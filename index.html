@@ -1,1355 +1,1338 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NIVA BUYER ZONE!</title>
-    
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
-    <style>
-        /* =========================================
-           [SECTION 1] CORE & USER STYLES
-           ========================================= */
-        :root { 
-    --primary: #22c55e; 
-    --bg: #0f172a;        /* Deep Dark Background */
-    --card: #1e293b;      /* Slate Card Background */
-    --text: #f1f5f9;      /* Light Text */
-    --p-blue: #3b82f6; 
-    --danger: #ef4444; 
-    --success: #10b981; 
-    --warning: #f59e0b; 
-    --border: #334155;    /* Subtle Dark Border */
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NIVA BUYER ZONE • Modern</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07111f;
+      --bg-2: #0d1830;
+      --card: rgba(18, 30, 54, .82);
+      --card-2: rgba(14, 24, 42, .94);
+      --line: rgba(255,255,255,.09);
+      --text: #eef6ff;
+      --muted: #8da2c7;
+      --blue: #3b82f6;
+      --blue-2: #1d4ed8;
+      --green: #10b981;
+      --green-2: #22c55e;
+      --orange: #f59e0b;
+      --red: #ef4444;
+      --pink: #ec4899;
+      --shadow: 0 18px 50px rgba(0,0,0,.35);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+    }
 
-* { box-sizing: border-box; font-family: 'Urbanist', sans-serif; -webkit-tap-highlight-color: transparent; }
-body { background: var(--bg); margin: 0; padding: 15px; padding-bottom: 120px; color: var(--text); }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { margin: 0; padding: 0; font-family: Inter, system-ui, sans-serif; background: radial-gradient(circle at top left, #12254a 0%, var(--bg) 35%, #040a12 100%); color: var(--text); min-height: 100%; }
+    body { padding: 16px 16px 120px; overflow-x: hidden; }
 
-#loading {
-    position: fixed;
-    inset: 0;
-    background: radial-gradient(circle at center, #1e293b 0%, #080c14 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-}
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      width: 220px;
+      height: 220px;
+      border-radius: 999px;
+      filter: blur(60px);
+      opacity: .25;
+      z-index: -2;
+      animation: floatBlob 10s ease-in-out infinite;
+    }
+    body::before { top: -40px; left: -40px; background: #2563eb; }
+    body::after { bottom: 80px; right: -30px; background: #10b981; animation-delay: -4s; }
 
-.loader-wrapper {
-    position: relative;
-    width: 180px;
-    height: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    @keyframes floatBlob {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50% { transform: translate(12px, 18px) scale(1.08); }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulseGlow {
+      0%,100% { box-shadow: 0 0 0 0 rgba(59,130,246,.24), 0 10px 35px rgba(59,130,246,.18); }
+      50% { box-shadow: 0 0 0 10px rgba(59,130,246,0), 0 16px 45px rgba(34,197,94,.16); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
 
-/* Outer Glowing Ring */
-.loader-ring {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 40px;
-    border: 2px solid transparent;
-    border-top: 3px solid #2563eb;
-    border-right: 3px solid #2563eb;
-    animation: rotateRing 1.5s linear infinite;
-    filter: drop-shadow(0 0 10px #2563eb);
-}
+    .hidden { display: none !important; }
+    .glass {
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border: 1px solid var(--line);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+    }
 
-/* Inner Glowing Ring (Reverse) */
-.loader-ring-inner {
-    position: absolute;
-    width: 85%;
-    height: 85%;
-    border-radius: 35px;
-    border: 2px solid transparent;
-    border-bottom: 3px solid #22c55e;
-    border-left: 3px solid #22c55e;
-    animation: rotateRingReverse 2s linear infinite;
-    filter: drop-shadow(0 0 10px #22c55e);
-}
+    #loading {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, #17315f 0%, #08111f 45%, #02050a 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity .45s ease;
+    }
+    .loader-orb {
+      width: 150px;
+      height: 150px;
+      border-radius: 34px;
+      position: relative;
+      display: grid;
+      place-items: center;
+      margin-bottom: 28px;
+      animation: pulseGlow 2s ease-in-out infinite;
+    }
+    .loader-orb::before,
+    .loader-orb::after {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      border-radius: 40px;
+      border: 2px solid transparent;
+    }
+    .loader-orb::before { border-top-color: #3b82f6; border-right-color: #3b82f6; animation: spin 1.4s linear infinite; }
+    .loader-orb::after { inset: -18px; border-bottom-color: #22c55e; border-left-color: #22c55e; animation: spin 1.8s linear infinite reverse; }
+    .loader-inner {
+      width: 110px;
+      height: 110px;
+      border-radius: 28px;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(180deg, #0f172a, #111827);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .loader-inner img { width: 100%; height: 100%; object-fit: cover; }
+    .loader-title { font-size: 26px; font-weight: 900; letter-spacing: .12em; }
+    .loader-title span { color: #22c55e; }
+    .loader-bar {
+      width: 220px;
+      height: 6px;
+      margin-top: 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      overflow: hidden;
+      position: relative;
+    }
+    .loader-bar::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      width: 42%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #3b82f6, #22c55e, #3b82f6);
+      background-size: 200% 100%;
+      animation: shimmer 1.6s linear infinite;
+    }
 
-/* Main Image Container */
-.light-box-main {
-    position: relative;
-    width: 110px;
-    height: 110px;
-    background: #0f172a;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 5;
-    overflow: hidden;
-    box-shadow: 0 0 30px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.05);
-}
+    .top-actions {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      display: flex;
+      gap: 10px;
+      z-index: 30;
+    }
+    .icon-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      color: white;
+      text-decoration: none;
+      font-size: 20px;
+    }
 
-.inner-img-main {
-    width: 90%;
-    height: 90%;
-    border-radius: 25px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    .app-shell { display: none; animation: fadeUp .5s ease both; }
+    .profile-card {
+      position: relative;
+      margin-top: 56px;
+      border-radius: 30px;
+      overflow: hidden;
+      padding: 18px;
+      background: linear-gradient(135deg, rgba(37,99,235,.95), rgba(124,58,237,.92), rgba(16,185,129,.84));
+      box-shadow: 0 18px 50px rgba(37,99,235,.3);
+    }
+    .profile-card::before {
+      content: "";
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      top: -50px;
+      right: -35px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      filter: blur(2px);
+    }
+    .profile-row { display: flex; gap: 14px; align-items: center; position: relative; z-index: 1; }
+    .avatar {
+      width: 66px;
+      height: 66px;
+      border-radius: 22px;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,.22);
+      box-shadow: 0 10px 20px rgba(0,0,0,.2);
+    }
+    .username { margin: 0; font-size: 22px; font-weight: 900; }
+    .usertag { margin-top: 3px; color: rgba(255,255,255,.84); font-size: 12px; font-weight: 600; }
+    .success-pill {
+      margin-left: auto;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 18px;
+      padding: 10px 12px;
+      text-align: center;
+      min-width: 76px;
+    }
+    .success-pill small { display: block; font-size: 9px; letter-spacing: .14em; font-weight: 900; opacity: .9; }
+    .success-pill b { font-size: 20px; }
 
-.inner-img-main img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    animation: pulseLogo 2s ease-in-out infinite;
-}
+    #admin-shortcut { margin: 16px 0 8px; display: none; }
+    .admin-button {
+      width: 100%;
+      border: none;
+      border-radius: 24px;
+      padding: 16px 18px;
+      font-weight: 900;
+      color: white;
+      background: linear-gradient(135deg, #0f172a, #1d4ed8, #10b981);
+      border: 1px solid rgba(255,255,255,.1);
+      box-shadow: 0 18px 38px rgba(29,78,216,.28);
+      animation: pulseGlow 2s ease-in-out infinite;
+    }
 
-/* Text Animations */
-.loading-text-container {
-    margin-top: 40px;
-    text-align: center;
-}
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 18px 4px 14px;
+      font-size: 18px;
+      font-weight: 900;
+    }
+    .action-card, .coin-card, .simple-card {
+      border-radius: 24px;
+      padding: 16px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp .35s ease both;
+    }
+    .action-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      color: inherit;
+    }
+    .action-card::before,
+    .coin-card::before,
+    .simple-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.08), transparent 42%);
+      pointer-events: none;
+    }
+    .left-wrap { display: flex; align-items: center; gap: 13px; }
+    .icon-box {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      background: linear-gradient(135deg, rgba(59,130,246,.22), rgba(34,197,94,.18));
+      border: 1px solid rgba(255,255,255,.1);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .muted { color: var(--muted); }
 
-.loading-title-new {
-    font-size: 24px;
-    font-weight: 900;
-    color: white;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-}
+    .coin-card {
+      padding-top: 48px;
+      cursor: pointer;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+    .coin-card:active { transform: scale(.985); }
+    .coin-card.offline {
+      opacity: .58;
+      filter: grayscale(.6);
+      pointer-events: none;
+    }
+    .status-badge {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,.1);
+    }
+    .online { color: #6ee7b7; background: rgba(16,185,129,.14); }
+    .offline { color: #fca5a5; background: rgba(239,68,68,.14); }
+    .rate-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 16px; }
+    .rate-box {
+      border-radius: 18px;
+      padding: 12px;
+      background: rgba(6,12,24,.44);
+      border: 1px solid rgba(255,255,255,.07);
+      text-align: center;
+    }
+    .rate-box small { display: block; font-size: 10px; font-weight: 800; color: var(--muted); margin-bottom: 8px; }
+    .rate-val {
+      display: inline-block;
+      min-width: 84px;
+      padding: 7px 12px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 900;
+      color: white;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      box-shadow: 0 10px 20px rgba(29,78,216,.22);
+    }
+    .rate-box:last-child .rate-val { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 10px 20px rgba(16,185,129,.18); }
+    .coin-foot { text-align: center; margin-top: 14px; font-size: 11px; font-weight: 900; letter-spacing: .16em; color: #7eb7ff; }
 
-.green-text { color: #22c55e; text-shadow: 0 0 15px rgba(34, 197, 94, 0.4); }
+    .screen { display: none; }
+    .screen.active { display: block; }
 
-.loading-progress-bar {
-    width: 220px;
-    height: 4px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 10px;
-    margin: 15px auto;
-    overflow: hidden;
-    position: relative;
-}
+    .history-card,
+    .leader-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .status-chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
 
-.progress-fill {
-    position: absolute;
-    height: 100%;
-    width: 50%;
-    background: linear-gradient(90deg, #2563eb, #22c55e);
-    box-shadow: 0 0 10px #22c55e;
-    animation: progressAnim 2s ease-in-out infinite;
-}
+    .nav-dock {
+      position: fixed;
+      left: 14px;
+      right: 14px;
+      bottom: 16px;
+      height: 78px;
+      border-radius: 30px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      padding: 8px;
+      z-index: 40;
+    }
+    .nav-tab {
+      border: none;
+      background: transparent;
+      color: #8fa8ce;
+      border-radius: 22px;
+      font-size: 24px;
+      font-weight: 800;
+      transition: .2s ease;
+    }
+    .nav-tab.active {
+      background: linear-gradient(135deg, #2563eb, #10b981);
+      color: #fff;
+      box-shadow: 0 12px 25px rgba(37,99,235,.24);
+    }
 
-.loading-subtitle-new {
-    font-size: 11px;
-    color: #94a3b8;
-    font-weight: 600;
-    font-style: italic;
-    letter-spacing: 1px;
-}
+    .modal-mask, .admin-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(1, 7, 16, .74);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 100;
+    }
+    .modal-mask.active, .admin-mask.active { display: flex; }
+    .bottom-sheet {
+      width: 100%;
+      max-width: 560px;
+      max-height: 92vh;
+      overflow: auto;
+      padding: 26px 18px 24px;
+      border-radius: 32px 32px 0 0;
+      background: linear-gradient(180deg, rgba(19, 31, 56, .98), rgba(9, 17, 32, .98));
+      border-top: 1px solid rgba(255,255,255,.1);
+      animation: slideUp .28s ease;
+    }
+    .sheet-handle {
+      width: 58px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.16);
+      margin: 0 auto 18px;
+    }
+    .sheet-title { margin: 0; font-size: 24px; font-weight: 900; }
+    .sheet-sub { margin: 6px 0 18px; color: var(--muted); font-size: 13px; }
+    .highlight-box {
+      padding: 16px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(245,158,11,.16), rgba(255,255,255,.04));
+      border: 1px dashed rgba(245,158,11,.5);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .highlight-box b { font-size: 26px; letter-spacing: .04em; }
+    .input, .select {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(4, 10, 21, .7);
+      color: white;
+      padding: 15px 16px;
+      border-radius: 18px;
+      font-size: 15px;
+      outline: none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .cta-btn, .ghost-btn, .danger-btn, .mini-btn {
+      border: none;
+      cursor: pointer;
+      font-weight: 900;
+      border-radius: 18px;
+    }
+    .cta-btn {
+      width: 100%;
+      padding: 16px;
+      color: white;
+      background: linear-gradient(135deg, #2563eb, #7c3aed, #10b981);
+      background-size: 200% 100%;
+      animation: shimmer 5s linear infinite;
+      box-shadow: 0 18px 35px rgba(37,99,235,.25);
+    }
+    .ghost-btn {
+      width: 100%;
+      padding: 14px;
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      margin-top: 12px;
+    }
+    .danger-btn { background: linear-gradient(135deg, #7f1d1d, #ef4444); color: #fff; padding: 12px 14px; }
+    .mini-btn { background: rgba(255,255,255,.06); color: white; padding: 10px 12px; }
 
-/* Keyframes */
-@keyframes rotateRing { 100% { transform: rotate(360deg); } }
-@keyframes rotateRingReverse { 100% { transform: rotate(-360deg); } }
-@keyframes pulseLogo { 
-    0%, 100% { transform: scale(1); filter: brightness(1); }
-    50% { transform: scale(1.1); filter: brightness(1.3); }
-}
-@keyframes progressAnim {
-    0% { left: -50%; }
-    100% { left: 100%; }
-}
+    .review-box { border-radius: 24px; padding: 16px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); }
+    .review-row { display: flex; justify-content: space-between; gap: 10px; padding: 9px 0; }
+    .review-row span { color: var(--muted); }
 
-/* USER UI */
-.help-btn { position: fixed; top: 20px; right: 20px; width: 45px; height: 45px; background: var(--card); border-radius: 15px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 22px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); z-index: 1000; border: 1.5px solid var(--border); color: #fff; }
-.profile-card { background: linear-gradient(135deg, #1d4ed8, #7c3aed); border-radius: 25px; padding: 22px; color: white; display: flex; align-items: center; margin-bottom: 15px; margin-top: 60px; }
-.user-avatar { width: 60px; height: 60px; border-radius: 18px; border: 2px solid rgba(255,255,255,0.2); object-fit: cover; }
-.action-card { background: var(--card); border-radius: 24px; padding: 16px; margin-bottom: 12px; border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; text-decoration: none; color: inherit; }
-.icon-box { width: 45px; height: 45px; border-radius: 15px; background: #334155; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .admin-panel {
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      padding: 14px 14px 110px;
+      background: radial-gradient(circle at top right, #17315f 0%, #08111f 35%, #02050a 100%);
+      animation: fadeUp .25s ease;
+    }
+    .admin-top {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      padding: 10px 0 16px;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(8,17,31,.86), rgba(8,17,31,.4), transparent);
+    }
+    .admin-head {
+      border-radius: 28px;
+      padding: 18px;
+      background: linear-gradient(135deg, rgba(29,78,216,.45), rgba(15,23,42,.88), rgba(16,185,129,.2));
+      border: 1px solid rgba(255,255,255,.09);
+    }
+    .admin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+    .stat-card {
+      border-radius: 20px;
+      padding: 14px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
+      text-align: center;
+    }
+    .stat-card small { display: block; color: #9fb2d1; font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+    .stat-card b { display: block; font-size: 22px; margin-top: 6px; }
 
-/* Status Badge - Left Side Placement */
-.status-badge { 
-    position: absolute; 
-    top: -5px; 
-    left: 13px; /* বাম পাশে নেওয়া হলো */
-    padding: 4px 10px; 
-    border-radius: 20px; 
-    font-size: 9px; 
-    font-weight: 800; 
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    backdrop-filter: blur(4px);
-}
-.status-online { background: rgba(16, 185, 129, 0.2); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
-.status-offline { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-/* Card offline thakle opacity kombe */
-.coin-card.offline { 
-    opacity: 0.5; /* Ekhane 0.5 mane 50% opacity, dorkar hole aro komate paren (e.g. 0.4) */
-    filter: grayscale(0.8); /* Saturation komiye dhowate (Gray) look dewar jonno */
-    pointer-events: none; /* Offline thakle jate click na kora jay */
-}
+    .admin-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 16px 0;
+      padding: 6px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .admin-tab {
+      border: none;
+      padding: 12px 10px;
+      border-radius: 18px;
+      font-weight: 900;
+      color: #9bb0d0;
+      background: transparent;
+    }
+    .admin-tab.active { background: linear-gradient(135deg, #2563eb, #10b981); color: #fff; }
 
-/* Main Coin Card Modernized */
-.coin-card { 
-    background: linear-gradient(145deg, #1e293b, #111827); 
-    border-radius: 24px; 
-    padding: 20px; 
-    padding-top: 45px; /* Status badge er jonno upore jayga */
-    margin-bottom: 16px; 
-    border: 1px solid rgba(255, 255, 255, 0.05); 
-    position: relative; 
-    transition: transform 0.2s;
-}
+    .admin-order,
+    .settings-card,
+    .manager-card {
+      border-radius: 24px;
+      padding: 16px;
+      margin-bottom: 12px;
+      background: rgba(15, 24, 44, .9);
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 16px 35px rgba(0,0,0,.22);
+    }
+    .admin-order-top { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: 12px; }
+    .admin-order-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; margin-bottom: 12px; }
+    .tile {
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .tile small { display: block; color: #8ca4c8; font-size: 10px; font-weight: 800; margin-bottom: 5px; }
+    .copy-box {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(37,99,235,.08);
+      border: 1px dashed rgba(96,165,250,.45);
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+    .actions-row { display: flex; gap: 8px; }
+    .actions-row button { flex: 1; padding: 12px; border-radius: 14px; border: none; color: white; font-weight: 900; }
+    .approve { background: linear-gradient(135deg, #059669, #22c55e); }
+    .reject { background: linear-gradient(135deg, #991b1b, #ef4444); }
+    .delete { flex: 0 0 48px !important; background: rgba(255,255,255,.08); }
 
-.coin-card:active { transform: scale(0.98); }
+    .manager-card h4, .settings-card h4 { margin: 0 0 14px; font-size: 16px; }
+    .stack { display: grid; gap: 10px; }
+    .switch-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .switch {
+      position: relative;
+      width: 52px;
+      height: 30px;
+      display: inline-block;
+    }
+    .switch input { display: none; }
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,.1);
+      border-radius: 999px;
+      transition: .2s ease;
+    }
+    .slider::before {
+      content: "";
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      top: 4px;
+      left: 4px;
+      border-radius: 50%;
+      background: white;
+      transition: .2s ease;
+    }
+    .switch input:checked + .slider { background: linear-gradient(135deg, #2563eb, #10b981); }
+    .switch input:checked + .slider::before { transform: translateX(22px); }
 
-/* Rate Grid Design Updated */
-.rate-grid { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 12px; 
-    margin-top: 15px; 
-}
+    .empty-state { text-align: center; padding: 26px 14px; color: var(--muted); }
+    .small-note { font-size: 12px; color: var(--muted); }
 
-.rate-box { 
-    background: rgba(15, 23, 42, 0.6); 
-    padding: 12px; 
-    border-radius: 18px; 
-    text-align: center; 
-    border: 1px solid rgba(255, 255, 255, 0.08); 
-}
-
-.rate-box small { 
-    font-size: 10px; 
-    color: #94a3b8; 
-    font-weight: 700; 
-    display: block; 
-    margin-bottom: 6px;
-}
-
-.rate-val { 
-    font-size: 16px; 
-    font-weight: 900; 
-    color: #fff; 
-    background: linear-gradient(135deg, #3b82f6, #2563eb); 
-    padding: 6px 10px; 
-    border-radius: 12px; 
-    display: inline-block;
-    min-width: 70px;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-}
-
-/* Admin Rate can have a different color */
-.rate-box:last-child .rate-val {
-    background: linear-gradient(135deg, #10b981, #059669);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-}
-
-.click-here-text {
-    margin-top: 15px;
-    font-size: 11px;
-    font-weight: 900;
-    color: #3b82f6;
-    text-align: center;
-    letter-spacing: 2px;
-    opacity: 0.8;
-}
-
-/* MODALS */
-.modal-mask { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); display: none; align-items: flex-end; z-index: 2000; }
-.bottom-sheet { background: #1e293b; width: 100%; border-radius: 40px 40px 0 0; padding: 30px; transform: translateY(100%); transition: 0.4s; overflow-y: auto; max-height: 90vh; color: #fff; }
-.modal-mask.active .bottom-sheet { transform: translateY(0); }
-.form-input { width: 100%; background: #0f172a; border: 1.5px solid var(--border); padding: 16px; border-radius: 20px; font-size: 16px; font-weight: 700; margin-bottom: 15px; outline: none; color: #fff; }
-.btn-submit { background: #2563eb; color: white; border: none; width: 100%; padding: 18px; border-radius: 20px; font-size: 17px; font-weight: 800; cursor: pointer; }
-
-.nav-dock { position: fixed; bottom: 20px; left: 20px; right: 20px; height: 75px; background: #1e293b; border-radius: 35px; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.4); z-index: 1001; border: 1px solid var(--border); }
-.nav-tab { border: none; background: none; color: #64748b; font-size: 24px; width: 50px; height: 50px; border-radius: 18px; }
-.nav-tab.active { background: var(--p-blue); color: white; }
-
-/* ADMIN BUTTON */
-#admin-shortcut { display: none; margin-bottom: 15px; padding: 0 5px; }
-.admin-entry-btn { width: 100%; padding: 18px; background: #ef4444; color: white; border: none; border-radius: 22px; font-weight: 900; box-shadow: 0 10px 20px rgba(239, 68, 68, 0.4); font-size: 14px; animation: pulse 2s infinite; }
-
-       /* =========================================
-           [SECTION 2] UPDATED MODERN ADMIN UI
-           ========================================= */
-        /* ADMIN MASTER UI - DARK MODE */
-#admin-master-ui { 
-    position: fixed; 
-    inset: 0; 
-    background: #0f172a; /* Dark Navy Background */
-    z-index: 100000; 
-    display: none; 
-    overflow-y: auto; 
-    font-family: 'Plus Jakarta Sans', sans-serif; 
-    color: #f1f5f9; 
-}
-
-#admin-lock-screen { 
-    position: fixed; 
-    inset: 0; 
-    background: #020617; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    z-index: 100001; 
-    flex-direction: column; 
-    color: white; 
-}
-
-.adm-container { max-width: 500px; margin: 0 auto; padding: 15px; } 
-
-/* Statistics Box */
-.adm-stats-row { display: block; margin-bottom: 15px; }
-.adm-stat-box { 
-    background: #1e293b; /* Dark Slate Card */
-    padding: 20px; 
-    border-radius: 20px; 
-    border: 1px solid #334155; 
-    text-align: center; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
-}
-.adm-stat-box small { 
-    font-weight: 800; 
-    color: #94a3b8; 
-    font-size: 10px; 
-    display: block; 
-    text-transform: uppercase; 
-    letter-spacing: 1px;
-}
-.adm-stat-box h3 { 
-    margin: 5px 0 0; 
-    font-size: 28px; 
-    color: #ffffff; 
-}
-
-/* Modern Tab Menu */
-.adm-tab-menu { 
-    display: flex; 
-    background: #1e293b; 
-    border-radius: 15px; 
-    padding: 5px; 
-    margin-bottom: 20px; 
-    gap: 5px;
-    border: 1px solid #334155;
-} 
-.adm-tab { 
-    flex: 1; 
-    text-align: center; 
-    padding: 12px 5px; 
-    font-size: 11px; 
-    font-weight: 800; 
-    cursor: pointer; 
-    border-radius: 12px; 
-    color: #94a3b8; 
-    transition: 0.3s;
-} 
-.adm-tab.active { 
-    background: #334155 !important; 
-    color: #3b82f6 !important; 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
-}
-
-/* Order Card - Grid Design */
-.adm-order-box { 
-    background: #1e293b; 
-    border-radius: 20px; 
-    padding: 18px; 
-    margin-bottom: 15px; 
-    border: 1px solid #334155; 
-    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-    position: relative; 
-    overflow: hidden;
-}
-.order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-.order-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-.grid-item { 
-    background: #0f172a; 
-    padding: 12px; 
-    border-radius: 15px; 
-    border: 1px solid #334155; 
-}
-.grid-item small { 
-    display: block; 
-    color: #64748b; 
-    font-size: 9px; 
-    font-weight: 800; 
-    text-transform: uppercase; 
-    margin-bottom: 3px; 
-}
-.grid-item b { font-size: 11px; color: #e2e8f0; }
-
-.status-badge { 
-    font-size: 10px; 
-    font-weight: 900; 
-    padding: 5px 12px; 
-    border-radius: 10px; 
-    text-transform: uppercase; 
-}
-
-/* Forms & Buttons */
-.adm-input { 
-    width: 100%; 
-    padding: 12px; 
-    border-radius: 12px; 
-    border: 1px solid #334155; 
-    margin-bottom: 10px; 
-    font-size: 13px; 
-    background: #0f172a; 
-    color: #ffffff;
-    outline: none;
-}
-.adm-input::placeholder { color: #475569; }
-
-.adm-btn { 
-    border: none; 
-    padding: 12px; 
-    border-radius: 12px; 
-    font-weight: 800; 
-    cursor: pointer; 
-    width: 100%; 
-    transition: 0.2s; 
-    background: #2563eb;
-    color: white;
-}
-    </style>
+    @media (min-width: 720px) {
+      body { max-width: 580px; margin: 0 auto; }
+      .nav-dock { max-width: 552px; margin: 0 auto; }
+      .bottom-sheet { border-radius: 32px; margin-bottom: 14px; }
+    }
+  </style>
 </head>
 <body>
+  <div id="loading">
+    <div class="loader-orb glass">
+      <div class="loader-inner">
+        <img src="https://i.ibb.co.com/nsLQgRFR/photo-2025-12-05-11-17-43.jpg" alt="Logo">
+      </div>
+    </div>
+    <div class="loader-title">NIVA <span>BUYER</span> ZONE</div>
+    <div class="loader-bar"></div>
+    <div style="margin-top:14px;color:#95a9cc;font-size:12px;font-weight:700;letter-spacing:.08em;">Best Deal • Premium Experience</div>
+  </div>
 
-<div id="loading">
-    <div class="loader-wrapper">
-        <div class="loader-ring"></div>
-        <div class="loader-ring-inner"></div>
-        
-        <div class="light-box-main">
-            <div class="inner-img-main">
-                <img src="https://i.ibb.co.com/nsLQgRFR/photo-2025-12-05-11-17-43.jpg" alt="Logo">
+  <div id="app" class="app-shell">
+    <div class="top-actions">
+      <a id="help-link" href="#" target="_blank" class="icon-btn glass">🎧</a>
+    </div>
+
+    <section class="profile-card">
+      <div class="profile-row">
+        <img id="user-pfp" class="avatar" src="" alt="avatar">
+        <div>
+          <h2 id="user-display-name" class="username">User</h2>
+          <div id="user-display-tag" class="usertag">@guest</div>
+        </div>
+        <div class="success-pill">
+          <small>SUCCESS</small>
+          <b id="suc-count-display">0</b>
+        </div>
+      </div>
+    </section>
+
+    <div id="admin-shortcut">
+      <button class="admin-button" onclick="openAdminPanel()">🛡️ Access Admin Dashboard</button>
+    </div>
+
+    <section id="home-scr" class="screen active">
+      <a href="#" id="chan-link" target="_blank" class="action-card glass">
+        <div class="left-wrap">
+          <div class="icon-box">📢</div>
+          <div>
+            <b>Join Channel</b><br>
+            <small class="muted">Updates, offers & proofs</small>
+          </div>
+        </div>
+        <span>❯</span>
+      </a>
+
+      <div class="section-title">
+        <span>Coin Market</span>
+        <span class="small-note">100K+ = Admin Rate</span>
+      </div>
+      <div id="market-list-display"></div>
+    </section>
+
+    <section id="history-scr" class="screen">
+      <div class="section-title"><span>Order History</span></div>
+      <div id="history-list-display"></div>
+    </section>
+
+    <section id="rank-scr" class="screen">
+      <div class="section-title"><span>Top Sellers</span></div>
+      <div id="rank-list-display"></div>
+    </section>
+  </div>
+
+  <nav class="nav-dock glass" id="nav-dock">
+    <button class="nav-tab active" onclick="switchTab('home-scr', this)">🏠</button>
+    <button class="nav-tab" onclick="switchTab('history-scr', this)">🕒</button>
+    <button class="nav-tab" onclick="switchTab('rank-scr', this)">🏆</button>
+  </nav>
+
+  <div id="order-modal" class="modal-mask" onclick="backdropClose(event, 'order-modal')">
+    <div class="bottom-sheet" onclick="event.stopPropagation()">
+      <div class="sheet-handle"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+        <h2 id="modal-coin-title" class="sheet-title">Sell Coin</h2>
+        <button class="mini-btn" onclick="closeModal('order-modal')">✕</button>
+      </div>
+      <p class="sheet-sub">Enter your details carefully before submitting.</p>
+
+      <div class="highlight-box">
+        <div style="font-size:11px;font-weight:900;letter-spacing:.16em;color:#fcd34d;">SEND COINS TO THIS ID</div>
+        <b id="display-admin-id">---</b>
+        <div style="margin-top:10px;"><button class="mini-btn" onclick="copyAdminID()">COPY ID</button></div>
+      </div>
+
+      <div class="stack">
+        <input type="number" id="input-qty" class="input" placeholder="Amount (Min 10000)" oninput="calculatePayout()">
+        <input type="text" id="input-sender" class="input" placeholder="Sender Username">
+        <div class="grid-2">
+          <select id="input-method" class="select"></select>
+          <input type="text" id="input-number" class="input" placeholder="Payment Number">
+        </div>
+      </div>
+
+      <div class="action-card glass" style="margin-top:16px;">
+        <div>
+          <div style="font-size:12px;color:var(--muted);font-weight:800;">Applied Rate</div>
+          <div id="display-applied-rate" style="font-size:24px;font-weight:900;">0৳</div>
+        </div>
+        <div style="text-align:right;">
+          <small style="display:block;color:#fca5a5;font-weight:900;">FEE: -5৳</small>
+          <b id="display-final-payout" style="font-size:28px;color:#6ee7b7;">0.00 ৳</b>
+        </div>
+      </div>
+
+      <button class="cta-btn" onclick="showConfirmation()">Next Step →</button>
+    </div>
+  </div>
+
+  <div id="review-modal" class="modal-mask" onclick="backdropClose(event, 'review-modal')">
+    <div class="bottom-sheet" onclick="event.stopPropagation()">
+      <div class="sheet-handle"></div>
+      <h2 class="sheet-title">Review Details</h2>
+      <p class="sheet-sub">Please check everything before final submission.</p>
+      <div class="review-box">
+        <div class="review-row"><span>Coin</span><b id="r-coin">---</b></div>
+        <div class="review-row"><span>Amount</span><b id="r-qty">---</b></div>
+        <div class="review-row"><span>Sender</span><b id="r-sender">---</b></div>
+        <div class="review-row"><span>Method</span><b id="r-method">---</b></div>
+        <div class="review-row"><span>Account No</span><b id="r-number">---</b></div>
+        <div class="review-row"><span>Applied Rate</span><b id="r-rate">---</b></div>
+        <div class="review-row" style="border-top:1px dashed rgba(255,255,255,.12);margin-top:8px;padding-top:14px;"><span>You Will Get</span><b id="r-pay" style="font-size:23px;color:#6ee7b7;">0.00 ৳</b></div>
+      </div>
+      <button class="cta-btn" id="confirm-submit-btn" onclick="finalSubmitOrder()">Confirm & Submit ✅</button>
+      <button class="ghost-btn" onclick="closeModal('review-modal')">Go Back & Edit</button>
+    </div>
+  </div>
+
+  <div id="admin-master-ui" class="admin-mask" onclick="backdropClose(event, 'admin-master-ui')">
+    <div class="admin-panel" onclick="event.stopPropagation()">
+      <div class="admin-top">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
+          <button class="danger-btn" onclick="closeAdminPanel()">Close ✕</button>
+        </div>
+        <div class="admin-head">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:14px;">
+            <div>
+              <div style="font-size:12px;color:#a5b4fc;font-weight:900;letter-spacing:.16em;">ADMIN COMMAND CENTER</div>
+              <h2 style="margin:6px 0 0;font-size:24px;">Manage Orders & Rates</h2>
             </div>
+            <div style="font-size:36px;">🛡️</div>
+          </div>
+          <div class="admin-grid">
+            <div class="stat-card"><small>PENDING</small><b id="count-pending">0</b></div>
+            <div class="stat-card"><small>APPROVED</small><b id="count-completed">0</b></div>
+            <div class="stat-card"><small>REJECTED</small><b id="count-rejected">0</b></div>
+          </div>
         </div>
+      </div>
+
+      <div class="admin-tabs">
+        <button class="admin-tab active" onclick="switchAdminTab('pending', this)">Pending</button>
+        <button class="admin-tab" onclick="switchAdminTab('history', this)">History</button>
+        <button class="admin-tab" onclick="switchAdminTab('settings', this)">Settings</button>
+      </div>
+
+      <div id="admin-dynamic-content"></div>
     </div>
+  </div>
 
-    <div class="loading-text-container">
-        <h1 class="loading-title-new">NIVA <span class="green-text">BUYER</span> ZONE</h1>
-        <div class="loading-progress-bar">
-            <div class="progress-fill"></div>
-        </div>
-        <p class="loading-subtitle-new">"Best Deal, Premium experience"</p>
-    </div>
-</div>>
-
-<div id="user-app-interface" style="display:none;">
-    <a href="#" id="help-link" class="help-btn" target="_blank">🎧</a>
-    
-	
-	<div class="profile-card">
-    <img src="" id="user-pfp" class="user-avatar">
-    <div style="flex:1; margin-left:12px;">
-        <h3 id="user-display-name" style="margin:0;">User</h3>
-        <p id="user-display-tag" style="margin:0; font-size:12px; opacity:0.8;">@username</p>
-    </div>
-    <div style="background:rgba(255,255,255,0.1); padding:8px 12px; border-radius:15px; text-align:center;">
-        <small style="font-size:8px; font-weight:900; display:block;">SUCCESS</small>
-        <b id="suc-count-display">0</b>
-    </div>
-</div>
-
-<div id="admin-shortcut" style="display:none; margin: 15px 5px;">
-    <button onclick="openAdminPanel()" style="width:100%; padding:16px; background:#2563eb; color:white; border:none; border-radius:20px; font-weight:800; font-size:14px; box-shadow:0 10px 20px rgba(37, 99, 235, 0.2);">
-        🛡️ Access Admin Dashboard
-    </button>
-</div>
-	
-	
-<div id="admin-master-ui">
-    <button onclick="closeAdminPanel()" style="position: fixed; top: 20px; right: 20px; z-index: 100002; background: #ef4444; color: white; border: none; padding: 10px 15px; border-radius: 10px; font-weight: 800;">CLOSE ✖</button>
-
-    <div id="admin-lock-screen">
-        <div style="text-align: center; background: rgba(255,255,255,0.05); padding: 40px; border-radius: 30px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);">
-            <div style="font-size: 50px; margin-bottom: 20px;">🛡️</div>
-            <h2 style="margin-bottom: 10px; font-weight: 800;">Admin Verification</h2>
-            <p style="color: #94a3b8; font-size: 13px; margin-bottom: 25px;">Enter secure PIN to access dashboard</p>
-            
-            <input type="password" id="adm-pin-input" maxlength="4" placeholder="••••" style="width: 150px; background: #1e293b; border: 2px solid #334155; color: white; text-align: center; font-size: 24px; padding: 12px; border-radius: 15px; letter-spacing: 5px; margin-bottom: 20px; outline: none;">
-            
-            <button onclick="verifyAdminPin()" style="display: block; width: 100%; background: #2563eb; color: white; border: none; padding: 15px; border-radius: 15px; font-weight: 800; cursor: pointer;">UNLOCK DASHBOARD</button>
-        </div>
-    </div>
-
-    <div id="admin-dashboard-view" style="display: none;">
-        <div class="adm-container">
-            <header style="margin: 30px 0 20px;">
-                <h1 style="font-size: 24px; font-weight: 900; color: #1e293b;">Admin Command Center</h1>
-                <p style="color: #64748b; font-size: 14px;">Manage orders, market rates and settings.</p>
-            </header>
-
-            <div class="adm-stats-row">
-                <div class="adm-stat-box">
-                    <small>Pending Orders</small>
-                    <h3 id="adm-display-pending">0</h3>
-                </div>
-            </div>
-
-            <div class="adm-tab-menu">
-                <div class="adm-tab active" onclick="switchAdminTab('pending', this)">PENDING</div>
-                <div class="adm-tab" onclick="switchAdminTab('history', this)">HISTORY</div>
-                <div class="adm-tab" onclick="switchAdminTab('settings', this)">SETTINGS</div>
-            </div>
-
-            <div id="admin-dynamic-content">
-                </div>
-        </div>
-    </div>
-</div>
-    
-</div>
-
-    <div id="home-scr">
-        <a href="#" id="chan-link" target="_blank" class="action-card">
-            <div style="display:flex; align-items:center; gap:12px;">
-                <div class="icon-box">📢</div>
-                <div><b>Join Channel</b><br><small style="color:#64748b;">Updates & Proofs</small></div>
-            </div>
-            <span>❯</span>
-        </a>
-        <div style="font-size:18px; font-weight:800; margin:20px 0 15px 5px;">Coin Market</div>
-        <div id="market-list-display"></div>
-    </div>
-
-    <div id="history-scr" style="display:none; padding-top:10px;"><div id="history-list-display"></div></div>
-    <div id="rank-scr" style="display:none; padding-top:10px;"><div id="rank-list-display"></div></div>
-
-    <nav class="nav-dock">
-        <button class="nav-tab active" onclick="switchTab('home-scr', this)">🏠</button>
-        <button class="nav-tab" onclick="switchTab('history-scr', this)">🕒</button>
-        <button class="nav-tab" onclick="switchTab('rank-scr', this)">🏆</button>
-    </nav>
-</div>
-
-<div id="order-modal" class="modal-mask">
-    <div class="bottom-sheet">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2 id="modal-coin-title" style="margin:0; font-size:22px;">Sell Coin</h2>
-            <button onclick="closeModal()" style="background:none; border:none; font-size:24px; color:#94a3b8;">✕</button>
-        </div>
-        <div style="background:#fffbeb; border:1px dashed #fcd34d; padding:15px; border-radius:20px; text-align:center; margin-bottom:20px;">
-            <small style="font-weight:800; color:#b45309;">SEND COINS TO THIS ID</small>
-            <div id="display-admin-id" style="font-size:20px; font-weight:900; margin:5px 0; color:#1e293b;">---</div>
-            <button onclick="copyAdminID()" style="background:white; border:1px solid #fcd34d; padding:5px 15px; border-radius:12px; font-size:11px; font-weight:800;">COPY ID</button>
-        </div>
-        <input type="number" id="input-qty" class="form-input" placeholder="Amount (Min 10000)" oninput="calculatePayout()">
-        <input type="text" id="input-sender" class="form-input" placeholder="SENDER USERNAME">
-        <div style="display:grid; grid-template-columns:1fr 1.2fr; gap:12px;">
-            <select id="input-method" class="form-input"></select>
-            <input type="text" id="input-number" class="form-input" placeholder="Payment Number">
-        </div>
-        <div style="display:flex; justify-content:space-between; align-items:center; padding:15px 0;">
-            <span style="font-weight:700; color:#64748b;">You Get:</span>
-            <div style="text-align:right;">
-                <small style="color:#ef4444; font-weight:800; display:block;">FEE: -5৳</small>
-                <b id="display-final-payout" style="font-size:28px; color:#22c55e;">0.00 ৳</b>
-            </div>
-        </div>
-        <button class="btn-submit" onclick="showConfirmation()">Next Step →</button>
-    </div>
-</div>
-
-<div id="review-modal" class="modal-mask">
-    <div class="bottom-sheet" style="background: #ffffff; border-top: 5px solid #2563eb;">
-        <div style="width: 50px; height: 5px; background: #e2e8f0; border-radius: 10px; margin: 0 auto 20px;"></div>
-        <h2 style="text-align:center; margin-bottom: 5px; font-weight: 900; color: #1e293b;">Review Details</h2>
-        <p style="text-align: center; color: #64748b; font-size: 13px; margin-bottom: 20px;">Please check everything before final submission.</p>
-        
-        <div style="background: #f1f5f9; border-radius: 25px; padding: 20px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                <span style="color: #64748b;">COIN:</span> 
-                <b id="r-coin" style="color:#2563eb; background: #dbeafe; padding: 2px 10px; border-radius: 10px;">---</b>
-            </div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                <span style="color: #64748b;">Amount:</span> 
-                <b id="r-qty" style="color:#1e293b;">---</b>
-            </div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                <span style="color: #64748b;">Sender:</span> 
-                <b id="r-sender" style="color:#1e293b;">---</b>
-            </div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                <span style="color: #64748b;">Method:</span> 
-                <b id="r-method" style="color:#2563eb;">---</b>
-            </div>
-            <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
-                <span style="color: #64748b;">Account No:</span> 
-                <b id="r-number" style="color:#1e293b;">---</b>
-            </div>
-            <hr style="border: 0; border-top: 1px dashed #cbd5e1; margin: 15px 0;">
-            <div style="display:flex; justify-content:space-between; align-items: center;">
-                <span style="font-weight: 800; color: #1e293b;">You Will Get:</span> 
-                <b id="r-pay" style="color:#10b981; font-size:22px; font-weight: 900;">0.00৳</b>
-            </div>
-        </div>
-
-        <button class="btn-submit" onclick="finalSubmitOrder()" style="background: linear-gradient(135deg, #2563eb, #7c3aed); box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);">Confirm & Submit ✅</button>
-        <button onclick="closeReviewModal()" style="width:100%; border:none; background:none; margin-top:15px; color:#94a3b8; font-weight:700; font-size: 14px;">Go Back & Edit</button>
-    </div>
-</div>
-
-<div id="admin-master-ui">
-    <div id="admin-lock-screen">
-        <div style="background:white; padding:30px; border-radius:25px; text-align:center; width:300px; color:#1e293b;">
-            <h3 style="margin-bottom:20px;">Admin Access</h3>
-            <input type="password" id="adm-pin-input" placeholder="ENTER PIN" style="width:100%; padding:15px; text-align:center; border-radius:15px; border:1.5px solid #ddd; margin-bottom:15px; font-weight:900;">
-            <button onclick="verifyAdminPin()" style="width:100%; background:#2563eb; color:white; padding:15px; border:none; border-radius:15px; font-weight:800;">UNLOCK PANEL</button>
-            <button onclick="closeAdminPanel()" style="margin-top:10px; background:none; border:none; color:#64748b; font-weight:700;">Back to App</button>
-        </div>
-    </div>
-
-    <div id="admin-dashboard-view" style="display:none;">
-        <div style="padding:20px; display:flex; justify-content:space-between; align-items:center; background:white; border-bottom:1.5px solid #e2e8f0; position:sticky; top:0; z-index:100;">
-            <h2 style="margin:0; color:#ef4444; font-weight:900; font-size:18px;">ADMIN PANEL</h2>
-            <button onclick="closeAdminPanel()" style="background:#f1f5f9; border:none; padding:10px 15px; border-radius:12px; font-weight:800;">EXIT</button>
-        </div>
-
- <div class="adm-container">
-    <div class="adm-stats-row" style="display: block; margin-bottom: 15px;">
-        <div class="adm-stat-box" style="padding: 20px; border-bottom: 4px solid #f59e0b; text-align: center;">
-            <small style="color: #64748b; font-weight: 800; text-transform: uppercase; font-size: 10px;">Total Pending Orders</small>
-            <h3 id="stat-pending-count" style="color: #f59e0b; font-size: 32px; margin: 10px 0 0;">0</h3>
-        </div>
-    </div>
-
-    <div class="adm-tab-menu" style="display: flex; background: #f1f5f9; border-radius: 15px; padding: 5px; gap: 5px; border: 1px solid #e2e8f0; margin-bottom: 15px;">
-        <div class="adm-tab active" onclick="filterTab('pending', this)" style="flex: 1; text-align: center; padding: 10px; cursor: pointer; border-radius: 12px; font-weight: 800; font-size: 11px;">
-            Pending <span id="count-pending" style="background: #f59e0b; color: white; padding: 2px 6px; border-radius: 8px; font-size: 9px; margin-left: 4px;">0</span>
-        </div>
-        <div class="adm-tab" onclick="filterTab('completed', this)" style="flex: 1; text-align: center; padding: 10px; cursor: pointer; border-radius: 12px; font-weight: 800; font-size: 11px;">
-            Approved <span id="count-completed" style="background: #10b981; color: white; padding: 2px 6px; border-radius: 8px; font-size: 9px; margin-left: 4px;">0</span>
-        </div>
-        <div class="adm-tab" onclick="filterTab('rejected', this)" style="flex: 1; text-align: center; padding: 10px; cursor: pointer; border-radius: 12px; font-weight: 800; font-size: 11px;">
-            Rejected <span id="count-rejected" style="background: #ef4444; color: white; padding: 2px 6px; border-radius: 8px; font-size: 9px; margin-left: 4px;">0</span>
-        </div>
-        <div class="adm-tab" onclick="filterTab('settings', this)" style="flex: 1; text-align: center; padding: 10px; cursor: pointer; border-radius: 12px; font-weight: 800; font-size: 11px;">
-            Settings
-        </div>
-    </div>
-
-    <div id="order-list-section">
-        <div id="order-list"></div>
-    </div>
-</div>
-
-        <div id="settings-section" style="display:none;">
-             </div>
-    </div> 
-</div>
-        </div>
-    </div>
-</div>
-
-<script>
-    /* =========================================
-       CORE LOGIC
-       ========================================= */
+  <script>
     const firebaseConfig = {
-        apiKey: "AIzaSyAZTpuNxupHZ8DokeHyE0T6NiWsvq5oBsw",
-  authDomain: "meta-earn-coin.firebaseapp.com",
-  databaseURL: "https://meta-earn-coin-default-rtdb.firebaseio.com",
-  projectId: "meta-earn-coin",
-  storageBucket: "meta-earn-coin.firebasestorage.app",
-  messagingSenderId: "263927776319",
-  appId: "1:263927776319:web:78b177fb9806c24779a48a"
-
+      apiKey: "AIzaSyAZTpuNxupHZ8DokeHyE0T6NiWsvq5oBsw",
+      authDomain: "meta-earn-coin.firebaseapp.com",
+      databaseURL: "https://meta-earn-coin-default-rtdb.firebaseio.com",
+      projectId: "meta-earn-coin",
+      storageBucket: "meta-earn-coin.firebasestorage.app",
+      messagingSenderId: "263927776319",
+      appId: "1:263927776319:web:78b177fb9806c24779a48a"
     };
+
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const tg = window.Telegram.WebApp;
     const ADMIN_LIST = [7665757155, 8505710811];
 
-    let currentSelectedCoin = "", currentCoinRate = 0, currentCoinTID = "", calculatedFinalPayout = 0;
+    let currentSelectedCoin = "";
+    let currentCoinRate = 0;
+    let currentAdminRate = 0;
+    let currentCoinTID = "";
+    let currentAppliedRate = 0;
+    let calculatedFinalPayout = 0;
     let adminActiveTab = 'pending';
+    let currentTelegramUser = 'guest';
 
-    window.onload = () => {
-    tg.expand();
-
-    // টেলিগ্রাম থেকে ইউজার ডাটা নেওয়া
-    const user = tg.initDataUnsafe.user || { id: 0, first_name: "Guest", username: "guest" };
-    const userId = Number(user.id);
-    
-    // গ্লোবাল ভেরিয়েবলে ইউজারনেম সেভ রাখা (লিডারবোর্ডের জন্য)
-    window.currentTelegramUser = user.username || user.first_name || "Guest";
-
-    const userNameEl = document.getElementById('user-display-name');
-    const userTagEl = document.getElementById('user-display-tag');
-    const userPfpEl = document.getElementById('user-pfp');
-
-    if(userNameEl) userNameEl.innerText = user.first_name + (user.last_name ? " " + user.last_name : "");
-    if(userTagEl) userTagEl.innerText = "@" + (user.username || "guest");
-    
-    if(userPfpEl) {
-        userPfpEl.src = user.photo_url || `https://ui-avatars.com/api/?name=${user.first_name}&background=3b82f6&color=fff&bold=true`;
+    function safeHaptic(type, level) {
+      try {
+        if (!tg || !tg.HapticFeedback) return;
+        if (type === 'impact') tg.HapticFeedback.impactOccurred(level || 'light');
+        if (type === 'notify') tg.HapticFeedback.notificationOccurred(level || 'success');
+      } catch (e) {}
     }
 
-    // --- অ্যাডমিন বাটন সিকিউরিটি ---
-    const adminBtn = document.getElementById('admin-shortcut');
-    if (adminBtn) {
-        if (ADMIN_LIST.includes(userId)) {
-            // শুধুমাত্র অ্যাডমিন হলে বাটনটি দৃশ্যমান হবে
-            adminBtn.style.display = 'flex'; 
-        } else {
-            // অ্যাডমিন না হলে বাটনটি ডকুমেন্ট থেকে পুরোপুরি মুছে যাবে
-            adminBtn.remove(); 
-        }
+    function formatMoney(value) {
+      return `${parseFloat(value || 0).toFixed(2)}৳`;
     }
 
-    // লোডিং স্ক্রিন প্রসেস
-    setTimeout(() => {
-        const loadingScr = document.getElementById('loading');
-        if(loadingScr) {
-            loadingScr.style.opacity = '0';
-            setTimeout(() => {
-                loadingScr.style.display = 'none';
-                document.getElementById('user-app-interface').style.display = 'block';
-            }, 500);
-        }
-    }, 2000);
+    function showToast(msg) {
+      alert(msg);
+    }
 
-    // ডাটা লোড করা শুরু
-    initializeDataFetching();
-    fetchHistory();
-    fetchLeaderboard();
-};
+    function backdropClose(e, id) {
+      if (e.target.id === id) closeModal(id);
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove('active');
+      setTimeout(() => { el.style.display = 'none'; }, 160);
+    }
+
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.display = 'flex';
+      requestAnimationFrame(() => el.classList.add('active'));
+    }
+
+    function bootLoader() {
+      setTimeout(() => {
+        const loading = document.getElementById('loading');
+        loading.style.opacity = '0';
+        setTimeout(() => {
+          loading.remove();
+          document.getElementById('app').style.display = 'block';
+        }, 420);
+      }, 1850);
+    }
+
+    function initTelegramUser() {
+      tg.expand();
+      tg.ready();
+      const user = tg.initDataUnsafe.user || { id: 0, first_name: 'Guest', username: 'guest' };
+      const userId = Number(user.id || 0);
+      currentTelegramUser = user.username || user.first_name || 'guest';
+
+      document.getElementById('user-display-name').innerText = `${user.first_name || 'Guest'}${user.last_name ? ' ' + user.last_name : ''}`;
+      document.getElementById('user-display-tag').innerText = '@' + (user.username || 'guest');
+      document.getElementById('user-pfp').src = user.photo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.first_name || 'Guest')}&background=2563eb&color=ffffff&bold=true`;
+
+      const adminShortcut = document.getElementById('admin-shortcut');
+      if (ADMIN_LIST.includes(userId)) {
+        adminShortcut.style.display = 'block';
+      } else {
+        adminShortcut.remove();
+      }
+    }
 
     function initializeDataFetching() {
-        db.ref('marketConfig').on('value', snap => {
-            let html = "";
-            snap.forEach(c => {
-                const v = c.val(); const on = v.status !== false;
-                html += `<div class="coin-card ${!on?'offline':''}" onclick="${on?`openOrderModal('${c.key}',${v.userRate},'${v.transferId}')`:''}">
-                    <div class="status-badge ${on?'status-online':'status-offline'}">${on?'● Online':'● Offline'}</div>
-                    <div style="display:flex; align-items:center; gap:15px;">
-                        <div class="icon-box">🪙</div>
-                        <div><b style="font-size:18px;">${c.key}</b><br><small style="color:#ADADAD; font-weight:800;">MARKET RATE</small></div>
-                    </div>
-                    <div class="rate-grid">
-                        <div class="rate-box"><small>User Rate</small><div class="rate-val">${v.userRate}৳</div></div>
-                        <div class="rate-box"><small>Admin Rate</small><div class="rate-val">${v.adminRate}৳</div></div>
-                    </div>
-                </div>`;
-            });
-            document.getElementById('market-list-display').innerHTML = html;
+      db.ref('marketConfig').on('value', snap => {
+        let html = '';
+        snap.forEach(c => {
+          const v = c.val() || {};
+          const isOnline = v.status !== false;
+          html += `
+            <div class="coin-card glass ${isOnline ? '' : 'offline'}" onclick="${isOnline ? `openOrderModal('${c.key.replace(/'/g, "\\'")}', ${parseFloat(v.userRate || 0)}, ${parseFloat(v.adminRate || 0)}, '${String(v.transferId || '').replace(/'/g, "\\'")}')` : ''}">
+              <div class="status-badge ${isOnline ? 'online' : 'offline'}">${isOnline ? '● Online' : '● Offline'}</div>
+              <div class="left-wrap">
+                <div class="icon-box">🪙</div>
+                <div>
+                  <b style="font-size:18px;">${c.key}</b><br>
+                  <small class="muted" style="font-weight:800;">LIVE MARKET RATE</small>
+                </div>
+              </div>
+              <div class="rate-grid">
+                <div class="rate-box"><small>User Rate</small><div class="rate-val">${parseFloat(v.userRate || 0)}৳</div></div>
+                <div class="rate-box"><small>Admin Rate</small><div class="rate-val">${parseFloat(v.adminRate || 0)}৳</div></div>
+              </div>
+              <div class="coin-foot">TAP TO SELL</div>
+            </div>`;
         });
+        document.getElementById('market-list-display').innerHTML = html || `<div class="empty-state glass action-card">No market data found.</div>`;
+      });
 
-        db.ref('settings/links').on('value', s => {
-            if(s.val()){
-                document.getElementById('chan-link').href = s.val().channel || "#";
-                document.getElementById('help-link').href = s.val().help || "#";
-            }
-        });
+      db.ref('settings/links').on('value', snap => {
+        const links = snap.val() || {};
+        document.getElementById('chan-link').href = links.channel || '#';
+        document.getElementById('help-link').href = links.help || '#';
+      });
 
-        db.ref('paymentMethods').on('value', s => {
-            let o = ""; s.forEach(p => { if(p.val().status) o += `<option value="${p.key}">${p.key}</option>`; });
-            document.getElementById('input-method').innerHTML = o || "<option>No Method</option>";
+      db.ref('paymentMethods').on('value', snap => {
+        let options = '';
+        snap.forEach(p => {
+          const v = p.val() || {};
+          if (v.status !== false) options += `<option value="${p.key}">${p.key}</option>`;
         });
+        document.getElementById('input-method').innerHTML = options || '<option value="">No Method</option>';
+      });
     }
 
-    /* --- USER HELPERS --- */
-    // Admin Tab Switching Logic
-function switchAdminTab(t, el) {
-    // ১. Active Tab Variable Update
-    adminActiveTab = t;
+    function openOrderModal(name, userRate, adminRate, tid) {
+      currentSelectedCoin = name;
+      currentCoinRate = parseFloat(userRate || 0);
+      currentAdminRate = parseFloat(adminRate || 0);
+      currentCoinTID = tid || '';
+      currentAppliedRate = currentCoinRate;
 
-    // ২. UI-te Active Class Change
-    document.querySelectorAll('.tab, .adm-tab').forEach(x => x.classList.remove('active'));
-    el.classList.add('active');
+      document.getElementById('modal-coin-title').innerText = `Sell ${name}`;
+      document.getElementById('display-admin-id').innerText = tid || '---';
+      document.getElementById('display-applied-rate').innerText = `${currentCoinRate}৳`;
+      document.getElementById('display-final-payout').innerText = '0.00 ৳';
 
-    // ৩. Dynamic Content Render
-    const listSection = document.getElementById('order-list-section');
-    const settingsSection = document.getElementById('settings-section');
-
-    if(t === 'settings') {
-        if(listSection) listSection.style.display = 'none';
-        if(settingsSection) settingsSection.style.display = 'block';
-        renderAdminData(); // Settings-er bhitore thaka data render korbe
-    } else {
-        if(settingsSection) settingsSection.style.display = 'none';
-        if(listSection) listSection.style.display = 'block';
-        renderAdminData(); // Pending/History data render korbe
-    }
-}
-
-    function openOrderModal(name, rate, tid) {
-        currentSelectedCoin = name; currentCoinRate = rate; currentCoinTID = tid;
-        document.getElementById('modal-coin-title').innerText = "Sell " + name;
-        document.getElementById('display-admin-id').innerText = tid;
-        document.getElementById('order-modal').style.display = 'flex';
-        setTimeout(() => document.getElementById('order-modal').classList.add('active'), 10);
-    }
-
-    function closeModal() {
-        document.getElementById('order-modal').classList.remove('active');
-        setTimeout(() => document.getElementById('order-modal').style.display = 'none', 400);
+      document.getElementById('input-qty').value = '';
+      document.getElementById('input-sender').value = '';
+      document.getElementById('input-number').value = '';
+      openModal('order-modal');
     }
 
     function calculatePayout() {
-        const qty = document.getElementById('input-qty').value;
-        const raw = (qty/1000) * currentCoinRate;
-        calculatedFinalPayout = raw > 5 ? (raw - 5).toFixed(2) : 0;
-        document.getElementById('display-final-payout').innerText = calculatedFinalPayout + " ৳";
+      const qty = parseInt(document.getElementById('input-qty').value || '0', 10) || 0;
+      currentAppliedRate = qty >= 100000 ? currentAdminRate : currentCoinRate;
+      const raw = (qty / 1000) * currentAppliedRate;
+      calculatedFinalPayout = raw > 5 ? raw - 5 : 0;
+      document.getElementById('display-applied-rate').innerText = `${currentAppliedRate}৳`;
+      document.getElementById('display-final-payout').innerText = `${calculatedFinalPayout.toFixed(2)} ৳`;
     }
 
     function copyAdminID() {
-        navigator.clipboard.writeText(currentCoinTID);
-        alert("Admin ID Copied!");
+      navigator.clipboard.writeText(String(currentCoinTID || ''));
+      safeHaptic('notify', 'success');
+      showToast('Admin ID copied!');
     }
 
-    // Function 1: Double Confirm Modal Open Kora
-function showConfirmation() {
-    const qty = document.getElementById('input-qty').value;
-    const sender = document.getElementById('input-sender').value;
-    const num = document.getElementById('input-number').value;
-    const method = document.getElementById('input-method').value;
+    function showConfirmation() {
+      const qty = parseInt(document.getElementById('input-qty').value || '0', 10) || 0;
+      const sender = document.getElementById('input-sender').value.trim();
+      const method = document.getElementById('input-method').value;
+      const number = document.getElementById('input-number').value.trim();
 
-    if(qty < 10000 || !sender || !num) return alert("Fill all details! (Min 10000)");
+      if (qty < 10000 || !sender || !method || !number) {
+        safeHaptic('notify', 'error');
+        return showToast('Fill all details correctly! (Min 10000)');
+      }
 
-    // Review Modal-e user-er dewa data set kora
-    document.getElementById('r-coin').innerText = currentSelectedCoin;
-    document.getElementById('r-qty').innerText = qty;
-    document.getElementById('r-sender').innerText = sender;
-    document.getElementById('r-method').innerText = method;
-    document.getElementById('r-number').innerText = num;
-    document.getElementById('r-pay').innerText = calculatedFinalPayout + " ৳";
+      document.getElementById('r-coin').innerText = currentSelectedCoin;
+      document.getElementById('r-qty').innerText = qty;
+      document.getElementById('r-sender').innerText = sender;
+      document.getElementById('r-method').innerText = method;
+      document.getElementById('r-number').innerText = number;
+      document.getElementById('r-rate').innerText = `${currentAppliedRate}৳`;
+      document.getElementById('r-pay').innerText = `${calculatedFinalPayout.toFixed(2)} ৳`;
 
-    // Prothom modal bondho kore Review modal khola
-    closeModal(); 
-    const rm = document.getElementById('review-modal');
-    rm.style.display = 'flex'; 
-    setTimeout(() => rm.classList.add('active'), 10);
-}
-
-// Function 2: Final Submit (Firebase-e data pathano)
-function finalSubmitOrder() {
-    const orderId = Date.now();
-    const user = tg.initDataUnsafe.user || { id: 12345, username: "guest" };
-
-    db.ref('orders/' + orderId).set({
-        id: orderId, 
-        user: user.username || user.first_name || "guest",
-        coin: currentSelectedCoin, 
-        amt: document.getElementById('r-qty').innerText, 
-        payable: parseFloat(calculatedFinalPayout),
-        sender: document.getElementById('r-sender').innerText, 
-        number: document.getElementById('r-number').innerText, 
-        method: document.getElementById('r-method').innerText, 
-        status: 'pending',
-        targetId: currentCoinTID, 
-        timestamp: firebase.database.ServerValue.TIMESTAMP
-    }).then(() => {
-        alert("Order Submitted Successfully!");
-        location.reload();
-    });
-}
-
-// Review modal bondho korar extra function
-function closeReviewModal() {
-    document.getElementById('review-modal').classList.remove('active');
-    setTimeout(() => document.getElementById('review-modal').style.display = 'none', 400);
-}
+      closeModal('order-modal');
+      setTimeout(() => openModal('review-modal'), 120);
+    }
 
     function finalSubmitOrder() {
-    // Button Disable (Double click protection)
-    const btn = event.target;
-    btn.disabled = true;
-    btn.innerText = "Submitting...";
+      const btn = document.getElementById('confirm-submit-btn');
+      btn.disabled = true;
+      btn.innerText = 'Submitting...';
 
-    const orderId = Date.now();
-    const user = tg.initDataUnsafe.user || { id: 12345, username: "guest" };
-
-    db.ref('orders/' + orderId).set({
-        id: orderId, 
-        user: user.username || user.first_name || "guest",
-        coin: currentSelectedCoin, 
-        amt: document.getElementById('r-qty').innerText, 
-        payable: parseFloat(calculatedFinalPayout),
-        sender: document.getElementById('r-sender').innerText, 
-        number: document.getElementById('r-number').innerText, 
-        method: document.getElementById('r-method').innerText, 
+      const user = tg.initDataUnsafe.user || { id: 12345, username: 'guest', first_name: 'guest' };
+      const orderId = Date.now();
+      const payload = {
+        id: orderId,
+        user: user.username || user.first_name || 'guest',
+        coin: currentSelectedCoin,
+        amt: document.getElementById('r-qty').innerText,
+        payable: parseFloat(calculatedFinalPayout.toFixed(2)),
+        sender: document.getElementById('r-sender').innerText,
+        number: document.getElementById('r-number').innerText,
+        method: document.getElementById('r-method').innerText,
         status: 'pending',
-        targetId: currentCoinTID, 
+        targetId: currentCoinTID,
+        appliedRate: parseFloat(currentAppliedRate || 0),
         timestamp: firebase.database.ServerValue.TIMESTAMP
-    }).then(() => {
-        // Form Auto Close Logic
-        closeReviewModal(); 
-        alert("Order Submitted Successfully! Check history for updates.");
-        location.reload(); // Page refresh hoye home-e chole jabe
-    }).catch(err => {
-        alert("Error: " + err.message);
-        btn.disabled = false;
-        btn.innerText = "Confirm & Submit ✅";
-    });
-}
+      };
 
-function closeReviewModal() {
-    const rm = document.getElementById('review-modal');
-    rm.classList.remove('active');
-    setTimeout(() => { rm.style.display = 'none'; }, 400);
-}
+      db.ref('orders/' + orderId).set(payload).then(() => {
+        safeHaptic('notify', 'success');
+        closeModal('review-modal');
+        showToast('Order submitted successfully! Check history for updates.');
+        btn.disabled = false;
+        btn.innerText = 'Confirm & Submit ✅';
+      }).catch(err => {
+        showToast('Error: ' + err.message);
+        btn.disabled = false;
+        btn.innerText = 'Confirm & Submit ✅';
+      });
+    }
 
     function fetchHistory() {
-    // Telegram user data check
-    const user = tg.initDataUnsafe.user || { username: "guest" };
-    const uname = user.username || user.first_name || "guest";
-    
-    // User-er username onujayi orders filter kora
-    db.ref('orders').orderByChild('user').equalTo(uname).on('value', s => {
-        let h = ""; 
-        let count = 0;
-        
-        s.forEach(o => {
-            const d = o.val(); 
-            if(d.status === 'completed') count++;
-            
-            // Status onujayi color set kora
-            const color = d.status === 'pending' ? '#f39c12' : (d.status === 'completed' ? '#2ecc71' : '#e74c3c');
-            
-            h += `<div class="action-card" style="flex-direction:column; align-items:flex-start; gap:8px; margin-bottom:10px;">
-                    <div style="display:flex; justify-content:space-between; width:100%;">
-                        <b>${d.amt} ${d.coin}</b> 
-                        <span style="color:${color}; font-weight:900;">${d.status.toUpperCase()}</span>
-                    </div>
-                    <small style="color:#64748b;">Payable: ${d.payable}৳ | To: ${d.targetId}</small>
-                </div>`;
+      const user = tg.initDataUnsafe.user || { username: 'guest', first_name: 'guest' };
+      const uname = user.username || user.first_name || 'guest';
+      db.ref('orders').orderByChild('user').equalTo(uname).on('value', snap => {
+        let html = '';
+        let completedCount = 0;
+        const orders = [];
+        snap.forEach(item => orders.push(item.val()));
+        orders.reverse().forEach(d => {
+          if (d.status === 'completed') completedCount++;
+          const bg = d.status === 'pending' ? 'rgba(245,158,11,.12)' : d.status === 'completed' ? 'rgba(16,185,129,.12)' : 'rgba(239,68,68,.12)';
+          const color = d.status === 'pending' ? '#fbbf24' : d.status === 'completed' ? '#6ee7b7' : '#fca5a5';
+          html += `
+            <div class="simple-card glass history-card">
+              <div>
+                <b>${d.amt} ${d.coin}</b><br>
+                <small class="muted">Payable: ${formatMoney(d.payable)} • To: ${d.targetId || '---'}</small>
+              </div>
+              <div class="status-chip" style="background:${bg};color:${color};border:1px solid rgba(255,255,255,.06);">${String(d.status || 'pending').toUpperCase()}</div>
+            </div>`;
         });
-        
-        // UI-te history list ebong success count set kora
-        const historyContainer = document.getElementById('history-list-display');
-        if(historyContainer) historyContainer.innerHTML = h || "<center style='padding:20px; color:#94a3b8;'>No History Found</center>";
-        
-        const countDisplay = document.getElementById('suc-count-display');
-        if(countDisplay) countDisplay.innerText = count;
-    });
-}
+        document.getElementById('history-list-display').innerHTML = html || `<div class="empty-state glass">No history found.</div>`;
+        document.getElementById('suc-count-display').innerText = completedCount;
+      });
+    }
 
-    /* --- LEADERBOARD & SALES LOGIC --- */
-
-// ১. লিডারবোর্ড ডাটা ফেচ এবং ডিলিট লজিক (fetchAdminSettingsData এর ভেতরে থাকবে)
-function fetchLeaderboard() {
-    const rankDisplay = document.getElementById('rank-list-display');
-    if (!rankDisplay) return;
-
-    db.ref('leaderboard').on('value', snap => {
-        let users = [];
+    function fetchLeaderboard() {
+      const rankDisplay = document.getElementById('rank-list-display');
+      db.ref('leaderboard').on('value', snap => {
+        const users = [];
         snap.forEach(u => {
-            let data = u.val();
-            if(data.user) users.push(data);
+          const data = u.val() || {};
+          if (data.user) users.push(data);
         });
-
-        // ১. Sorting: Beshi amount upore
         users.sort((a, b) => (parseFloat(b.totalAmount) || 0) - (parseFloat(a.totalAmount) || 0));
-
-        // ২. Top 10 Filter: Shudhu prothom 10 jonke nibe
         const top10 = users.slice(0, 10);
-
-        let html = "<h3 style='margin: 15px 5px;'>🏆 Top 10 Sellers</h3>";
-        
-        if (top10.length === 0) {
-            html += "<p style='text-align:center; padding:20px; color:#ff0303;'>No earners yet.</p>";
+        let html = '';
+        if (!top10.length) {
+          html = `<div class="empty-state glass">No earners yet.</div>`;
         } else {
-            top10.forEach((d, i) => {
-                let medal = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : `#${i + 1}`;
-                html += `
-                <div class="action-card" style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <div style="font-weight:900; color:#0223f7; width:25px; font-size:14px;">${medal}</div>
-                        <b style="font-size:14px; color:#0061ff;">@${d.user}</b>
-                    </div>
-                    <b style="color:#10b981; font-size:15px;">${parseFloat(d.totalAmount).toFixed(2)}৳</b>
-                </div>`;
-            });
+          top10.forEach((d, i) => {
+            const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`;
+            html += `
+              <div class="simple-card glass leader-card">
+                <div class="left-wrap">
+                  <div class="icon-box" style="width:44px;height:44px;font-size:16px;">${medal}</div>
+                  <div>
+                    <b>@${d.user}</b><br>
+                    <small class="muted">Top seller rank</small>
+                  </div>
+                </div>
+                <b style="color:#6ee7b7;">${formatMoney(d.totalAmount)}</b>
+              </div>`;
+          });
         }
-        
         rankDisplay.innerHTML = html;
-    });
-}
-
-// ২. লিডারবোর্ড ইউজার ডিলিট ফাংশন
-function deleteLdrUser(username) {
-    if(confirm(`Remove @${username} from leaderboard?`)) {
-        db.ref('leaderboard/' + username).remove()
-        .then(() => {
-            alert("✅ User removed!");
-        })
-        .catch(err => {
-            alert("❌ Error: " + err.message);
-        });
-    }
-}
-
-    /* =========================================
-       ADMIN PANEL LOGIC (ALL FEATURES ADDED)
-       ========================================= */
-    // --- SECTION CONTROL LOGIC ---
-
-function switchTab(id, el) {
-    // ১. Age shob gulo screen (Home, History, Rank) hide korbe
-    const screens = ['home-scr', 'history-scr', 'rank-scr'];
-    screens.forEach(s => {
-        const screenEl = document.getElementById(s);
-        if(screenEl) screenEl.style.display = 'none';
-    });
-
-    // ২. Click kora screen-ti show korbe
-    const target = document.getElementById(id);
-    if(target) target.style.display = 'block';
-
-    // ৩. Nav bar-er button-e active color dibe
-    document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
-    if(el) el.classList.add('active');
-
-    // ৪. History ba Rank-e click korle data auto refresh korbe
-    if(id === 'history-scr') fetchHistory();
-    if(id === 'rank-scr') fetchLeaderboard();
-}
-
-/* --- ADMIN PANEL INTERFACE CONTROL --- */
-
-// Admin Panel Open Korar Function
-function openAdminPanel() {
-    const user = tg.initDataUnsafe.user || {};
-    const userId = Number(user.id);
-
-    // ১. চেক করা হচ্ছে ইউজার আইডি এডমিন লিস্টে আছে কিনা
-    if (!ADMIN_LIST.includes(userId)) {
-        alert("Access Denied! You are not an authorized administrator.");
-        tg.HapticFeedback.notificationOccurred('error'); // ফোনে ভাইব্রেশন দিবে
-        return; // ফাংশন এখানেই থেমে যাবে, ড্যাশবোর্ড খুলবে না
+      });
     }
 
-    // ২. আইডি ঠিক থাকলে ড্যাশবোর্ড ওপেন হবে
-    const adminUI = document.getElementById('admin-master-ui');
-    const lockScreen = document.getElementById('admin-lock-screen');
-    const dashboardView = document.getElementById('admin-dashboard-view');
-
-    if (adminUI) {
-        adminUI.style.display = 'block';
-        if(lockScreen) lockScreen.style.display = 'none'; // পিন স্ক্রিন স্কিপ
-        if(dashboardView) dashboardView.style.display = 'block';
-        
-        adminActiveTab = 'pending';
-        renderAdminData(); 
-        tg.HapticFeedback.impactOccurred('medium');
+    function switchTab(id, el) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
+      el.classList.add('active');
+      if (id === 'history-scr') fetchHistory();
+      if (id === 'rank-scr') fetchLeaderboard();
     }
-}
 
-// Admin UI Close Korar Function
-function closeAdminPanel() {
-    document.getElementById('admin-master-ui').style.display = 'none';
-}
+    function openAdminPanel() {
+      const user = tg.initDataUnsafe.user || {};
+      const userId = Number(user.id || 0);
+      if (!ADMIN_LIST.includes(userId)) {
+        safeHaptic('notify', 'error');
+        return showToast('Access denied! You are not an authorized administrator.');
+      }
+      openModal('admin-master-ui');
+      adminActiveTab = 'pending';
+      document.querySelectorAll('.admin-tab').forEach((tab, index) => tab.classList.toggle('active', index === 0));
+      renderAdminData();
+    }
 
-   function startAdminEngine() {
-    // Real-time Orders Listener
-    db.ref('orders').on('value', snap => {
+    function closeAdminPanel() {
+      closeModal('admin-master-ui');
+    }
+
+    function startAdminEngine() {
+      db.ref('orders').on('value', snap => {
         const orders = snap.val() || {};
-        let counts = { pending: 0, completed: 0, rejected: 0 };
-        
+        const counts = { pending: 0, completed: 0, rejected: 0 };
         Object.values(orders).forEach(o => {
-            if(counts[o.status] !== undefined) counts[o.status]++;
+          if (counts[o.status] !== undefined) counts[o.status]++;
         });
-
-        // Top Stat Update (Pending only)
-        document.getElementById('adm-display-pending').innerText = counts.pending;
-        
-        // Tab Counters Update
         document.getElementById('count-pending').innerText = counts.pending;
         document.getElementById('count-completed').innerText = counts.completed;
         document.getElementById('count-rejected').innerText = counts.rejected;
-        
-        // Instant List Refresh
-        if(adminActiveTab !== 'settings') renderAdminData();
-    });
-
-    // Leaderboard/User count listener (Optional)
-    db.ref('leaderboard').on('value', s => {
-        // Users counting logic ekhane thakbe kintu upore display hobe na
-    });
-}
-
-    function switchAdminTab(t, el) {
-        adminActiveTab = t;
-        document.querySelectorAll('.adm-tab').forEach(x => x.classList.remove('active'));
-        el.classList.add('active');
-        renderAdminData();
+        if (document.getElementById('admin-master-ui').style.display === 'flex') renderAdminData();
+      });
     }
 
-    // Instant Data Sync-er jonno connection
-let ordersListener = null;
-
-// Real-time Pending Counter (Shob somoy active thakbe)
-db.ref('orders').on('value', s => {
-    const orders = s.val() || {};
-    const count = Object.values(orders).filter(o => o.status === 'pending').length;
-    document.getElementById('adm-total-pending').innerText = count;
-});
-
-/* =========================================
-   COMBINED ADMIN ENGINE (UI + ALL FEATURES)
-   ========================================= */
-
-/* =========================================
-   FIXED ADMIN ENGINE & ACTIONS
-   ========================================= */
-
-function renderAdminData() {
-    const area = document.getElementById('admin-dynamic-content');
-    if (!area) return;
-
-    if(ordersListener) db.ref('orders').off('value', ordersListener);
-
-    if(adminActiveTab === 'settings') {
-        renderSettingsUI(area); 
-    } else {
-        ordersListener = db.ref('orders').on('value', s => {
-            const orders = s.val() || {};
-            let html = "";
-            Object.values(orders).reverse().forEach(o => {
-                const isHistory = (adminActiveTab === 'history');
-                const shouldShow = isHistory ? (o.status !== 'pending') : (o.status === 'pending');
-
-                if (shouldShow) {
-                    const statusColor = o.status === 'pending' ? '#f59e0b' : (o.status === 'completed' ? '#10b981' : '#ef4444');
-                    
-                    // Dark Mode Optimized Colors
-                    const boxBg = "#1e293b";      // Card Background
-                    const gridItemBg = "#0f172a"; // Inner Box Background
-                    const textColor = "#f1f5f9";  // Main Text
-                    const mutedText = "#94a3b8"; // Small Text
-                    const copyBg = "#334155";    // Copy area background
-
-                    html += `
-    <div class="adm-order-box" style="border-left: 5px solid ${statusColor}; padding: 12px; margin-bottom: 12px; border-radius: 15px; background: ${boxBg}; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border-top: 1px solid #334155; border-right: 1px solid #334155; border-bottom: 1px solid #334155;">
-        <div class="order-header" style="margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
-            <b style="font-size: 14px; color: ${textColor};">@${o.user}</b>
-            <span class="status-badge" style="background:${statusColor}20; color:${statusColor}; font-size: 10px; padding: 4px 8px; border-radius: 8px; font-weight: 800;">${o.status.toUpperCase()}</span>
-        </div>
-        
-        <div class="order-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 10px;">
-            <div class="grid-item" style="background: ${gridItemBg}; padding: 6px; border-radius: 8px; border: 1px solid #334155;">
-                <small style="font-size: 9px; color: ${mutedText}; font-weight: 700;">COIN</small>
-                <b style="display: block; font-size: 12px; color: ${textColor};">${o.coin}</b>
-            </div>
-            <div class="grid-item" style="background: ${gridItemBg}; padding: 6px; border-radius: 8px; border: 1px solid #334155;">
-                <small style="font-size: 9px; color: ${mutedText}; font-weight: 700;">METHOD</small>
-                <b style="display: block; font-size: 12px; color: ${textColor};">${o.method}</b>
-            </div>
-            <div class="grid-item" style="background: ${gridItemBg}; padding: 6px; border-radius: 8px; border: 1px solid #334155;">
-                <small style="font-size: 9px; color: ${mutedText}; font-weight: 700;">ASSET</small>
-                <b style="display: block; font-size: 12px; color: ${textColor};">${o.amt}</b>
-            </div>
-            <div class="grid-item" style="background: #064e3b; padding: 6px; border-radius: 8px; border: 1px solid #065f46;">
-                <small style="font-size: 9px; color: #6ee7b7; font-weight: 700;">PAYOUT</small>
-                <b style="display: block; font-size: 12px; color: #10b981;">${o.payable}৳</b>
-            </div>
-        </div>
-
-        <div onclick="copyToClipboard('${o.number}')" style="padding: 8px; background: ${copyBg}; border-radius: 10px; border: 1px dashed #475569; cursor: pointer; margin-bottom: 8px;">
-            <small style="color: ${mutedText}; display: block; font-size: 9px; font-weight: 800; text-transform: uppercase;">Tap to copy</small>
-            <b style="color: #60a5fa; font-size: 13px;">📱 ${o.number}</b>
-        </div>
-
-        <div style="padding-left: 4px; margin-bottom: 10px;">
-            <small style="color: ${mutedText}; font-size: 9px; font-weight: 700;">SENDER:</small>
-            <b style="font-size: 11px; color: ${textColor};"> ${o.sender}</b>
-        </div>
-
-        <div style="display: flex; gap: 8px;">
-            ${o.status === 'pending' ? `
-                <button onclick="updateOrderStatus('${o.id}','completed','${o.user}',${o.payable})" style="flex: 2; background: #10b981; color: white; border: none; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer;">APPROVE</button>
-                <button onclick="updateOrderStatus('${o.id}','rejected')" style="flex: 1; background: #450a0a; color: #f87171; border: 1px solid #7f1d1d; padding: 10px; border-radius: 10px; font-size: 12px; font-weight: 700; cursor: pointer;">REJECT</button>
-            ` : ''}
-            <button onclick="if(confirm('Delete?')) db.ref('orders/${o.id}').remove()" style="background: #334155; border: none; width: 38px; height: 38px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: white;">🗑️</button>
-        </div>
-    </div>`;
-                }
-            });
-            area.innerHTML = html || "<center style='padding:50px; color:#64748b;'>No Records Found</center>";
-        });
+    function switchAdminTab(tab, el) {
+      adminActiveTab = tab;
+      document.querySelectorAll('.admin-tab').forEach(x => x.classList.remove('active'));
+      el.classList.add('active');
+      renderAdminData();
     }
-}
 
-function copyToClipboard(val) {
-    if (!val) return;
-    const dummy = document.createElement("textarea");
-    document.body.appendChild(dummy);
-    dummy.value = val;
-    dummy.select();
-    document.execCommand("copy");
-    document.body.removeChild(dummy);
-    alert("✅ Number Copied: " + val);
-}
+    function copyToClipboard(val) {
+      navigator.clipboard.writeText(String(val || ''));
+      safeHaptic('notify', 'success');
+      showToast('Copied: ' + val);
+    }
 
+    function renderAdminData() {
+      const area = document.getElementById('admin-dynamic-content');
+      if (!area) return;
 
-function renderSettingsUI(container) {
-    const cardBg = "#1e293b";
-    const innerBg = "#0f172a";
-    const borderColor = "#334155";
-    const textColor = "#f1f5f9";
+      if (adminActiveTab === 'settings') {
+        renderSettingsUI(area);
+        return;
+      }
 
-    container.innerHTML = `
-        <div class="settings-card" style="background:${cardBg}; padding:15px; border-radius:20px; border:1px solid ${borderColor}; color: ${textColor};">
-            <h4 style="margin-bottom:15px; color:#fff;">💎 Market Rates & Config</h4>
-            <div id="adm-market-config-list">Loading market data...</div>
-            
-            <div style="background:${innerBg}; padding:15px; border-radius:15px; border:1px dashed #475569; margin-bottom:20px;">
-                <small style="font-weight:800; display:block; margin-bottom:8px; color:#94a3b8;">+ ADD NEW COIN</small>
-                <input type="text" id="new-c-name" class="adm-input" placeholder="Coin Name">
-                <input type="text" id="new-c-tid" class="adm-input" placeholder="Address/UID">
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                    <input type="number" id="new-c-user" class="adm-input" placeholder="User Rate">
-                    <input type="number" id="new-c-admin" class="adm-input" placeholder="Admin Rate">
+      const isHistory = adminActiveTab === 'history';
+      db.ref('orders').once('value').then(snap => {
+        const orders = snap.val() || {};
+        const list = Object.values(orders).sort((a, b) => (b.id || 0) - (a.id || 0));
+        let html = '';
+
+        list.forEach(o => {
+          const shouldShow = isHistory ? o.status !== 'pending' : o.status === 'pending';
+          if (!shouldShow) return;
+          const color = o.status === 'pending' ? '#f59e0b' : o.status === 'completed' ? '#10b981' : '#ef4444';
+          html += `
+            <div class="admin-order">
+              <div class="admin-order-top">
+                <div>
+                  <b style="font-size:16px;">@${o.user || 'unknown'}</b><br>
+                  <small style="color:#8ca4c8;">${o.sender || '---'}</small>
                 </div>
-                <button onclick="addNewCoin()" class="adm-btn" style="background:#10b981; color:white;">ADD COIN</button>
+                <div class="status-chip" style="background:${color}1f;color:${color};border:1px solid ${color}44;">${String(o.status || '').toUpperCase()}</div>
+              </div>
+
+              <div class="admin-order-grid">
+                <div class="tile"><small>Coin</small><b>${o.coin || '---'}</b></div>
+                <div class="tile"><small>Method</small><b>${o.method || '---'}</b></div>
+                <div class="tile"><small>Amount</small><b>${o.amt || '---'}</b></div>
+                <div class="tile"><small>Payout</small><b style="color:#6ee7b7;">${formatMoney(o.payable)}</b></div>
+              </div>
+
+              <div class="copy-box" onclick="copyToClipboard('${String(o.number || '').replace(/'/g, "\\'")}')">
+                <small style="display:block;color:#93c5fd;font-weight:900;letter-spacing:.08em;">TAP TO COPY NUMBER</small>
+                <b style="font-size:16px;">📱 ${o.number || '---'}</b>
+              </div>
+
+              <div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:10px;">
+                <small style="color:#8ca4c8;">Target ID: ${o.targetId || '---'}</small>
+                <small style="color:#8ca4c8;">Rate: ${parseFloat(o.appliedRate || 0)}৳</small>
+              </div>
+
+              <div class="actions-row">
+                ${o.status === 'pending' ? `<button class="approve" onclick="updateOrderStatus('${o.id}','completed','${String(o.user || '').replace(/'/g, "\\'")}',${parseFloat(o.payable || 0)})">Approve</button>
+                <button class="reject" onclick="updateOrderStatus('${o.id}','rejected')">Reject</button>` : ''}
+                <button class="delete" onclick="deleteOrder('${o.id}')">🗑️</button>
+              </div>
+            </div>`;
+        });
+
+        area.innerHTML = html || `<div class="empty-state glass">No records found.</div>`;
+      });
+    }
+
+    function renderSettingsUI(container) {
+      container.innerHTML = `
+        <div class="settings-card">
+          <h4>💎 Market Rates & Config</h4>
+          <div id="adm-market-config-list" class="stack"><div class="small-note">Loading market data...</div></div>
+        </div>
+
+        <div class="manager-card">
+          <h4>➕ Add New Coin</h4>
+          <div class="stack">
+            <input type="text" id="new-c-name" class="input" placeholder="Coin Name">
+            <input type="text" id="new-c-tid" class="input" placeholder="Address / UID">
+            <div class="grid-2">
+              <input type="number" id="new-c-user" class="input" placeholder="User Rate">
+              <input type="number" id="new-c-admin" class="input" placeholder="Admin Rate">
             </div>
+            <button class="cta-btn" onclick="addNewCoin()">Add Coin</button>
+          </div>
+        </div>
 
-            <h4 style="margin-bottom:15px; color:#fff;">💳 Payment Methods</h4>
-            <div id="adm-payment-list"></div>
-            <div style="display:flex; gap:8px; margin-top:10px;">
-                <input type="text" id="new-pay-name" class="adm-input" placeholder="New Method" style="margin:0;">
-                <button onclick="addNewPayment()" class="adm-btn" style="width:80px; background:#3b82f6; color:white;">ADD</button>
-            </div>
+        <div class="settings-card">
+          <h4>💳 Payment Methods</h4>
+          <div id="adm-payment-list"></div>
+          <div class="grid-2" style="margin-top:12px;">
+            <input type="text" id="new-pay-name" class="input" placeholder="New Method">
+            <button class="cta-btn" onclick="addNewPayment()">Add</button>
+          </div>
+        </div>
 
-            <h4 style="margin-top:25px; margin-bottom:15px; color:#fff;">🔗 Social Links</h4>
-            <input type="text" id="adm-link-chan" class="adm-input" placeholder="Channel Link">
-            <input type="text" id="adm-link-help" class="adm-input" placeholder="Support Link">
-            <button onclick="updateAdmLinks()" class="adm-btn" style="background:#2563eb; color:white;">UPDATE LINKS</button>
+        <div class="settings-card">
+          <h4>🔗 Social Links</h4>
+          <div class="stack">
+            <input type="text" id="adm-link-chan" class="input" placeholder="Channel Link">
+            <input type="text" id="adm-link-help" class="input" placeholder="Support Link">
+            <button class="cta-btn" onclick="updateAdmLinks()">Update Links</button>
+          </div>
+        </div>
 
-            <h4 style="margin-top:25px; margin-bottom:15px; color:#fff;">🏆 Leaderboard</h4>
-            <div id="adm-leaderboard-list" style="background:#0f172a; border-radius:12px; padding:10px; max-height:200px; overflow-y:auto; border: 1px solid ${borderColor};"></div>
-            
-            <button onclick="resetSalesStats()" class="adm-btn" style="background:#ef4444; color:white; margin-top:30px;">⚠️ RESET SALES STATS</button>
+        <div class="settings-card">
+          <h4>🏆 Leaderboard Manager</h4>
+          <div id="adm-leaderboard-list"></div>
+        </div>
+
+        <div class="settings-card">
+          <h4>⚠️ Sales Stats</h4>
+          <button class="danger-btn" style="width:100%;padding:16px;" onclick="resetSalesStats()">Reset Sales Stats</button>
         </div>`;
-    fetchAdminSettingsData();
-}
+      fetchAdminSettingsData();
+    }
 
-function fetchAdminSettingsData() {
-    const borderColor = "#334155";
-    const textColor = "#f1f5f9";
-    const innerBg = "#0f172a";
-
-    db.ref('leaderboard').on('value', s => {
-        let h = "";
-        s.forEach(u => {
-            const d = u.val();
-            h += `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid ${borderColor};">
-                <div><b style="color:${textColor}">@${d.user}</b><br><small style="color:#10b981; font-weight:bold;">${parseFloat(d.totalAmount).toFixed(2)}৳</small></div>
-                <button style="border:none; color:#ef4444; background:none; font-weight:800; cursor:pointer;" onclick="if(confirm('Delete user?')) db.ref('leaderboard/${d.user}').remove()">DEL</button>
+    function fetchAdminSettingsData() {
+      db.ref('leaderboard').on('value', snap => {
+        let html = '';
+        snap.forEach(u => {
+          const d = u.val() || {};
+          html += `
+            <div class="switch-row">
+              <div>
+                <b>@${d.user || 'unknown'}</b><br>
+                <small style="color:#6ee7b7;">${formatMoney(d.totalAmount)}</small>
+              </div>
+              <button class="danger-btn" onclick="deleteLeaderboardUser('${String(d.user || '').replace(/'/g, "\\'")}')">DEL</button>
             </div>`;
         });
-        const lbArea = document.getElementById('adm-leaderboard-list');
-        if(lbArea) lbArea.innerHTML = h || "<center style='color:#64748b; padding:10px;'>No Users</center>";
-    });
+        document.getElementById('adm-leaderboard-list').innerHTML = html || `<div class="small-note">No users yet.</div>`;
+      });
 
-    db.ref('marketConfig').on('value', snap => {
-        let html = "";
+      db.ref('marketConfig').on('value', snap => {
+        let html = '';
         snap.forEach(c => {
-            const v = c.val();
-            html += `
-            <div style="background:#1e293b; border:1px solid ${borderColor}; border-radius:15px; padding:12px; margin-bottom:10px;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <b style="color:#fff;">💎 ${c.key}</b>
-                    <label class="adm-switch"><input type="checkbox" ${v.status?'checked':''} onchange="db.ref('marketConfig/${c.key}').update({status:this.checked})"><span class="adm-slider"></span></label>
+          const v = c.val() || {};
+          html += `
+            <div class="manager-card">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;">
+                <b>💎 ${c.key}</b>
+                <label class="switch">
+                  <input type="checkbox" ${v.status !== false ? 'checked' : ''} onchange="db.ref('marketConfig/${c.key}').update({status:this.checked})">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="stack">
+                <input type="text" class="input" value="${v.transferId || ''}" onchange="db.ref('marketConfig/${c.key}').update({transferId:this.value})">
+                <div class="grid-2">
+                  <input type="number" class="input" value="${parseFloat(v.userRate || 0)}" onchange="db.ref('marketConfig/${c.key}').update({userRate:parseFloat(this.value||0)})">
+                  <input type="number" class="input" value="${parseFloat(v.adminRate || 0)}" onchange="db.ref('marketConfig/${c.key}').update({adminRate:parseFloat(this.value||0)})">
                 </div>
-                <input type="text" class="adm-input" value="${v.transferId}" onchange="db.ref('marketConfig/${c.key}').update({transferId: this.value})" style="margin-top:8px; background:#0f172a; border-color:${borderColor};">
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                    <div style="background:${innerBg}; padding:5px; border-radius:8px; text-align:center; border: 1px solid ${borderColor};"><small style="font-size:8px; color:#94a3b8;">USER</small><br><input type="number" value="${v.userRate}" onchange="db.ref('marketConfig/${c.key}').update({userRate: parseFloat(this.value)})" style="width:100%; border:none; background:transparent; font-weight:800; text-align:center; color:#fff;"></div>
-                    <div style="background:${innerBg}; padding:5px; border-radius:8px; text-align:center; border: 1px solid ${borderColor};"><small style="font-size:8px; color:#94a3b8;">ADMIN</small><br><input type="number" value="${v.adminRate}" onchange="db.ref('marketConfig/${c.key}').update({adminRate: parseFloat(this.value)})" style="width:100%; border:none; background:transparent; font-weight:800; text-align:center; color:#fff;"></div>
-                </div>
-                <button class="adm-btn" style="color:#f87171; background:none; font-size:11px; margin-top:5px; font-weight:bold;" onclick="if(confirm('Remove?')) db.ref('marketConfig/${c.key}').remove()">REMOVE COIN</button>
+                <button class="danger-btn" onclick="removeCoin('${String(c.key).replace(/'/g, "\\'")}')">Remove Coin</button>
+              </div>
             </div>`;
         });
-        const mcArea = document.getElementById('adm-market-config-list');
-        if(mcArea) mcArea.innerHTML = html;
-    });
+        document.getElementById('adm-market-config-list').innerHTML = html || `<div class="small-note">No market config found.</div>`;
+      });
 
-    db.ref('paymentMethods').on('value', s => {
-        let h = "";
-        s.forEach(p => {
-            h += `<div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid ${borderColor}; align-items:center; color:${textColor}">
-                <span>${p.key}</span>
-                <div style="display:flex; gap:12px; align-items:center;">
-                    <label class="adm-switch"><input type="checkbox" ${p.val().status?'checked':''} onchange="db.ref('paymentMethods/${p.key}').update({status:this.checked})"><span class="adm-slider"></span></label>
-                    <button style="border:none; color:#ef4444; background:none; cursor:pointer; font-size:16px;" onclick="db.ref('paymentMethods/${p.key}').remove()">🗑️</button>
-                </div>
+      db.ref('paymentMethods').on('value', snap => {
+        let html = '';
+        snap.forEach(p => {
+          const pv = p.val() || {};
+          html += `
+            <div class="switch-row">
+              <span>${p.key}</span>
+              <div style="display:flex;gap:10px;align-items:center;">
+                <label class="switch">
+                  <input type="checkbox" ${pv.status !== false ? 'checked' : ''} onchange="db.ref('paymentMethods/${p.key}').update({status:this.checked})">
+                  <span class="slider"></span>
+                </label>
+                <button class="danger-btn" onclick="removePayment('${String(p.key).replace(/'/g, "\\'")}')">🗑️</button>
+              </div>
             </div>`;
         });
-        const pmArea = document.getElementById('adm-payment-list');
-        if(pmArea) pmArea.innerHTML = h;
-    });
-}
+        document.getElementById('adm-payment-list').innerHTML = html || `<div class="small-note">No payment methods found.</div>`;
+      });
 
-/* --- ACTION FUNCTIONS --- */
-
-function addNewCoin() {
-    const n = document.getElementById('new-c-name').value.trim();
-    const tid = document.getElementById('new-c-tid').value.trim();
-    const ur = document.getElementById('new-c-user').value;
-    const ar = document.getElementById('new-c-admin').value;
-    if(n && tid && ur && ar) {
-        db.ref('marketConfig/'+n).set({ transferId: tid, userRate: parseFloat(ur), adminRate: parseFloat(ar), status: true })
-        .then(() => alert("Added!"));
+      db.ref('settings/links').once('value').then(snap => {
+        const data = snap.val() || {};
+        const chan = document.getElementById('adm-link-chan');
+        const help = document.getElementById('adm-link-help');
+        if (chan) chan.value = data.channel || '';
+        if (help) help.value = data.help || '';
+      });
     }
-}
 
-function addNewPayment() {
-    const name = document.getElementById('new-pay-name').value.trim();
-    if(name) db.ref('paymentMethods/'+name).set({status: true});
-}
+    function addNewCoin() {
+      const n = document.getElementById('new-c-name').value.trim();
+      const tid = document.getElementById('new-c-tid').value.trim();
+      const ur = parseFloat(document.getElementById('new-c-user').value || 0);
+      const ar = parseFloat(document.getElementById('new-c-admin').value || 0);
+      if (!n || !tid || !ur || !ar) return showToast('Fill all coin fields.');
+      db.ref('marketConfig/' + n).set({ transferId: tid, userRate: ur, adminRate: ar, status: true }).then(() => {
+        safeHaptic('notify', 'success');
+        showToast('Coin added successfully!');
+      });
+    }
 
-function updateAdmLinks() {
-    db.ref('settings/links').set({
-        channel: document.getElementById('adm-link-chan').value,
-        help: document.getElementById('adm-link-help').value
-    }).then(() => alert("Updated!"));
-}
+    function removeCoin(key) {
+      if (!confirm(`Remove ${key}?`)) return;
+      db.ref('marketConfig/' + key).remove();
+    }
 
-function updateOrderStatus(id, status, user, payable) {
-    db.ref('orders/' + id).update({ status: status }).then(() => {
-        // Order completed holei leaderboard-e add hobe
+    function addNewPayment() {
+      const name = document.getElementById('new-pay-name').value.trim();
+      if (!name) return showToast('Enter payment method name.');
+      db.ref('paymentMethods/' + name).set({ status: true }).then(() => showToast('Payment method added!'));
+    }
+
+    function removePayment(key) {
+      if (!confirm(`Remove ${key}?`)) return;
+      db.ref('paymentMethods/' + key).remove();
+    }
+
+    function updateAdmLinks() {
+      db.ref('settings/links').set({
+        channel: document.getElementById('adm-link-chan').value.trim(),
+        help: document.getElementById('adm-link-help').value.trim()
+      }).then(() => showToast('Links updated!'));
+    }
+
+    function updateOrderStatus(id, status, user, payable) {
+      db.ref('orders/' + id).update({ status }).then(() => {
         if (status === 'completed' && user && user !== 'undefined') {
-            const ldrRef = db.ref('leaderboard/' + user);
-            ldrRef.once('value', sn => {
-                let d = sn.val() || { totalAmount: 0, user: user };
-                let newTotal = (parseFloat(d.totalAmount) || 0) + (parseFloat(payable) || 0);
-                
-                ldrRef.update({ 
-                    totalAmount: newTotal, 
-                    user: user 
-                });
-            });
+          const ref = db.ref('leaderboard/' + user);
+          ref.once('value', snap => {
+            const data = snap.val() || { totalAmount: 0, user };
+            const newTotal = (parseFloat(data.totalAmount) || 0) + (parseFloat(payable) || 0);
+            ref.update({ totalAmount: newTotal, user });
+          });
         }
-        alert("Order " + status + "!");
-    });
-}
-
-function resetSalesStats() {
-    if(confirm("Reset Stats?")) {
-        db.ref('orders').once('value', s => {
-            let total = 0;
-            Object.values(s.val() || {}).forEach(o => { if(o.status === 'completed') total += parseFloat(o.payable || 0); });
-            db.ref('stats_reset').set({ resetAmount: total }).then(() => alert("Reset!"));
-        });
+        safeHaptic('notify', 'success');
+        showToast('Order ' + status + '!');
+        renderAdminData();
+      }).catch(err => showToast(err.message));
     }
-}
 
-document.addEventListener('DOMContentLoaded', () => {
-    adminActiveTab = 'pending';
-    renderAdminData();
-});
+    function deleteOrder(id) {
+      if (!confirm('Delete this order?')) return;
+      db.ref('orders/' + id).remove().then(() => showToast('Order deleted.'));
+    }
 
-</script>
+    function deleteLeaderboardUser(username) {
+      if (!confirm(`Remove @${username} from leaderboard?`)) return;
+      db.ref('leaderboard/' + username).remove().then(() => showToast('User removed!'));
+    }
+
+    function resetSalesStats() {
+      if (!confirm('Reset Stats?')) return;
+      db.ref('orders').once('value').then(snap => {
+        let total = 0;
+        Object.values(snap.val() || {}).forEach(o => {
+          if (o.status === 'completed') total += parseFloat(o.payable || 0);
+        });
+        return db.ref('stats_reset').set({ resetAmount: total, timestamp: Date.now() });
+      }).then(() => showToast('Sales stats reset snapshot saved!'));
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      bootLoader();
+      initTelegramUser();
+      initializeDataFetching();
+      fetchHistory();
+      fetchLeaderboard();
+      startAdminEngine();
+    });
+  </script>
 </body>
 </html>
-
-

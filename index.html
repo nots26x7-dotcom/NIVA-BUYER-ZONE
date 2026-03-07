@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NIVA BUYER ZONE • Modern</title>
+  <title>NIVA BUYER ZONE • MADE BY @S26X_BRO</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
@@ -32,7 +32,7 @@
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     html, body { margin: 0; padding: 0; font-family: Inter, system-ui, sans-serif; background: radial-gradient(circle at top left, #12254a 0%, var(--bg) 35%, #040a12 100%); color: var(--text); min-height: 100%; }
-    body { padding: 16px 16px 120px; overflow-x: hidden; }
+    body { padding: 108px 13px 112px; overflow-x: hidden; }
 
     body::before,
     body::after {
@@ -144,70 +144,95 @@
       animation: shimmer 1.6s linear infinite;
     }
 
-    .top-actions {
+    .top-fixed-bar {
       position: fixed;
-      top: 18px;
-      right: 18px;
-      display: flex;
-      gap: 10px;
-      z-index: 30;
+      top: 12px;
+      left: 13px;
+      right: 13px;
+      z-index: 40;
+      border-radius: 24px;
+      padding: 10px;
+      background: linear-gradient(180deg, rgba(12,22,41,.92), rgba(8,15,28,.88));
+      border: 1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 14px 35px rgba(0,0,0,.28);
     }
-    .icon-btn {
-      width: 48px;
-      height: 48px;
+    .top-fixed-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .help-only-bar {
+      left: auto;
+      right: 13px;
+      width: auto;
+      padding: 8px;
       border-radius: 18px;
+    }
+    .help-only-row { justify-content: center; }
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      min-width: 42px;
+      border-radius: 14px;
       display: grid;
       place-items: center;
       color: white;
       text-decoration: none;
-      font-size: 20px;
+      font-size: 19px;
+      flex-shrink: 0;
     }
 
     .app-shell { display: none; animation: fadeUp .5s ease both; }
+    .profile-card-home { margin: 0 0 12px; }
     .profile-card {
       position: relative;
-      margin-top: 56px;
-      border-radius: 30px;
+      margin-top: 0;
+      flex: 1;
+      min-width: 0;
+      border-radius: 20px;
       overflow: hidden;
-      padding: 18px;
+      padding: 12px;
       background: linear-gradient(135deg, rgba(37,99,235,.95), rgba(124,58,237,.92), rgba(16,185,129,.84));
-      box-shadow: 0 18px 50px rgba(37,99,235,.3);
+      box-shadow: 0 14px 36px rgba(37,99,235,.26);
     }
     .profile-card::before {
       content: "";
       position: absolute;
-      width: 160px;
-      height: 160px;
-      top: -50px;
-      right: -35px;
+      width: 120px;
+      height: 120px;
+      top: -34px;
+      right: -28px;
       border-radius: 999px;
       background: rgba(255,255,255,.12);
       filter: blur(2px);
     }
-    .profile-row { display: flex; gap: 14px; align-items: center; position: relative; z-index: 1; }
+    .profile-row { display: flex; gap: 10px; align-items: center; position: relative; z-index: 1; min-width: 0; }
     .avatar {
-      width: 66px;
-      height: 66px;
-      border-radius: 22px;
+      width: 50px;
+      height: 50px;
+      border-radius: 16px;
       object-fit: cover;
       border: 2px solid rgba(255,255,255,.22);
       box-shadow: 0 10px 20px rgba(0,0,0,.2);
     }
-    .username { margin: 0; font-size: 22px; font-weight: 900; }
-    .usertag { margin-top: 3px; color: rgba(255,255,255,.84); font-size: 12px; font-weight: 600; }
+    .username { margin: 0; font-size: 15px; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 132px; }
+    .usertag { margin-top: 3px; color: rgba(255,255,255,.84); font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 132px; }
     .success-pill {
       margin-left: auto;
-      background: rgba(255,255,255,.15);
+      background: rgba(255,255,255,.14);
       border: 1px solid rgba(255,255,255,.18);
-      border-radius: 18px;
-      padding: 10px 12px;
+      border-radius: 14px;
+      padding: 7px 9px;
       text-align: center;
-      min-width: 76px;
+      min-width: 62px;
+      flex-shrink: 0;
     }
-    .success-pill small { display: block; font-size: 9px; letter-spacing: .14em; font-weight: 900; opacity: .9; }
-    .success-pill b { font-size: 20px; }
+    .success-pill small { display: block; font-size: 8px; letter-spacing: .14em; font-weight: 900; opacity: .9; }
+    .success-pill b { font-size: 17px; }
 
-    #admin-shortcut { margin: 16px 0 8px; display: none; }
+    #admin-shortcut { margin: 12px 0 10px; display: none; }
     .admin-button {
       width: 100%;
       border: none;
@@ -225,14 +250,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin: 18px 4px 14px;
-      font-size: 18px;
+      margin: 15px 4px 12px;
+      font-size: 16px;
       font-weight: 900;
     }
     .action-card, .coin-card, .simple-card {
-      border-radius: 24px;
-      padding: 16px;
-      margin-bottom: 14px;
+      border-radius: 20px;
+      padding: 13px;
+      margin-bottom: 11px;
       position: relative;
       overflow: hidden;
       animation: fadeUp .35s ease both;
@@ -255,12 +280,12 @@
     }
     .left-wrap { display: flex; align-items: center; gap: 13px; }
     .icon-box {
-      width: 52px;
-      height: 52px;
-      border-radius: 18px;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
       display: grid;
       place-items: center;
-      font-size: 22px;
+      font-size: 19px;
       background: linear-gradient(135deg, rgba(59,130,246,.22), rgba(34,197,94,.18));
       border: 1px solid rgba(255,255,255,.1);
       box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
@@ -268,55 +293,63 @@
     .muted { color: var(--muted); }
 
     .coin-card {
-      padding-top: 48px;
+      padding-top: 42px;
       cursor: pointer;
       transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
     }
     .coin-card:active { transform: scale(.985); }
     .coin-card.offline {
-      opacity: .58;
-      filter: grayscale(.6);
+      opacity: .32;
+      filter: saturate(.38) brightness(.78);
       pointer-events: none;
+      border-color: rgba(239,68,68,.12);
+      background: linear-gradient(180deg, rgba(28,16,22,.48), rgba(10,14,22,.62));
+      box-shadow: none;
     }
     .status-badge {
       position: absolute;
-      top: 14px;
-      left: 14px;
+      top: 0;
+      right: 0;
+      left: auto;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 7px 11px;
-      border-radius: 999px;
+      gap: 5px;
+      padding: 9px 14px;
+      border-radius: 0 20px 0 18px;
       font-size: 10px;
       font-weight: 900;
       letter-spacing: .08em;
       text-transform: uppercase;
-      border: 1px solid rgba(255,255,255,.1);
+      border-left: 1px solid rgba(255,255,255,.08);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 8px 18px rgba(0,0,0,.18);
+      min-width: 108px;
+      justify-content: center;
     }
-    .online { color: #6ee7b7; background: rgba(16,185,129,.14); }
-    .offline { color: #fca5a5; background: rgba(239,68,68,.14); }
-    .rate-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 16px; }
+    .online { color: #d1fae5; background: linear-gradient(135deg, rgba(16,185,129,.94), rgba(5,150,105,.84)); }
+    .offline { color: #ffe4e6; background: linear-gradient(135deg, rgba(239,68,68,.82), rgba(127,29,29,.72)); }
+    .rate-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 13px; }
     .rate-box {
-      border-radius: 18px;
-      padding: 12px;
+      border-radius: 15px;
+      padding: 10px;
       background: rgba(6,12,24,.44);
       border: 1px solid rgba(255,255,255,.07);
       text-align: center;
     }
-    .rate-box small { display: block; font-size: 10px; font-weight: 800; color: var(--muted); margin-bottom: 8px; }
+    .rate-box small { display: block; font-size: 9px; font-weight: 800; color: var(--muted); margin-bottom: 6px; }
     .rate-val {
       display: inline-block;
-      min-width: 84px;
-      padding: 7px 12px;
-      border-radius: 14px;
-      font-size: 15px;
+      min-width: 72px;
+      padding: 6px 10px;
+      border-radius: 12px;
+      font-size: 13px;
       font-weight: 900;
       color: white;
       background: linear-gradient(135deg, #2563eb, #1d4ed8);
       box-shadow: 0 10px 20px rgba(29,78,216,.22);
     }
     .rate-box:last-child .rate-val { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 10px 20px rgba(16,185,129,.18); }
-    .coin-foot { text-align: center; margin-top: 14px; font-size: 11px; font-weight: 900; letter-spacing: .16em; color: #7eb7ff; }
+    .coin-foot { text-align: center; margin-top: 11px; font-size: 10px; font-weight: 900; letter-spacing: .14em; color: #7eb7ff; }
 
     .screen { display: none; }
     .screen.active { display: block; }
@@ -328,6 +361,42 @@
       justify-content: space-between;
       gap: 12px;
     }
+
+    .leader-card-main {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .leader-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 15px;
+      object-fit: cover;
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 8px 16px rgba(0,0,0,.18);
+      flex-shrink: 0;
+    }
+    .leader-meta { min-width: 0; }
+    .leader-meta b, .leader-meta small {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 150px;
+    }
+    .medal-badge {
+      min-width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(59,130,246,.16), rgba(34,197,94,.14));
+      border: 1px solid rgba(255,255,255,.08);
+      font-size: 15px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
     .status-chip {
       padding: 8px 12px;
       border-radius: 999px;
@@ -338,22 +407,22 @@
 
     .nav-dock {
       position: fixed;
-      left: 14px;
-      right: 14px;
-      bottom: 16px;
-      height: 78px;
+      left: 12px;
+      right: 12px;
+      bottom: 14px;
+      height: 70px;
       border-radius: 30px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      padding: 8px;
+      padding: 7px;
       z-index: 40;
     }
     .nav-tab {
       border: none;
       background: transparent;
       color: #8fa8ce;
-      border-radius: 22px;
-      font-size: 24px;
+      border-radius: 18px;
+      font-size: 21px;
       font-weight: 800;
       transition: .2s ease;
     }
@@ -476,7 +545,7 @@
       text-align: center;
     }
     .stat-card small { display: block; color: #9fb2d1; font-size: 10px; font-weight: 800; letter-spacing: .08em; }
-    .stat-card b { display: block; font-size: 22px; margin-top: 6px; }
+    .stat-card b { display: block; font-size: 19px; margin-top: 6px; }
 
     .admin-tabs {
       display: grid;
@@ -592,29 +661,27 @@
   </div>
 
   <div id="app" class="app-shell">
-    <div class="top-actions">
-      <a id="help-link" href="#" target="_blank" class="icon-btn glass">🎧</a>
-    </div>
-
-    <section class="profile-card">
-      <div class="profile-row">
-        <img id="user-pfp" class="avatar" src="" alt="avatar">
-        <div>
-          <h2 id="user-display-name" class="username">User</h2>
-          <div id="user-display-tag" class="usertag">@guest</div>
-        </div>
-        <div class="success-pill">
-          <small>SUCCESS</small>
-          <b id="suc-count-display">0</b>
-        </div>
+    <div class="top-fixed-bar glass help-only-bar">
+      <div class="top-fixed-row help-only-row">
+        <a id="help-link" href="#" target="_blank" class="icon-btn glass">🎧</a>
       </div>
-    </section>
-
-    <div id="admin-shortcut">
-      <button class="admin-button" onclick="openAdminPanel()">🛡️ Access Admin Dashboard</button>
     </div>
 
-    <section id="home-scr" class="screen active">
+    <section id="home-scr" class="screen active" style="padding-top:52px;">
+      <section class="profile-card profile-card-home">
+        <div class="profile-row">
+          <img id="user-pfp" class="avatar" src="" alt="avatar">
+          <div style="min-width:0;">
+            <h2 id="user-display-name" class="username">User</h2>
+            <div id="user-display-tag" class="usertag">@guest</div>
+          </div>
+          <div class="success-pill">
+            <small>SUCCESS</small>
+            <b id="suc-count-display">0</b>
+          </div>
+        </div>
+      </section>
+
       <a href="#" id="chan-link" target="_blank" class="action-card glass">
         <div class="left-wrap">
           <div class="icon-box">📢</div>
@@ -625,6 +692,10 @@
         </div>
         <span>❯</span>
       </a>
+
+      <div id="admin-shortcut">
+        <button class="admin-button" onclick="openAdminPanel()">🛡️ Access Admin Dashboard</button>
+      </div>
 
       <div class="section-title">
         <span>Coin Market</span>
@@ -742,13 +813,14 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyAZTpuNxupHZ8DokeHyE0T6NiWsvq5oBsw",
-      authDomain: "meta-earn-coin.firebaseapp.com",
-      databaseURL: "https://meta-earn-coin-default-rtdb.firebaseio.com",
-      projectId: "meta-earn-coin",
-      storageBucket: "meta-earn-coin.firebasestorage.app",
-      messagingSenderId: "263927776319",
-      appId: "1:263927776319:web:78b177fb9806c24779a48a"
+ apiKey: "AIzaSyDwPchjHJ8SrtKxXb18diT8c9fHiiMqLII",
+  authDomain: "niva-buyer-zone-9f0d2.firebaseapp.com",
+  databaseURL: "https://niva-buyer-zone-9f0d2-default-rtdb.firebaseio.com",
+  projectId: "niva-buyer-zone-9f0d2",
+  storageBucket: "niva-buyer-zone-9f0d2.firebasestorage.app",
+  messagingSenderId: "92493493182",
+  appId: "1:92493493182:web:edaf82fb0401b4154d3fef",
+  measurementId: "G-P2DHHSESBH"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -820,6 +892,14 @@
       document.getElementById('user-display-name').innerText = `${user.first_name || 'Guest'}${user.last_name ? ' ' + user.last_name : ''}`;
       document.getElementById('user-display-tag').innerText = '@' + (user.username || 'guest');
       document.getElementById('user-pfp').src = user.photo_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.first_name || 'Guest')}&background=2563eb&color=ffffff&bold=true`;
+      window.currentUserProfile = {
+        nickname: `${user.first_name || ''}${user.last_name ? ' ' + user.last_name : ''}`.trim() || (user.username || 'Guest'),
+        username: user.username || '',
+        photo: user.photo_url || ''
+      };
+      if (window.currentUserProfile.username) {
+        db.ref('userProfiles/' + window.currentUserProfile.username).update(window.currentUserProfile);
+      }
 
       const adminShortcut = document.getElementById('admin-shortcut');
       if (ADMIN_LIST.includes(userId)) {
@@ -841,7 +921,7 @@
               <div class="left-wrap">
                 <div class="icon-box">🪙</div>
                 <div>
-                  <b style="font-size:18px;">${c.key}</b><br>
+                  <b style="font-size:16px;">${c.key}</b><br>
                   <small class="muted" style="font-weight:800;">LIVE MARKET RATE</small>
                 </div>
               </div>
@@ -946,6 +1026,9 @@
         status: 'pending',
         targetId: currentCoinTID,
         appliedRate: parseFloat(currentAppliedRate || 0),
+        nickname: `${user.first_name || ''}${user.last_name ? ' ' + user.last_name : ''}`.trim() || (user.username || 'Guest'),
+        username: user.username || '',
+        photo: user.photo_url || '',
         timestamp: firebase.database.ServerValue.TIMESTAMP
       };
 
@@ -990,11 +1073,22 @@
 
     function fetchLeaderboard() {
       const rankDisplay = document.getElementById('rank-list-display');
-      db.ref('leaderboard').on('value', snap => {
+      Promise.all([
+        db.ref('leaderboard').once('value'),
+        db.ref('userProfiles').once('value')
+      ]).then(([boardSnap, profileSnap]) => {
+        const profileMap = profileSnap.val() || {};
         const users = [];
-        snap.forEach(u => {
+        boardSnap.forEach(u => {
           const data = u.val() || {};
-          if (data.user) users.push(data);
+          if (!data.user) return;
+          const profile = profileMap[data.username] || profileMap[data.user] || {};
+          users.push({
+            ...data,
+            nickname: data.nickname || profile.nickname || data.user,
+            username: data.username || profile.username || data.user,
+            photo: data.photo || profile.photo || ''
+          });
         });
         users.sort((a, b) => (parseFloat(b.totalAmount) || 0) - (parseFloat(a.totalAmount) || 0));
         const top10 = users.slice(0, 10);
@@ -1004,13 +1098,17 @@
         } else {
           top10.forEach((d, i) => {
             const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`;
+            const nick = d.nickname || d.username || d.user || 'Unknown';
+            const tag = '@' + (d.username || d.user || 'guest');
+            const avatar = d.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(nick)}&background=1d4ed8&color=ffffff&bold=true`;
             html += `
               <div class="simple-card glass leader-card">
-                <div class="left-wrap">
-                  <div class="icon-box" style="width:44px;height:44px;font-size:16px;">${medal}</div>
-                  <div>
-                    <b>@${d.user}</b><br>
-                    <small class="muted">Top seller rank</small>
+                <div class="leader-card-main">
+                  <div class="medal-badge">${medal}</div>
+                  <img class="leader-avatar" src="${avatar}" alt="${nick}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(nick)}&background=1d4ed8&color=ffffff&bold=true'">
+                  <div class="leader-meta">
+                    <b>${nick}</b>
+                    <small class="muted">${tag}</small>
                   </div>
                 </div>
                 <b style="color:#6ee7b7;">${formatMoney(d.totalAmount)}</b>
@@ -1018,6 +1116,8 @@
           });
         }
         rankDisplay.innerHTML = html;
+      }).catch(() => {
+        rankDisplay.innerHTML = `<div class="empty-state glass">Leaderboard load failed.</div>`;
       });
     }
 
@@ -1289,18 +1389,35 @@
     }
 
     function updateOrderStatus(id, status, user, payable) {
-      db.ref('orders/' + id).update({ status }).then(() => {
-        if (status === 'completed' && user && user !== 'undefined') {
-          const ref = db.ref('leaderboard/' + user);
-          ref.once('value', snap => {
-            const data = snap.val() || { totalAmount: 0, user };
-            const newTotal = (parseFloat(data.totalAmount) || 0) + (parseFloat(payable) || 0);
-            ref.update({ totalAmount: newTotal, user });
-          });
-        }
-        safeHaptic('notify', 'success');
-        showToast('Order ' + status + '!');
-        renderAdminData();
+      db.ref('orders/' + id).once('value').then(orderSnap => {
+        const orderData = orderSnap.val() || {};
+        return db.ref('orders/' + id).update({ status }).then(() => {
+          if (status === 'completed' && user && user !== 'undefined') {
+            const ref = db.ref('leaderboard/' + user);
+            ref.once('value', snap => {
+              const data = snap.val() || { totalAmount: 0, user };
+              const newTotal = (parseFloat(data.totalAmount) || 0) + (parseFloat(payable) || 0);
+              const mergedProfile = {
+                nickname: orderData.nickname || data.nickname || user,
+                username: orderData.username || data.username || user,
+                photo: orderData.photo || data.photo || ''
+              };
+              ref.update({ 
+                totalAmount: newTotal, 
+                user,
+                nickname: mergedProfile.nickname,
+                username: mergedProfile.username,
+                photo: mergedProfile.photo
+              });
+              if (mergedProfile.username) {
+                db.ref('userProfiles/' + mergedProfile.username).update(mergedProfile);
+              }
+            });
+          }
+          safeHaptic('notify', 'success');
+          showToast('Order ' + status + '!');
+          renderAdminData();
+        });
       }).catch(err => showToast(err.message));
     }
 

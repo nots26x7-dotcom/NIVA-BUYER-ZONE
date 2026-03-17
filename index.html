@@ -3,36 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EZGrowZone - S26X</title>
+  <title>NIVA BUYER ZONE • MADE BY @S26X_BRO</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-     :root {
-      --bg: #eef2f6;
-      --bg-2: #e4e9ef;
-      --card: rgba(255, 255, 255, .88);
-      --card-2: rgba(248, 250, 252, .96);
-      --line: rgba(97, 113, 132, .12);
-      --text: #233142;
-      --muted: #6f7d90;
-      --blue: #5f7ea6;
-      --blue-2: #46627f;
-      --green: #7aa487;
-      --green-2: #6f957a;
-      --orange: #d3a66c;
-      --red: #cc6f6f;
-      --pink: #b686a7;
-      --shadow: 0 12px 28px rgba(35, 49, 66, .08);
-      --radius-xl: 30px;
-      --radius-lg: 24px;
-      --radius-md: 18px;
+    :root {
+      --bg: #07111f;
+      --bg-2: #0d1830;
+      --card: rgba(18, 30, 54, .82);
+      --card-2: rgba(14, 24, 42, .94);
+      --line: rgba(255,255,255,.09);
+      --text: #eef6ff;
+      --muted: #8da2c7;
+      --blue: #3b82f6;
+      --blue-2: #1d4ed8;
+      --green: #10b981;
+      --green-2: #22c55e;
+      --orange: #f59e0b;
+      --red: #ef4444;
+      --pink: #ec4899;
+      --shadow: 0 18px 50px rgba(0,0,0,.35);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html, body { margin: 0; padding: 0; font-family: Inter, system-ui, sans-serif; background: linear-gradient(180deg, #f6f8fb 0%, #eef2f6 40%, #e8edf3 100%); color: var(--text); min-height: 100%; }
-    body { padding: 108px 13px 112px; overflow-x: hidden; position: relative; }
+    html, body { margin: 0; padding: 0; font-family: Inter, system-ui, sans-serif; background: radial-gradient(circle at top left, #12254a 0%, var(--bg) 35%, #040a12 100%); color: var(--text); min-height: 100%; }
+    body { padding: 108px 13px 112px; overflow-x: hidden; }
 
     body::before,
     body::after {
@@ -46,8 +46,8 @@
       z-index: -2;
       animation: floatBlob 10s ease-in-out infinite;
     }
-    body::before { top: -40px; left: -40px; background: rgba(131, 148, 171, .35); }
-    body::after { bottom: 80px; right: -30px; background: rgba(178, 187, 197, .38); animation-delay: -4s; }
+    body::before { top: -40px; left: -40px; background: #2563eb; }
+    body::after { bottom: 80px; right: -30px; background: #10b981; animation-delay: -4s; }
 
     @keyframes floatBlob {
       0%,100% { transform: translate(0,0) scale(1); }
@@ -71,20 +71,19 @@
       100% { background-position: 200% 0; }
     }
 
-    #particle-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; opacity: .65; }
     .hidden { display: none !important; }
     .glass {
-      background: linear-gradient(180deg, rgba(255,255,255,.94), rgba(247,249,251,.88));
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
       border: 1px solid var(--line);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       box-shadow: var(--shadow);
     }
 
     #loading {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at center, #ffffff 0%, #f2f5f8 52%, #e7ecf2 100%);
+      background: radial-gradient(circle at center, #17315f 0%, #08111f 45%, #02050a 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -110,22 +109,21 @@
       border-radius: 40px;
       border: 2px solid transparent;
     }
-    .loader-orb::before { border-top-color: #8fa1b7; border-right-color: #8fa1b7; animation: spin 1.4s linear infinite; }
-    .loader-orb::after { inset: -18px; border-bottom-color: #bcc7d4; border-left-color: #bcc7d4; animation: spin 1.8s linear infinite reverse; }
+    .loader-orb::before { border-top-color: #3b82f6; border-right-color: #3b82f6; animation: spin 1.4s linear infinite; }
+    .loader-orb::after { inset: -18px; border-bottom-color: #22c55e; border-left-color: #22c55e; animation: spin 1.8s linear infinite reverse; }
     .loader-inner {
       width: 110px;
       height: 110px;
-      border-radius: 30px;
+      border-radius: 28px;
       overflow: hidden;
       display: grid;
       place-items: center;
-      background: linear-gradient(180deg, #ffffff, #f2f5f8);
-      border: 1px solid rgba(97,113,132,.12);
+      background: linear-gradient(180deg, #0f172a, #111827);
+      border: 1px solid rgba(255,255,255,.08);
     }
     .loader-inner img { width: 100%; height: 100%; object-fit: cover; }
     .loader-title { font-size: 26px; font-weight: 900; letter-spacing: .12em; }
-    .loader-title { color: #233142; }
-    .loader-title span { color: #607b98; }
+    .loader-title span { color: #22c55e; }
     .loader-bar {
       width: 220px;
       height: 6px;
@@ -141,7 +139,7 @@
       inset: 0;
       width: 42%;
       border-radius: inherit;
-      background: linear-gradient(90deg, #8fa1b7, #bcc7d4, #8fa1b7);
+      background: linear-gradient(90deg, #3b82f6, #22c55e, #3b82f6);
       background-size: 200% 100%;
       animation: shimmer 1.6s linear infinite;
     }
@@ -154,11 +152,11 @@
       z-index: 40;
       border-radius: 24px;
       padding: 10px;
-      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(245,248,251,.90));
+      background: linear-gradient(180deg, rgba(12,22,41,.92), rgba(8,15,28,.88));
       border: 1px solid rgba(255,255,255,.08);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
-      box-shadow: 0 10px 24px rgba(35,49,66,.08);
+      box-shadow: 0 14px 35px rgba(0,0,0,.28);
     }
     .top-fixed-row {
       display: flex;
@@ -196,8 +194,8 @@
       border-radius: 20px;
       overflow: hidden;
       padding: 12px;
-      background: linear-gradient(135deg, #ffffff, #f2f5f8, #e7edf4);
-      box-shadow: 0 14px 28px rgba(35,49,66,.08);
+      background: linear-gradient(135deg, rgba(37,99,235,.95), rgba(124,58,237,.92), rgba(16,185,129,.84));
+      box-shadow: 0 14px 36px rgba(37,99,235,.26);
     }
     .profile-card::before {
       content: "";
@@ -207,7 +205,7 @@
       top: -34px;
       right: -28px;
       border-radius: 999px;
-      background: rgba(130, 145, 162, .10);
+      background: rgba(255,255,255,.12);
       filter: blur(2px);
     }
     .profile-row { display: flex; gap: 10px; align-items: center; position: relative; z-index: 1; min-width: 0; }
@@ -216,11 +214,11 @@
       height: 50px;
       border-radius: 16px;
       object-fit: cover;
-      border: 1px solid rgba(97,113,132,.12);
-      box-shadow: 0 8px 16px rgba(35,49,66,.08);
+      border: 2px solid rgba(255,255,255,.22);
+      box-shadow: 0 10px 20px rgba(0,0,0,.2);
     }
     .username { margin: 0; font-size: 15px; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 132px; }
-    .usertag { margin-top: 3px; color: var(--muted); font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 132px; }
+    .usertag { margin-top: 3px; color: rgba(255,255,255,.84); font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 132px; }
     .success-pill {
       margin-left: auto;
       background: rgba(255,255,255,.14);
@@ -334,8 +332,8 @@
     .rate-box {
       border-radius: 15px;
       padding: 10px;
-      background: rgba(255,255,255,.98);
-      border: 1px solid rgba(97,113,132,.12);
+      background: rgba(6,12,24,.44);
+      border: 1px solid rgba(255,255,255,.07);
       text-align: center;
     }
     .rate-box small { display: block; font-size: 9px; font-weight: 800; color: var(--muted); margin-bottom: 6px; }
@@ -346,12 +344,11 @@
       border-radius: 12px;
       font-size: 13px;
       font-weight: 900;
-      color: #1d4ed8;
-      background: rgba(219,234,254,.88);
-      border: 1px solid rgba(96,165,250,.25);
-      box-shadow: none;
+      color: white;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      box-shadow: 0 10px 20px rgba(29,78,216,.22);
     }
-    .rate-box:last-child .rate-val { background: rgba(220,252,231,.92); color: #047857; border: 1px solid rgba(52,211,153,.25); box-shadow: none; }
+    .rate-box:last-child .rate-val { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 10px 20px rgba(16,185,129,.18); }
     .coin-foot { text-align: center; margin-top: 11px; font-size: 10px; font-weight: 900; letter-spacing: .14em; color: #7eb7ff; }
 
     .screen { display: none; }
@@ -438,9 +435,9 @@
     .modal-mask, .admin-mask {
       position: fixed;
       inset: 0;
-      background: rgba(245, 248, 252, .72);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(1, 7, 16, .74);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       display: none;
       align-items: flex-end;
       justify-content: center;
@@ -454,16 +451,15 @@
       overflow: auto;
       padding: 26px 18px 24px;
       border-radius: 32px 32px 0 0;
-      background: linear-gradient(180deg, rgba(255,255,255,.99), rgba(246,248,251,.98));
-      border-top: 1px solid rgba(97,113,132,.12);
-      box-shadow: 0 -18px 40px rgba(35,49,66,.10);
+      background: linear-gradient(180deg, rgba(19, 31, 56, .98), rgba(9, 17, 32, .98));
+      border-top: 1px solid rgba(255,255,255,.1);
       animation: slideUp .28s ease;
     }
     .sheet-handle {
       width: 58px;
       height: 6px;
       border-radius: 999px;
-      background: rgba(97,113,132,.22);
+      background: rgba(255,255,255,.16);
       margin: 0 auto 18px;
     }
     .sheet-title { margin: 0; font-size: 24px; font-weight: 900; }
@@ -471,22 +467,22 @@
     .highlight-box {
       padding: 16px;
       border-radius: 22px;
-      background: linear-gradient(135deg, rgba(59,130,246,.08), rgba(255,255,255,.95));
-      border: 1px dashed rgba(96,165,250,.32);
+      background: linear-gradient(135deg, rgba(245,158,11,.16), rgba(255,255,255,.04));
+      border: 1px dashed rgba(245,158,11,.5);
       text-align: center;
       margin-bottom: 16px;
     }
     .highlight-box b { font-size: 26px; letter-spacing: .04em; }
     .input, .select {
       width: 100%;
-      border: 1px solid rgba(97,113,132,.14);
-      background: rgba(255,255,255,.96);
-      color: var(--text);
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(4, 10, 21, .7);
+      color: white;
       padding: 15px 16px;
       border-radius: 18px;
       font-size: 15px;
       outline: none;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.65);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
     }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .cta-btn, .ghost-btn, .danger-btn, .mini-btn {
@@ -507,15 +503,14 @@
     .ghost-btn {
       width: 100%;
       padding: 14px;
-      background: rgba(244,247,250,.96);
-      color: #5f6f82;
-      border: 1px solid rgba(97,113,132,.12);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
       margin-top: 12px;
     }
     .danger-btn { background: linear-gradient(135deg, #7f1d1d, #ef4444); color: #fff; padding: 12px 14px; }
-    .mini-btn { background: rgba(244,247,250,.98); color: #334155; padding: 10px 12px; border: 1px solid rgba(97,113,132,.12); box-shadow: 0 6px 16px rgba(35,49,66,.06); }
+    .mini-btn { background: rgba(255,255,255,.06); color: white; padding: 10px 12px; }
 
-    .review-box { border-radius: 24px; padding: 16px; background: rgba(249,250,252,.98); border: 1px solid rgba(97,113,132,.12); box-shadow: inset 0 1px 0 rgba(255,255,255,.7); }
+    .review-box { border-radius: 24px; padding: 16px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); }
     .review-row { display: flex; justify-content: space-between; gap: 10px; padding: 9px 0; }
     .review-row span { color: var(--muted); }
 
@@ -524,64 +519,53 @@
       height: 100%;
       overflow: auto;
       padding: 14px 14px 110px;
-      background: linear-gradient(180deg, #f7f9fc 0%, #eef2f6 55%, #e7ecf2 100%);
+      background: radial-gradient(circle at top right, #17315f 0%, #08111f 35%, #02050a 100%);
       animation: fadeUp .25s ease;
-      color: var(--text);
     }
     .admin-top {
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 3;
       padding: 10px 0 16px;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      background: linear-gradient(180deg, rgba(247,249,252,.96), rgba(247,249,252,.82), rgba(247,249,252,0));
+      backdrop-filter: blur(12px);
+      background: linear-gradient(180deg, rgba(8,17,31,.86), rgba(8,17,31,.4), transparent);
     }
     .admin-head {
-      position: sticky;
-      top: 8px;
       border-radius: 28px;
       padding: 18px;
-      background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(240,244,249,.94));
-      border: 1px solid rgba(97,113,132,.12);
-      box-shadow: 0 14px 28px rgba(35,49,66,.08);
+      background: linear-gradient(135deg, rgba(29,78,216,.45), rgba(15,23,42,.88), rgba(16,185,129,.2));
+      border: 1px solid rgba(255,255,255,.09);
     }
-    .admin-head h2 { color: #263445; }
     .admin-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
     .stat-card {
       border-radius: 20px;
       padding: 14px;
-      background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(242,246,250,.95));
-      border: 1px solid rgba(97,113,132,.12);
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.08);
       text-align: center;
-      box-shadow: 0 8px 18px rgba(35,49,66,.05);
     }
-    .stat-card small { display: block; color: #758396; font-size: 10px; font-weight: 800; letter-spacing: .08em; }
-    .stat-card b { display: block; font-size: 19px; margin-top: 6px; color: #263445; }
+    .stat-card small { display: block; color: #9fb2d1; font-size: 10px; font-weight: 800; letter-spacing: .08em; }
+    .stat-card b { display: block; font-size: 19px; margin-top: 6px; }
 
     .admin-tabs {
-      position: sticky;
-      top: 178px;
-      z-index: 19;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
       margin: 16px 0;
       padding: 6px;
       border-radius: 22px;
-      background: rgba(255,255,255,.92);
-      border: 1px solid rgba(97,113,132,.12);
-      box-shadow: 0 10px 22px rgba(35,49,66,.06);
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
     }
     .admin-tab {
       border: none;
       padding: 12px 10px;
       border-radius: 18px;
       font-weight: 900;
-      color: #6f7d90;
+      color: #9bb0d0;
       background: transparent;
     }
-    .admin-tab.active { background: linear-gradient(135deg, #6f8bad, #8ea4bc); color: #fff; box-shadow: 0 10px 20px rgba(95,126,166,.2); }
+    .admin-tab.active { background: linear-gradient(135deg, #2563eb, #10b981); color: #fff; }
 
     .admin-order,
     .settings-card,
@@ -589,19 +573,19 @@
       border-radius: 24px;
       padding: 16px;
       margin-bottom: 12px;
-      background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(243,246,250,.96));
-      border: 1px solid rgba(97,113,132,.12);
-      box-shadow: 0 14px 28px rgba(35,49,66,.07);
+      background: rgba(15, 24, 44, .9);
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 16px 35px rgba(0,0,0,.22);
     }
     .admin-order-top { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: 12px; }
     .admin-order-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; margin-bottom: 12px; }
     .tile {
       border-radius: 16px;
       padding: 12px;
-      background: rgba(248,250,252,.96);
-      border: 1px solid rgba(97,113,132,.1);
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.06);
     }
-    .tile small { display: block; color: #7a8898; font-size: 10px; font-weight: 800; margin-bottom: 5px; }
+    .tile small { display: block; color: #8ca4c8; font-size: 10px; font-weight: 800; margin-bottom: 5px; }
     .copy-box {
       padding: 12px;
       border-radius: 16px;
@@ -665,14 +649,13 @@
   </style>
 </head>
 <body>
-  <canvas id="particle-canvas"></canvas>
   <div id="loading">
     <div class="loader-orb glass">
       <div class="loader-inner">
-        <a href="https://imgbb.com/"><img src="https://i.ibb.co/1tSPtsqc/EZ-Grow-ZONE.png" alt="EZ Grow ZONE" border="0"></a>
+        <img src="https://i.ibb.co.com/nsLQgRFR/photo-2025-12-05-11-17-43.jpg" alt="Logo">
       </div>
     </div>
-    <div class="loader-title">EZ<span>Grow</span>Zone</div>
+    <div class="loader-title">NIVA <span>BUYER</span> ZONE</div>
     <div class="loader-bar"></div>
     <div style="margin-top:14px;color:#95a9cc;font-size:12px;font-weight:700;letter-spacing:.08em;">Best Deal • Premium Experience</div>
   </div>
@@ -748,7 +731,7 @@
       <p class="sheet-sub">Enter your details carefully before submitting.</p>
 
       <div class="highlight-box">
-        <div style="font-size:11px;font-weight:900;letter-spacing:.16em;color:#3b82f6;">SEND COINS TO THIS ID</div>
+        <div style="font-size:11px;font-weight:900;letter-spacing:.16em;color:#fcd34d;">SEND COINS TO THIS ID</div>
         <b id="display-admin-id">---</b>
         <div style="margin-top:10px;"><button class="mini-btn" onclick="copyAdminID()">COPY ID</button></div>
       </div>
@@ -756,7 +739,7 @@
       <div class="simple-card glass" style="margin:12px 0 0;padding:12px 14px;">
         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
           <span class="muted" style="font-size:12px;font-weight:800;">MINIMUM SUBMIT LIMIT</span>
-          <b id="display-submit-limit" style="font-size:18px;color:#2563eb;">0</b>
+          <b id="display-submit-limit" style="font-size:18px;color:#fcd34d;">0</b>
         </div>
       </div>
 
@@ -813,7 +796,7 @@
         <div class="admin-head">
           <div style="display:flex;justify-content:space-between;align-items:center;gap:14px;">
             <div>
-              <div style="font-size:12px;color:#72839a;font-weight:900;letter-spacing:.16em;position:sticky;top:0;">ADMIN COMMAND CENTER</div>
+              <div style="font-size:12px;color:#a5b4fc;font-weight:900;letter-spacing:.16em;">ADMIN COMMAND CENTER</div>
               <h2 style="margin:6px 0 0;font-size:24px;">Manage Orders & Rates</h2>
             </div>
             <div style="font-size:36px;">🛡️</div>
@@ -838,31 +821,19 @@
 
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyC2XDpldi2bjOYb4_0vL4tFnTYzcsvQk6o",
-      authDomain: "ezgrowzone.firebaseapp.com",
-      databaseURL: "https://ezgrowzone-default-rtdb.firebaseio.com",
-      projectId: "ezgrowzone",
-      storageBucket: "ezgrowzone.firebasestorage.app",
-      messagingSenderId: "644449333899",
-      appId: "1:644449333899:web:6872c0c7412b7af2001a8e",
-      measurementId: "G-XNPHB9WTZ1"
+ apiKey: "AIzaSyDwPchjHJ8SrtKxXb18diT8c9fHiiMqLII",
+  authDomain: "niva-buyer-zone-9f0d2.firebaseapp.com",
+  databaseURL: "https://niva-buyer-zone-9f0d2-default-rtdb.firebaseio.com",
+  projectId: "niva-buyer-zone-9f0d2",
+  storageBucket: "niva-buyer-zone-9f0d2.firebasestorage.app",
+  messagingSenderId: "92493493182",
+  appId: "1:92493493182:web:edaf82fb0401b4154d3fef",
+  measurementId: "G-P2DHHSESBH"
     };
 
-    let db = null;
-    let tg = null;
-
-    try {
-      if (window.firebase && !firebase.apps.length) firebase.initializeApp(firebaseConfig);
-      if (window.firebase) db = firebase.database();
-    } catch (e) {
-      console.warn('Firebase init failed', e);
-    }
-
-    try {
-      tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
-    } catch (e) {
-      tg = null;
-    }
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const tg = window.Telegram.WebApp;
     const ADMIN_LIST = [7665757155, 8505710811];
 
     let currentSelectedCoin = "";
@@ -914,28 +885,21 @@
       requestAnimationFrame(() => el.classList.add('active'));
     }
 
-    function revealApp() {
-      const loading = document.getElementById('loading');
-      const app = document.getElementById('app');
-      if (app) app.style.display = 'block';
-      if (!loading) return;
-      loading.style.opacity = '0';
-      setTimeout(() => { if (loading.parentNode) loading.remove(); }, 420);
-    }
-
     function bootLoader() {
-      setTimeout(revealApp, 1650);
-      setTimeout(revealApp, 4500);
+      setTimeout(() => {
+        const loading = document.getElementById('loading');
+        loading.style.opacity = '0';
+        setTimeout(() => {
+          loading.remove();
+          document.getElementById('app').style.display = 'block';
+        }, 420);
+      }, 1850);
     }
 
     function initTelegramUser() {
-      try {
-        if (tg) {
-          tg.expand();
-          tg.ready();
-        }
-      } catch (e) {}
-      const user = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || { id: 0, first_name: 'Guest', username: 'guest' };
+      tg.expand();
+      tg.ready();
+      const user = tg.initDataUnsafe.user || { id: 0, first_name: 'Guest', username: 'guest' };
       const userId = Number(user.id || 0);
       currentTelegramUser = user.username || user.first_name || 'guest';
 
@@ -947,8 +911,8 @@
         username: user.username || '',
         photo: user.photo_url || ''
       };
-      if (window.currentUserProfile.username && db) {
-        db.ref('userProfiles/' + window.currentUserProfile.username).update(window.currentUserProfile).catch(() => {});
+      if (window.currentUserProfile.username) {
+        db.ref('userProfiles/' + window.currentUserProfile.username).update(window.currentUserProfile);
       }
 
       const adminShortcut = document.getElementById('admin-shortcut');
@@ -960,11 +924,6 @@
     }
 
     function initializeDataFetching() {
-      if (!db) {
-        document.getElementById('market-list-display').innerHTML = '<div class="empty-state glass action-card">Live market unavailable right now.</div>';
-        document.getElementById('input-method').innerHTML = '<option value="Manual">Manual</option>';
-        return;
-      }
       db.ref('marketConfig').on('value', snap => {
         let html = '';
         snap.forEach(c => {
@@ -1069,12 +1028,11 @@
     }
 
     function finalSubmitOrder() {
-      if (!db) return showToast('Server unavailable right now.');
       const btn = document.getElementById('confirm-submit-btn');
       btn.disabled = true;
       btn.innerText = 'Submitting...';
 
-      const user = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || { id: 12345, username: 'guest', first_name: 'guest' };
+      const user = tg.initDataUnsafe.user || { id: 12345, username: 'guest', first_name: 'guest' };
       const orderId = Date.now();
       const payload = {
         id: orderId,
@@ -1109,11 +1067,7 @@
     }
 
     function fetchHistory() {
-      if (!db) {
-        document.getElementById('history-list-display').innerHTML = '<div class="empty-state glass action-card">History is unavailable while offline.</div>';
-        return;
-      }
-      const user = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) || { username: 'guest', first_name: 'guest' };
+      const user = tg.initDataUnsafe.user || { username: 'guest', first_name: 'guest' };
       const uname = user.username || user.first_name || 'guest';
       db.ref('orders').orderByChild('user').equalTo(uname).on('value', snap => {
         let html = '';
@@ -1139,10 +1093,6 @@
     }
 
     function fetchLeaderboard() {
-      if (!db) {
-        document.getElementById('rank-list-display').innerHTML = '<div class="empty-state glass action-card">Leaderboard is unavailable while offline.</div>';
-        return;
-      }
       const rankDisplay = document.getElementById('rank-list-display');
       Promise.all([
         db.ref('leaderboard').once('value'),
@@ -1219,7 +1169,6 @@
     }
 
     function startAdminEngine() {
-      if (!db) return;
       db.ref('orders').on('value', snap => {
         const orders = snap.val() || {};
         const counts = { pending: 0, completed: 0, rejected: 0 };
@@ -1522,71 +1471,13 @@
       }).then(() => showToast('Sales stats reset snapshot saved!'));
     }
 
-    function startParticles() {
-      const canvas = document.getElementById('particle-canvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d', { alpha: true });
-      let w = 0, h = 0, particles = [], animationId = null;
-
-      function resize() {
-        const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
-        w = window.innerWidth;
-        h = window.innerHeight;
-        canvas.width = Math.floor(w * dpr);
-        canvas.height = Math.floor(h * dpr);
-        canvas.style.width = w + 'px';
-        canvas.style.height = h + 'px';
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        const count = Math.min(90, Math.max(36, Math.floor((w * h) / 18000)));
-        particles = Array.from({ length: count }, () => ({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          len: 8 + Math.random() * 16,
-          speed: 1.2 + Math.random() * 2.4,
-          opacity: 0.08 + Math.random() * 0.16
-        }));
-      }
-
-      function draw() {
-        ctx.clearRect(0, 0, w, h);
-        for (const p of particles) {
-          p.y += p.speed;
-          if (p.y > h + p.len) {
-            p.y = -p.len;
-            p.x = Math.random() * w;
-          }
-          ctx.beginPath();
-          ctx.strokeStyle = `rgba(122, 132, 145, ${p.opacity})`;
-          ctx.lineWidth = 1;
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(p.x, p.y + p.len);
-          ctx.stroke();
-        }
-        animationId = requestAnimationFrame(draw);
-      }
-
-      document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-          if (animationId) cancelAnimationFrame(animationId);
-          animationId = null;
-        } else if (!animationId) {
-          draw();
-        }
-      });
-
-      window.addEventListener('resize', resize, { passive: true });
-      resize();
-      draw();
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
-      startParticles();
       bootLoader();
-      try { initTelegramUser(); } catch (e) { console.warn('Telegram init failed', e); }
-      try { initializeDataFetching(); } catch (e) { console.warn('Data init failed', e); }
-      try { fetchHistory(); } catch (e) { console.warn('History init failed', e); }
-      try { fetchLeaderboard(); } catch (e) { console.warn('Leaderboard init failed', e); }
-      try { startAdminEngine(); } catch (e) { console.warn('Admin init failed', e); }
+      initTelegramUser();
+      initializeDataFetching();
+      fetchHistory();
+      fetchLeaderboard();
+      startAdminEngine();
     });
   </script>
 </body>

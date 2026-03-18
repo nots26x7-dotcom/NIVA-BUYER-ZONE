@@ -713,12 +713,18 @@
       <div class="section-title"><span>Top Sellers</span></div>
       <div id="rank-list-display"></div>
     </section>
+
+    <section id="tutorial-scr" class="screen">
+      <div class="section-title"><span>Tutorial</span></div>
+      <div id="tutorial-content-display"></div>
+    </section>
   </div>
 
   <nav class="nav-dock glass" id="nav-dock">
     <button class="nav-tab active" onclick="switchTab('home-scr', this)">🏠</button>
     <button class="nav-tab" onclick="switchTab('history-scr', this)">🕒</button>
     <button class="nav-tab" onclick="switchTab('rank-scr', this)">🏆</button>
+    <button class="nav-tab" onclick="switchTab('tutorial-scr', this)">🎥</button>
   </nav>
 
   <div id="order-modal" class="modal-mask" onclick="backdropClose(event, 'order-modal')">
@@ -869,6 +875,51 @@
       return Number.isFinite(parsed) && parsed > 0 ? parsed : 100000;
     }
 
+    function getTutorialEmbedUrl(url) {
+      const raw = String(url || '').trim();
+      if (!raw) return '';
+      if (/youtube\.com\/embed\//i.test(raw)) return raw;
+      const ytMatch = raw.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/i);
+      if (ytMatch && ytMatch[1]) return `https://www.youtube.com/embed/${ytMatch[1]}`;
+      return raw;
+    }
+
+    function getTutorialContentHtml(data) {
+      const title = String(data.title || 'Watch Tutorial').trim();
+      const url = String(data.url || '').trim();
+      const embedUrl = getTutorialEmbedUrl(url);
+      if (!embedUrl) {
+        return `<div class=\"empty-state glass\">No tutorial video set yet.</div>`;
+      }
+      const isDirectVideo = /\.(mp4|webm|ogg)(\?.*)?$/i.test(embedUrl);
+      return `
+        <div class=\"simple-card glass\" style=\"padding:16px;\">
+          <div style=\"margin-bottom:12px;\">
+            <b style=\"font-size:18px;display:block;\">${title}</b>
+            <small class=\"muted\">Watch the full selling tutorial here.</small>
+          </div>
+          <div style=\"overflow:hidden;border-radius:18px;border:1px solid rgba(255,255,255,.08);background:#08111f;\">${isDirectVideo ? `<video controls playsinline style=\"width:100%;display:block;max-height:70vh;background:#000;\" src=\"${embedUrl}\"></video>` : `<iframe src=\"${embedUrl}\" title=\"${title.replace(/\"/g, '&quot;')}\" style=\"width:100%;height:240px;border:0;display:block;\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>`}</div>
+          <a href=\"${url}\" target=\"_blank\" class=\"action-card glass\" style=\"margin-top:14px;\">
+            <div class=\"left-wrap\">
+              <div class=\"icon-box\">▶️</div>
+              <div>
+                <b>Open Video</b><br>
+                <small class=\"muted\">Tap to watch in full screen</small>
+              </div>
+            </div>
+            <span>❯</span>
+          </a>
+        </div>`;
+    }
+
+    function fetchTutorialVideo() {
+      db.ref('settings/tutorial').on('value', snap => {
+        const data = snap.val() || {};
+        const wrap = document.getElementById('tutorial-content-display');
+        if (wrap) wrap.innerHTML = getTutorialContentHtml(data);
+      });
+    }
+
     function showToast(msg) {
       alert(msg);
     }
@@ -936,7 +987,7 @@
           const v = c.val() || {};
           const isOnline = v.status !== false;
           html += `
-            <div class="coin-card glass ${isOnline ? '' : 'offline'}" onclick="${isOnline ? `openOrderModal('${c.key.replace(/'/g, "\\'")}', ${parseFloat(v.userRate || 0)}, ${parseFloat(v.adminRate || 0)}, '${String(v.transferId || '').replace(/'/g, "\\'")}', ${normalizeSubmitLimit(v.submitLimit)})` : ''}">
+            <div class="coin-card glass ${isOnline ? '' : 'offline'}" onclick="${isOnline ? `openOrderModal('${c.key.replace(/'/g, "\\'")}', ${parseFloat(v.userRate || 0)}, ${parseFloat(v.adminRate || 0)}, '${String(v.transferId || '').replace(/'/g, "\\'")}', ${normalizeSubmitLimit(v.submitLimit)}, ${normalizeAdminMinQty(v.adminMinQty)})` : ''}">
               <div class="status-badge ${isOnline ? 'online' : 'offline'}">${isOnline ? '● Online' : '● Offline'}</div>
               <div class="left-wrap">
                 <div class="icon-box">🪙</div>
@@ -969,6 +1020,8 @@
         });
         document.getElementById('input-method').innerHTML = options || '<option value="">No Method</option>';
       });
+
+      fetchTutorialVideo();
     }
 
     function openOrderModal(name, userRate, adminRate, tid, submitLimit, adminMinQty) {
@@ -977,7 +1030,9 @@
       currentAdminRate = parseFloat(adminRate || 0);
       currentCoinTID = tid || '';
       currentCoinSubmitLimit = normalizeSubmitLimit(submitLimit);
-      currentCoinAdminMinQty = normalizeAdminMinQty(adminMinQty);
+      currentCoinAdminMinQty = adminMinQty === undefined || adminMinQty === null || adminMinQty === ''
+        ? 100000
+        : normalizeAdminMinQty(adminMinQty);
       currentAppliedRate = currentCoinRate;
 
       document.getElementById('modal-coin-title').innerText = `Sell ${name}`;
@@ -995,13 +1050,27 @@
       openModal('order-modal');
     }
 
-    function calculatePayout() {
-      const qty = parseInt(document.getElementById('input-qty').value || '0', 10) || 0;
-      currentAppliedRate = qty >= currentCoinAdminMinQty ? currentAdminRate : currentCoinRate;
-      const raw = (qty / 1000) * currentAppliedRate;
+    function resolveAppliedRate(qty) {
+      const safeQty = parseFloat(qty || 0) || 0;
+      const safeUserRate = parseFloat(currentCoinRate || 0) || 0;
+      const safeAdminRate = parseFloat(currentAdminRate || 0) || 0;
+      const triggerQty = parseFloat(currentCoinAdminMinQty || 0) || 0;
+      if (safeAdminRate > 0 && safeQty >= triggerQty) return safeAdminRate;
+      return safeUserRate;
+    }
+
+    function recalculateOrderPreview(qty) {
+      const safeQty = parseFloat(qty || 0) || 0;
+      currentAppliedRate = resolveAppliedRate(safeQty);
+      const raw = (safeQty / 1000) * currentAppliedRate;
       calculatedFinalPayout = raw > 5 ? raw - 5 : 0;
       document.getElementById('display-applied-rate').innerText = `${currentAppliedRate}৳`;
       document.getElementById('display-final-payout').innerText = `${calculatedFinalPayout.toFixed(2)} ৳`;
+    }
+
+    function calculatePayout() {
+      const qty = parseFloat(document.getElementById('input-qty').value || '0') || 0;
+      recalculateOrderPreview(qty);
     }
 
     function copyAdminID() {
@@ -1011,10 +1080,12 @@
     }
 
     function showConfirmation() {
-      const qty = parseInt(document.getElementById('input-qty').value || '0', 10) || 0;
+      const qty = parseFloat(document.getElementById('input-qty').value || '0') || 0;
       const sender = document.getElementById('input-sender').value.trim();
       const method = document.getElementById('input-method').value;
       const number = document.getElementById('input-number').value.trim();
+
+      recalculateOrderPreview(qty);
 
       if (qty < currentCoinSubmitLimit || !sender || !method || !number) {
         safeHaptic('notify', 'error');
@@ -1038,6 +1109,9 @@
       const btn = document.getElementById('confirm-submit-btn');
       btn.disabled = true;
       btn.innerText = 'Submitting...';
+
+      const qty = parseFloat(document.getElementById('r-qty').innerText || '0') || 0;
+      recalculateOrderPreview(qty);
 
       const user = tg.initDataUnsafe.user || { id: 12345, username: 'guest', first_name: 'guest' };
       const orderId = Date.now();
@@ -1157,6 +1231,7 @@
       el.classList.add('active');
       if (id === 'history-scr') fetchHistory();
       if (id === 'rank-scr') fetchLeaderboard();
+      if (id === 'tutorial-scr') fetchTutorialVideo();
     }
 
     function openAdminPanel() {
@@ -1304,6 +1379,15 @@
         </div>
 
         <div class="settings-card">
+          <h4>🎥 Tutorial Video</h4>
+          <div class="stack">
+            <input type="text" id="adm-tutorial-title" class="input" placeholder="Tutorial Title">
+            <input type="text" id="adm-tutorial-url" class="input" placeholder="YouTube / MP4 Video Link">
+            <button class="cta-btn" onclick="updateTutorialVideo()">Update Tutorial</button>
+          </div>
+        </div>
+
+        <div class="settings-card">
           <h4>🏆 Leaderboard Manager</h4>
           <div id="adm-leaderboard-list"></div>
         </div>
@@ -1388,6 +1472,14 @@
         if (chan) chan.value = data.channel || '';
         if (help) help.value = data.help || '';
       });
+
+      db.ref('settings/tutorial').once('value').then(snap => {
+        const data = snap.val() || {};
+        const title = document.getElementById('adm-tutorial-title');
+        const url = document.getElementById('adm-tutorial-url');
+        if (title) title.value = data.title || '';
+        if (url) url.value = data.url || '';
+      });
     }
 
     function addNewCoin() {
@@ -1431,6 +1523,16 @@
         channel: document.getElementById('adm-link-chan').value.trim(),
         help: document.getElementById('adm-link-help').value.trim()
       }).then(() => showToast('Links updated!'));
+    }
+
+    function updateTutorialVideo() {
+      const title = document.getElementById('adm-tutorial-title').value.trim();
+      const url = document.getElementById('adm-tutorial-url').value.trim();
+      if (!url) return showToast('Enter tutorial video link.');
+      db.ref('settings/tutorial').set({ title: title || 'Watch Tutorial', url }).then(() => {
+        fetchTutorialVideo();
+        showToast('Tutorial video updated!');
+      });
     }
 
     function updateOrderStatus(id, status, user, payable) {

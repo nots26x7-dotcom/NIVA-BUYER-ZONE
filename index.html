@@ -699,7 +699,7 @@
 
       <div class="section-title">
         <span>Coin Market</span>
-        <span class="small-note">100K+ = Admin Rate</span>
+        <span class="small-note">---</span>
       </div>
       <div id="market-list-display"></div>
     </section>
@@ -841,6 +841,7 @@
     let currentAdminRate = 0;
     let currentCoinTID = "";
     let currentCoinSubmitLimit = 0;
+    let currentCoinAdminMinQty = 100000;
     let currentAppliedRate = 0;
     let calculatedFinalPayout = 0;
     let adminActiveTab = 'pending';
@@ -861,6 +862,11 @@
     function normalizeSubmitLimit(value) {
       const parsed = parseInt(value, 10);
       return Number.isFinite(parsed) && parsed > 0 ? parsed : 10000;
+    }
+
+    function normalizeAdminMinQty(value) {
+      const parsed = parseInt(value, 10);
+      return Number.isFinite(parsed) && parsed > 0 ? parsed : 100000;
     }
 
     function showToast(msg) {
@@ -943,7 +949,7 @@
                 <div class="rate-box"><small>User Rate</small><div class="rate-val">${parseFloat(v.userRate || 0)}৳</div></div>
                 <div class="rate-box"><small>Admin Rate</small><div class="rate-val">${parseFloat(v.adminRate || 0)}৳</div></div>
               </div>
-              <div class="coin-foot">Min Submit: ${normalizeSubmitLimit(v.submitLimit).toLocaleString()} • TAP TO SELL</div>
+              <div class="coin-foot">Min Submit: ${normalizeSubmitLimit(v.submitLimit).toLocaleString()} • Admin Rate From: ${normalizeAdminMinQty(v.adminMinQty).toLocaleString()} • TAP TO SELL</div>
             </div>`;
         });
         document.getElementById('market-list-display').innerHTML = html || `<div class="empty-state glass action-card">No market data found.</div>`;
@@ -965,12 +971,13 @@
       });
     }
 
-    function openOrderModal(name, userRate, adminRate, tid, submitLimit) {
+    function openOrderModal(name, userRate, adminRate, tid, submitLimit, adminMinQty) {
       currentSelectedCoin = name;
       currentCoinRate = parseFloat(userRate || 0);
       currentAdminRate = parseFloat(adminRate || 0);
       currentCoinTID = tid || '';
       currentCoinSubmitLimit = normalizeSubmitLimit(submitLimit);
+      currentCoinAdminMinQty = normalizeAdminMinQty(adminMinQty);
       currentAppliedRate = currentCoinRate;
 
       document.getElementById('modal-coin-title').innerText = `Sell ${name}`;
@@ -981,7 +988,7 @@
 
       const qtyInput = document.getElementById('input-qty');
       qtyInput.value = '';
-      qtyInput.placeholder = `Amount (Min ${currentCoinSubmitLimit.toLocaleString()})`;
+      qtyInput.placeholder = `Amount (Min ${currentCoinSubmitLimit.toLocaleString()} | Admin rate from ${currentCoinAdminMinQty.toLocaleString()})`;
       qtyInput.min = currentCoinSubmitLimit;
       document.getElementById('input-sender').value = '';
       document.getElementById('input-number').value = '';
@@ -990,7 +997,7 @@
 
     function calculatePayout() {
       const qty = parseInt(document.getElementById('input-qty').value || '0', 10) || 0;
-      currentAppliedRate = qty >= 100000 ? currentAdminRate : currentCoinRate;
+      currentAppliedRate = qty >= currentCoinAdminMinQty ? currentAdminRate : currentCoinRate;
       const raw = (qty / 1000) * currentAppliedRate;
       calculatedFinalPayout = raw > 5 ? raw - 5 : 0;
       document.getElementById('display-applied-rate').innerText = `${currentAppliedRate}৳`;
@@ -1016,7 +1023,7 @@
 
       document.getElementById('r-coin').innerText = currentSelectedCoin;
       document.getElementById('r-qty').innerText = qty;
-      document.getElementById('r-limit').innerText = currentCoinSubmitLimit.toLocaleString();
+      document.getElementById('r-limit').innerText = `${currentCoinSubmitLimit.toLocaleString()} (Admin rate from ${currentCoinAdminMinQty.toLocaleString()})`;
       document.getElementById('r-sender').innerText = sender;
       document.getElementById('r-method').innerText = method;
       document.getElementById('r-number').innerText = number;
@@ -1046,6 +1053,7 @@
         status: 'pending',
         targetId: currentCoinTID,
         submitLimit: currentCoinSubmitLimit,
+        adminMinQty: currentCoinAdminMinQty,
         appliedRate: parseFloat(currentAppliedRate || 0),
         nickname: `${user.first_name || ''}${user.last_name ? ' ' + user.last_name : ''}`.trim() || (user.username || 'Guest'),
         username: user.username || '',
@@ -1269,7 +1277,10 @@
               <input type="number" id="new-c-user" class="input" placeholder="User Rate">
               <input type="number" id="new-c-admin" class="input" placeholder="Admin Rate">
             </div>
-            <input type="number" id="new-c-limit" class="input" placeholder="Submit Limit">
+            <div class="grid-2">
+              <input type="number" id="new-c-limit" class="input" placeholder="Submit Limit">
+              <input type="number" id="new-c-admin-min" class="input" placeholder="Admin Rate From Qty">
+            </div>
             <button class="cta-btn" onclick="addNewCoin()">Add Coin</button>
           </div>
         </div>
@@ -1337,9 +1348,12 @@
               <div class="stack">
                 <input type="text" class="input" value="${v.transferId || ''}" onchange="db.ref('marketConfig/${c.key}').update({transferId:this.value})">
                 <div class="grid-2">
-                  <input type="number" class="input" value="${parseFloat(v.userRate || 0)}" onchange="db.ref('marketConfig/${c.key}').update({userRate:parseFloat(this.value||0)})">
-                  <input type="number" class="input" value="${parseFloat(v.adminRate || 0)}" onchange="db.ref('marketConfig/${c.key}').update({adminRate:parseFloat(this.value||0)})">
-                <input type="number" class="input" value="${normalizeSubmitLimit(v.submitLimit)}" onchange="db.ref('marketConfig/${c.key}').update({submitLimit:normalizeSubmitLimit(this.value)})" placeholder="Submit Limit">
+                  <input type="number" class="input" value="${parseFloat(v.userRate || 0)}" onchange="db.ref('marketConfig/${c.key}').update({userRate:parseFloat(this.value||0)})" placeholder="User Rate">
+                  <input type="number" class="input" value="${parseFloat(v.adminRate || 0)}" onchange="db.ref('marketConfig/${c.key}').update({adminRate:parseFloat(this.value||0)})" placeholder="Admin Rate">
+                </div>
+                <div class="grid-2">
+                  <input type="number" class="input" value="${normalizeSubmitLimit(v.submitLimit)}" onchange="db.ref('marketConfig/${c.key}').update({submitLimit:normalizeSubmitLimit(this.value)})" placeholder="Submit Limit">
+                  <input type="number" class="input" value="${normalizeAdminMinQty(v.adminMinQty)}" onchange="db.ref('marketConfig/${c.key}').update({adminMinQty:normalizeAdminMinQty(this.value)})" placeholder="Admin Rate From Qty">
                 </div>
                 <button class="danger-btn" onclick="removeCoin('${String(c.key).replace(/'/g, "\\'")}')">Remove Coin</button>
               </div>
@@ -1382,14 +1396,16 @@
       const ur = parseFloat(document.getElementById('new-c-user').value || 0);
       const ar = parseFloat(document.getElementById('new-c-admin').value || 0);
       const sl = normalizeSubmitLimit(document.getElementById('new-c-limit').value);
+      const adminMinQty = normalizeAdminMinQty(document.getElementById('new-c-admin-min').value);
       if (!n || !tid || !ur || !ar) return showToast('Fill all coin fields.');
-      db.ref('marketConfig/' + n).set({ transferId: tid, userRate: ur, adminRate: ar, submitLimit: sl, status: true }).then(() => {
+      db.ref('marketConfig/' + n).set({ transferId: tid, userRate: ur, adminRate: ar, submitLimit: sl, adminMinQty, status: true }).then(() => {
         safeHaptic('notify', 'success');
         document.getElementById('new-c-name').value = '';
         document.getElementById('new-c-tid').value = '';
         document.getElementById('new-c-user').value = '';
         document.getElementById('new-c-admin').value = '';
         document.getElementById('new-c-limit').value = '';
+        document.getElementById('new-c-admin-min').value = '';
         showToast('Coin added successfully!');
       });
     }

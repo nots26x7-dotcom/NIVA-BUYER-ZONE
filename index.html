@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>NIVA BUYER ZONE • MADE BY @S26X_BRO</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -410,20 +412,23 @@
       left: 12px;
       right: 12px;
       bottom: 14px;
-      height: 70px;
-      border-radius: 30px;
+      height: 64px;
+      border-radius: 24px;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      padding: 7px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+      padding: 6px;
       z-index: 40;
     }
     .nav-tab {
       border: none;
       background: transparent;
       color: #8fa8ce;
-      border-radius: 18px;
-      font-size: 21px;
+      border-radius: 16px;
+      font-size: 18px;
       font-weight: 800;
+      min-width: 0;
+      padding: 0;
       transition: .2s ease;
     }
     .nav-tab.active {
@@ -839,6 +844,7 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+    const storage = firebase.storage();
     const tg = window.Telegram.WebApp;
     const ADMIN_LIST = [7665757155, 8505710811];
 
@@ -875,13 +881,40 @@
       return Number.isFinite(parsed) && parsed > 0 ? parsed : 100000;
     }
 
-    function getTutorialEmbedUrl(url) {
+    let tutorialSoundMuted = true;
+    let currentTutorialData = {};
+    let tutorialUploadInProgress = false;
+
+    function getTutorialEmbedUrl(url, muted = tutorialSoundMuted) {
       const raw = String(url || '').trim();
       if (!raw) return '';
-      if (/youtube\.com\/embed\//i.test(raw)) return raw;
-      const ytMatch = raw.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/i);
-      if (ytMatch && ytMatch[1]) return `https://www.youtube.com/embed/${ytMatch[1]}`;
+      const muteValue = muted ? '1' : '0';
+
+      const origin = encodeURIComponent(location.origin || 'https://localhost');
+      const ytBaseParams = `playsinline=1&rel=0&mute=${muteValue}&enablejsapi=1&origin=${origin}`;
+
+      if (/youtube\.com\/embed\//i.test(raw)) {
+        const cleaned = raw.replace(/([?&])(playsinline|rel|modestbranding|mute|enablejsapi|origin)=[^&]*/gi, '').replace(/[?&]$/, '');
+        const sep = cleaned.includes('?') ? '&' : '?';
+        return `${cleaned}${sep}${ytBaseParams}`;
+      }
+
+      const ytMatch = raw.match(/(?:youtube\.com\/(?:watch\?.*?v=|embed\/|shorts\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/i);
+      if (ytMatch && ytMatch[1]) {
+        return `https://www.youtube.com/embed/${ytMatch[1]}?${ytBaseParams}`;
+      }
+
       return raw;
+    }
+
+    function escapeHtml(val) {
+      return String(val || '').replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s]));
+    }
+
+    function isDirectTutorialVideo(url, data = {}) {
+      const raw = String(url || '').trim();
+      const mime = String(data.mimeType || '').toLowerCase();
+      return /^video\//.test(mime) || /(?:\.mp4|\.webm|\.ogg|\.mov|\.m4v)(?:\?.*)?$/i.test(raw) || /firebasestorage|googleapis\.com/i.test(raw);
     }
 
     function getTutorialContentHtml(data) {
@@ -889,34 +922,89 @@
       const url = String(data.url || '').trim();
       const embedUrl = getTutorialEmbedUrl(url);
       if (!embedUrl) {
-        return `<div class=\"empty-state glass\">No tutorial video set yet.</div>`;
+        return `<div class="empty-state glass">No tutorial video set yet.</div>`;
       }
-      const isDirectVideo = /\.(mp4|webm|ogg)(\?.*)?$/i.test(embedUrl);
+      const isDirectVideo = isDirectTutorialVideo(url, data);
+      const safeTitle = escapeHtml(title);
+      const openLabel = isDirectVideo ? 'Download / Open' : 'Open Video';
       return `
-        <div class=\"simple-card glass\" style=\"padding:16px;\">
-          <div style=\"margin-bottom:12px;\">
-            <b style=\"font-size:18px;display:block;\">${title}</b>
-            <small class=\"muted\">Watch the full selling tutorial here.</small>
+        <div class="simple-card glass" style="padding:16px;">
+          <div style="margin-bottom:12px;">
+            <b style="font-size:18px;display:block;">${safeTitle}</b>
+            <small class="muted">Watch the full selling tutorial here.</small>
           </div>
-          <div style=\"overflow:hidden;border-radius:18px;border:1px solid rgba(255,255,255,.08);background:#08111f;\">${isDirectVideo ? `<video controls playsinline style=\"width:100%;display:block;max-height:70vh;background:#000;\" src=\"${embedUrl}\"></video>` : `<iframe src=\"${embedUrl}\" title=\"${title.replace(/\"/g, '&quot;')}\" style=\"width:100%;height:240px;border:0;display:block;\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>`}</div>
-          <a href=\"${url}\" target=\"_blank\" class=\"action-card glass\" style=\"margin-top:14px;\">
-            <div class=\"left-wrap\">
-              <div class=\"icon-box\">▶️</div>
-              <div>
-                <b>Open Video</b><br>
-                <small class=\"muted\">Tap to watch in full screen</small>
+          <div style="overflow:hidden;border-radius:18px;border:1px solid rgba(255,255,255,.08);background:#08111f;">${isDirectVideo ? `<video id="tutorial-video-player" controls playsinline preload="metadata" ${tutorialSoundMuted ? 'muted' : ''} style="width:100%;display:block;max-height:70vh;background:#000;" src="${embedUrl}"></video>` : `<iframe id="tutorial-video-frame" src="${embedUrl}" title="${safeTitle}" referrerpolicy="strict-origin-when-cross-origin" loading="lazy" style="width:100%;height:240px;border:0;display:block;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`}</div>
+          <div class="grid-2" style="margin-top:14px;">
+            <a href="${url}" target="_blank" class="action-card glass" style="margin:0;">
+              <div class="left-wrap">
+                <div class="icon-box">▶️</div>
+                <div>
+                  <b>${openLabel}</b><br>
+                  <small class="muted">Tap to watch in full screen</small>
+                </div>
               </div>
-            </div>
-            <span>❯</span>
-          </a>
+              <span>❯</span>
+            </a>
+            <button class="cta-btn" style="width:100%;margin:0;padding:8px 10px;font-size:12px;border-radius:10px;min-height:36px;" onclick="toggleTutorialMute()">${tutorialSoundMuted ? '🔇 Unmute' : '🔊 Mute'}</button>
+          </div>
         </div>`;
+    }
+
+    function syncTutorialPlayerState() {
+      const player = document.getElementById('tutorial-video-player');
+      if (player) {
+        player.muted = tutorialSoundMuted;
+        player.playsInline = true;
+        player.onloadeddata = null;
+        player.onerror = function() {
+          showToast('Video failed to play. Please re-upload the file from Admin.');
+        };
+      }
     }
 
     function fetchTutorialVideo() {
       db.ref('settings/tutorial').on('value', snap => {
         const data = snap.val() || {};
+        currentTutorialData = data;
         const wrap = document.getElementById('tutorial-content-display');
-        if (wrap) wrap.innerHTML = getTutorialContentHtml(data);
+        if (wrap) {
+          wrap.innerHTML = getTutorialContentHtml(data);
+          syncTutorialPlayerState();
+        }
+      });
+    }
+
+    function toggleTutorialMute() {
+      const url = String((currentTutorialData && currentTutorialData.url) || '').trim();
+      if (!url) return showToast('No tutorial video found.');
+      tutorialSoundMuted = !tutorialSoundMuted;
+      const wrap = document.getElementById('tutorial-content-display');
+      if (wrap) {
+        wrap.innerHTML = getTutorialContentHtml(currentTutorialData || {});
+        syncTutorialPlayerState();
+      }
+      showToast(tutorialSoundMuted ? 'Tutorial muted.' : 'Tutorial unmuted.');
+    }
+
+    function removeTutorialVideo() {
+      if (!confirm('Remove tutorial video?')) return;
+      const storagePath = String((currentTutorialData && currentTutorialData.storagePath) || '').trim();
+      const removeDb = db.ref('settings/tutorial').remove();
+      const removeStorage = storagePath ? storage.ref(storagePath).delete().catch(() => null) : Promise.resolve();
+      Promise.all([removeDb, removeStorage]).then(() => {
+        currentTutorialData = {};
+        tutorialSoundMuted = true;
+        const title = document.getElementById('adm-tutorial-title');
+        const url = document.getElementById('adm-tutorial-url');
+        const fileInput = document.getElementById('adm-tutorial-file');
+        const note = document.getElementById('adm-tutorial-upload-note');
+        if (title) title.value = '';
+        if (url) url.value = '';
+        if (fileInput) fileInput.value = '';
+        if (note) note.innerText = 'Choose a video from your phone and upload it, or paste a YouTube link and tap Save Link.';
+        const wrap = document.getElementById('tutorial-content-display');
+        if (wrap) wrap.innerHTML = getTutorialContentHtml({});
+        showToast('Tutorial video removed!');
       });
     }
 
@@ -1382,8 +1470,14 @@
           <h4>🎥 Tutorial Video</h4>
           <div class="stack">
             <input type="text" id="adm-tutorial-title" class="input" placeholder="Tutorial Title">
-            <input type="text" id="adm-tutorial-url" class="input" placeholder="YouTube / MP4 Video Link">
-            <button class="cta-btn" onclick="updateTutorialVideo()">Update Tutorial</button>
+            <input type="file" id="adm-tutorial-file" class="input" accept="video/*" onchange="handleTutorialFileSelected(event)">
+            <input type="text" id="adm-tutorial-url" class="input" placeholder="Paste YouTube link or use uploaded video URL">
+            <div id="adm-tutorial-upload-note" class="small-note">Choose a video from your phone and upload it, or paste a YouTube link and tap Save Link.</div>
+            <div class="grid-2">
+              <button class="cta-btn" onclick="uploadTutorialVideoFile()">Upload Video</button>
+              <button class="cta-btn" onclick="updateTutorialVideo()">Save Link</button>
+            </div>
+            <button class="danger-btn" style="width:100%;margin-top:10px;" onclick="removeTutorialVideo()">Remove Tutorial</button>
           </div>
         </div>
 
@@ -1477,8 +1571,10 @@
         const data = snap.val() || {};
         const title = document.getElementById('adm-tutorial-title');
         const url = document.getElementById('adm-tutorial-url');
+        const note = document.getElementById('adm-tutorial-upload-note');
         if (title) title.value = data.title || '';
         if (url) url.value = data.url || '';
+        if (note) note.innerText = data.url ? 'Video already saved. You can replace it with a new upload or paste a different YouTube link.' : 'Choose a video from your phone and upload it, or paste a YouTube link and tap Save Link.';
       });
     }
 
@@ -1525,12 +1621,93 @@
       }).then(() => showToast('Links updated!'));
     }
 
+    function handleTutorialFileSelected(event) {
+      const file = event && event.target && event.target.files ? event.target.files[0] : null;
+      const note = document.getElementById('adm-tutorial-upload-note');
+      if (!file) {
+        if (note) note.innerText = 'Choose a video from your phone and upload it, or paste a YouTube link and tap Save Link.';
+        return;
+      }
+      if (!String(file.type || '').startsWith('video/')) {
+        event.target.value = '';
+        if (note) note.innerText = 'Only video files are allowed.';
+        return showToast('Please choose a video file.');
+      }
+      if (note) note.innerText = `Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+    }
+
+    function uploadTutorialVideoFile() {
+      const fileInput = document.getElementById('adm-tutorial-file');
+      const titleInput = document.getElementById('adm-tutorial-title');
+      const urlInput = document.getElementById('adm-tutorial-url');
+      const note = document.getElementById('adm-tutorial-upload-note');
+      const file = fileInput && fileInput.files ? fileInput.files[0] : null;
+      if (!file) return showToast('Select a video file first.');
+      if (!String(file.type || '').startsWith('video/')) return showToast('Only video files are allowed.');
+      if (tutorialUploadInProgress) return showToast('Video upload already in progress.');
+      tutorialUploadInProgress = true;
+      const safeName = String(file.name || 'tutorial-video').replace(/[^a-zA-Z0-9._-]/g, '_');
+      const path = `tutorials/${Date.now()}_${safeName}`;
+      const ref = storage.ref(path);
+      const metadata = { contentType: file.type || 'video/mp4' };
+      const task = ref.put(file, metadata);
+      if (note) note.innerText = 'Uploading: 0%';
+
+      task.on('state_changed', snap => {
+        const total = parseFloat(snap.totalBytes || 0);
+        const done = parseFloat(snap.bytesTransferred || 0);
+        const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+        if (note) note.innerText = `Uploading: ${percent}%`;
+      }, err => {
+        tutorialUploadInProgress = false;
+        console.error(err);
+        if (note) note.innerText = 'Upload failed. Try again.';
+        showToast('Video upload failed. Check Firebase Storage rules.');
+      }, () => {
+        ref.getDownloadURL().then(url => {
+          const title = (titleInput && titleInput.value.trim()) || file.name.replace(/\.[^.]+$/, '') || 'Watch Tutorial';
+          const payload = {
+            title,
+            url,
+            storagePath: path,
+            mimeType: file.type || 'video/mp4',
+            originalName: file.name || '',
+            uploadedAt: Date.now()
+          };
+          return db.ref('settings/tutorial').set(payload).then(() => {
+            tutorialUploadInProgress = false;
+            currentTutorialData = payload;
+            if (urlInput) urlInput.value = url;
+            if (fileInput) fileInput.value = '';
+            if (note) note.innerText = 'Upload complete!';
+            tutorialSoundMuted = true;
+            const wrap = document.getElementById('tutorial-content-display');
+            if (wrap) {
+              wrap.innerHTML = getTutorialContentHtml(payload);
+              syncTutorialPlayerState();
+            }
+            showToast('Tutorial video uploaded!');
+          });
+        }).catch(err => {
+          tutorialUploadInProgress = false;
+          console.error(err);
+          if (note) note.innerText = 'Could not get download URL.';
+          showToast('Upload finished but video URL could not be created.');
+        });
+      });
+    }
+
     function updateTutorialVideo() {
       const title = document.getElementById('adm-tutorial-title').value.trim();
       const url = document.getElementById('adm-tutorial-url').value.trim();
-      if (!url) return showToast('Enter tutorial video link.');
-      db.ref('settings/tutorial').set({ title: title || 'Watch Tutorial', url }).then(() => {
-        fetchTutorialVideo();
+      if (!url) return showToast('Paste a YouTube link or upload a video first.');
+      db.ref('settings/tutorial').update({ title: title || 'Watch Tutorial', url }).then(() => {
+        currentTutorialData = Object.assign({}, currentTutorialData || {}, { title: title || 'Watch Tutorial', url });
+        const wrap = document.getElementById('tutorial-content-display');
+        if (wrap) {
+          wrap.innerHTML = getTutorialContentHtml(currentTutorialData);
+          syncTutorialPlayerState();
+        }
         showToast('Tutorial video updated!');
       });
     }

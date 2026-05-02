@@ -761,6 +761,10 @@
           <select id="input-method" class="select"></select>
           <input type="text" id="input-number" class="input" placeholder="Payment Number">
         </div>
+        <div id="coin-copy-info-box" class="copy-box hidden" onclick="copyCoinExtraInfo()" style="margin:0;">
+          <small id="coin-copy-info-label" style="display:block;color:#93c5fd;font-weight:900;letter-spacing:.08em;">TAP TO COPY CODE</small>
+          <b id="coin-copy-info-value" style="font-size:16px;">🔐 ---</b>
+        </div>
       </div>
 
       <div class="action-card glass" style="margin-top:16px;">
@@ -790,6 +794,7 @@
         <div class="review-row"><span>Sender</span><b id="r-sender">---</b></div>
         <div class="review-row"><span>Method</span><b id="r-method">---</b></div>
         <div class="review-row"><span>Account No</span><b id="r-number">---</b></div>
+        <div class="review-row" id="r-coin-info-row"><span id="r-coin-info-label">Code</span><b id="r-coin-info">---</b></div>
         <div class="review-row"><span>Applied Rate</span><b id="r-rate">---</b></div>
         <div class="review-row" style="border-top:1px dashed rgba(255,255,255,.12);margin-top:8px;padding-top:14px;"><span>You Will Get</span><b id="r-pay" style="font-size:23px;color:#6ee7b7;">0.00 ৳</b></div>
       </div>
@@ -852,6 +857,8 @@
     let currentCoinRate = 0;
     let currentAdminRate = 0;
     let currentCoinTID = "";
+    let currentCoinInfoType = "code";
+    let currentCoinInfoValue = "";
     let currentCoinSubmitLimit = 0;
     let currentCoinAdminMinQty = 100000;
     let currentAppliedRate = 0;
@@ -1002,6 +1009,19 @@
 
     function escapeHtml(val) {
       return String(val || '').replace(/[&<>"']/g, s => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s]));
+    }
+
+    function escapeJs(val) {
+      return String(val || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '');
+    }
+
+    function normalizeCoinInfoType(value) {
+      const type = String(value || '').trim().toLowerCase();
+      return type === 'username' ? 'username' : 'code';
+    }
+
+    function getCoinInfoLabel(type) {
+      return normalizeCoinInfoType(type) === 'username' ? 'Username' : 'Code';
     }
 
     function isDirectTutorialVideo(url, data = {}) {
@@ -1175,7 +1195,7 @@
           const v = c.val() || {};
           const isOnline = v.status !== false;
           html += `
-            <div class="coin-card glass ${isOnline ? '' : 'offline'}" onclick="${isOnline ? `openOrderModal('${c.key.replace(/'/g, "\\'")}', ${parseFloat(v.userRate || 0)}, ${parseFloat(v.adminRate || 0)}, '${String(v.transferId || '').replace(/'/g, "\\'")}', ${normalizeSubmitLimit(v.submitLimit)}, ${normalizeAdminMinQty(v.adminMinQty)})` : ''}">
+            <div class="coin-card glass ${isOnline ? '' : 'offline'}" onclick="${isOnline ? `openOrderModal('${escapeJs(c.key)}', ${parseFloat(v.userRate || 0)}, ${parseFloat(v.adminRate || 0)}, '${escapeJs(v.transferId || '')}', ${normalizeSubmitLimit(v.submitLimit)}, ${normalizeAdminMinQty(v.adminMinQty)}, '${escapeJs(normalizeCoinInfoType(v.coinInfoType))}', '${escapeJs(v.coinInfoValue || '')}')` : ''}">
               <div class="status-badge ${isOnline ? 'online' : 'offline'}">${isOnline ? '● Online' : '● Offline'}</div>
               <div class="left-wrap">
                 <div class="icon-box">🪙</div>
@@ -1212,11 +1232,13 @@
       fetchTutorialVideo();
     }
 
-    function openOrderModal(name, userRate, adminRate, tid, submitLimit, adminMinQty) {
+    function openOrderModal(name, userRate, adminRate, tid, submitLimit, adminMinQty, coinInfoType = 'code', coinInfoValue = '') {
       currentSelectedCoin = name;
       currentCoinRate = parseFloat(userRate || 0);
       currentAdminRate = parseFloat(adminRate || 0);
       currentCoinTID = tid || '';
+      currentCoinInfoType = normalizeCoinInfoType(coinInfoType);
+      currentCoinInfoValue = String(coinInfoValue || '').trim();
       currentCoinSubmitLimit = normalizeSubmitLimit(submitLimit);
       currentCoinAdminMinQty = adminMinQty === undefined || adminMinQty === null || adminMinQty === ''
         ? 100000
@@ -1228,6 +1250,20 @@
       document.getElementById('display-submit-limit').innerText = currentCoinSubmitLimit.toLocaleString();
       document.getElementById('display-applied-rate').innerText = `${currentCoinRate}৳`;
       document.getElementById('display-final-payout').innerText = '0.00 ৳';
+
+      const coinInfoBox = document.getElementById('coin-copy-info-box');
+      const coinInfoLabel = document.getElementById('coin-copy-info-label');
+      const coinInfoValueEl = document.getElementById('coin-copy-info-value');
+      const coinInfoDisplayLabel = getCoinInfoLabel(currentCoinInfoType);
+      if (currentCoinInfoValue) {
+        coinInfoBox.classList.remove('hidden');
+        coinInfoLabel.innerText = `TAP TO COPY ${coinInfoDisplayLabel.toUpperCase()}`;
+        coinInfoValueEl.innerText = `${currentCoinInfoType === 'username' ? '👤' : '🔐'} ${currentCoinInfoValue}`;
+      } else {
+        coinInfoBox.classList.add('hidden');
+        coinInfoLabel.innerText = 'TAP TO COPY CODE';
+        coinInfoValueEl.innerText = '🔐 ---';
+      }
 
       const qtyInput = document.getElementById('input-qty');
       qtyInput.value = '';
@@ -1267,6 +1303,13 @@
       showToast('Admin ID copied!');
     }
 
+    function copyCoinExtraInfo() {
+      if (!currentCoinInfoValue) return showToast('No code or username found for this coin.');
+      navigator.clipboard.writeText(String(currentCoinInfoValue || ''));
+      safeHaptic('notify', 'success');
+      showToast(getCoinInfoLabel(currentCoinInfoType) + ' copied!');
+    }
+
     function showConfirmation() {
       const qty = parseFloat(document.getElementById('input-qty').value || '0') || 0;
       const sender = document.getElementById('input-sender').value.trim();
@@ -1286,6 +1329,10 @@
       document.getElementById('r-sender').innerText = sender;
       document.getElementById('r-method').innerText = method;
       document.getElementById('r-number').innerText = number;
+      const reviewCoinInfoRow = document.getElementById('r-coin-info-row');
+      document.getElementById('r-coin-info-label').innerText = getCoinInfoLabel(currentCoinInfoType);
+      document.getElementById('r-coin-info').innerText = currentCoinInfoValue || '---';
+      reviewCoinInfoRow.style.display = currentCoinInfoValue ? 'flex' : 'none';
       document.getElementById('r-rate').innerText = `${currentAppliedRate}৳`;
       document.getElementById('r-pay').innerText = `${calculatedFinalPayout.toFixed(2)} ৳`;
 
@@ -1323,6 +1370,8 @@
         method: document.getElementById('r-method').innerText,
         status: 'pending',
         targetId: currentCoinTID,
+        coinInfoType: currentCoinInfoType,
+        coinInfoValue: currentCoinInfoValue,
         submitLimit: currentCoinSubmitLimit,
         adminMinQty: currentCoinAdminMinQty,
         appliedRate: parseFloat(currentAppliedRate || 0)
@@ -1532,10 +1581,15 @@
                 <div class="tile"><small>Payout</small><b style="color:#6ee7b7;">${formatMoney(o.payable)}</b></div>
               </div>
 
-              <div class="copy-box" onclick="copyToClipboard('${String(o.number || '').replace(/'/g, "\\'")}')">
+              <div class="copy-box" onclick="copyToClipboard('${escapeJs(o.number || '')}')">
                 <small style="display:block;color:#93c5fd;font-weight:900;letter-spacing:.08em;">TAP TO COPY NUMBER</small>
                 <b style="font-size:16px;">📱 ${o.number || '---'}</b>
               </div>
+
+              ${o.coinInfoValue ? `<div class="copy-box" onclick="copyToClipboard('${escapeJs(o.coinInfoValue || '')}')">
+                <small style="display:block;color:#93c5fd;font-weight:900;letter-spacing:.08em;">TAP TO COPY ${getCoinInfoLabel(o.coinInfoType).toUpperCase()}</small>
+                <b style="font-size:16px;">${normalizeCoinInfoType(o.coinInfoType) === 'username' ? '👤' : '🔐'} ${o.coinInfoValue}</b>
+              </div>` : ''}
 
               <div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:10px;">
                 <small style="color:#8ca4c8;">Target ID: ${o.targetId || '---'}</small>
@@ -1566,6 +1620,13 @@
           <div class="stack">
             <input type="text" id="new-c-name" class="input" placeholder="Coin Name">
             <input type="text" id="new-c-tid" class="input" placeholder="Address / UID">
+            <div class="grid-2">
+              <select id="new-c-info-type" class="select">
+                <option value="code">Code</option>
+                <option value="username">Username</option>
+              </select>
+              <input type="text" id="new-c-info-value" class="input" placeholder="Code / Username">
+            </div>
             <div class="grid-2">
               <input type="number" id="new-c-user" class="input" placeholder="User Rate">
               <input type="number" id="new-c-admin" class="input" placeholder="Admin Rate">
@@ -1654,7 +1715,14 @@
                 </label>
               </div>
               <div class="stack">
-                <input type="text" class="input" value="${v.transferId || ''}" onchange="db.ref('marketConfig/${c.key}').update({transferId:this.value})">
+                <input type="text" class="input" value="${escapeHtml(v.transferId || '')}" onchange="db.ref('marketConfig/${c.key}').update({transferId:this.value})" placeholder="Address / UID">
+                <div class="grid-2">
+                  <select class="select" onchange="db.ref('marketConfig/${c.key}').update({coinInfoType:this.value})">
+                    <option value="code" ${normalizeCoinInfoType(v.coinInfoType) === 'code' ? 'selected' : ''}>Code</option>
+                    <option value="username" ${normalizeCoinInfoType(v.coinInfoType) === 'username' ? 'selected' : ''}>Username</option>
+                  </select>
+                  <input type="text" class="input" value="${escapeHtml(v.coinInfoValue || '')}" onchange="db.ref('marketConfig/${c.key}').update({coinInfoValue:this.value})" placeholder="Code / Username">
+                </div>
                 <div class="grid-2">
                   <input type="number" class="input" value="${parseFloat(v.userRate || 0)}" onchange="db.ref('marketConfig/${c.key}').update({userRate:parseFloat(this.value||0)})" placeholder="User Rate">
                   <input type="number" class="input" value="${parseFloat(v.adminRate || 0)}" onchange="db.ref('marketConfig/${c.key}').update({adminRate:parseFloat(this.value||0)})" placeholder="Admin Rate">
@@ -1711,15 +1779,19 @@
     function addNewCoin() {
       const n = document.getElementById('new-c-name').value.trim();
       const tid = document.getElementById('new-c-tid').value.trim();
+      const coinInfoType = normalizeCoinInfoType(document.getElementById('new-c-info-type').value);
+      const coinInfoValue = document.getElementById('new-c-info-value').value.trim();
       const ur = parseFloat(document.getElementById('new-c-user').value || 0);
       const ar = parseFloat(document.getElementById('new-c-admin').value || 0);
       const sl = normalizeSubmitLimit(document.getElementById('new-c-limit').value);
       const adminMinQty = normalizeAdminMinQty(document.getElementById('new-c-admin-min').value);
       if (!n || !tid || !ur || !ar) return showToast('Fill all coin fields.');
-      db.ref('marketConfig/' + n).set({ transferId: tid, userRate: ur, adminRate: ar, submitLimit: sl, adminMinQty, status: true }).then(() => {
+      db.ref('marketConfig/' + n).set({ transferId: tid, coinInfoType, coinInfoValue, userRate: ur, adminRate: ar, submitLimit: sl, adminMinQty, status: true }).then(() => {
         safeHaptic('notify', 'success');
         document.getElementById('new-c-name').value = '';
         document.getElementById('new-c-tid').value = '';
+        document.getElementById('new-c-info-type').value = 'code';
+        document.getElementById('new-c-info-value').value = '';
         document.getElementById('new-c-user').value = '';
         document.getElementById('new-c-admin').value = '';
         document.getElementById('new-c-limit').value = '';

@@ -2,14 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <title>NIVA BUYER ZONE • MADE BY @S26X_BRO</title>
+  
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
   <style>
     :root {
       --bg: #07111f;
@@ -26,72 +28,44 @@
       --orange: #f59e0b;
       --red: #ef4444;
       --pink: #ec4899;
-      --shadow: 0 18px 50px rgba(0,0,0,.35);
+      --shadow: 0 8px 24px rgba(0,0,0,.2);
       --radius-xl: 28px;
       --radius-lg: 22px;
       --radius-md: 16px;
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    html, body { margin: 0; padding: 0; font-family: Inter, system-ui, sans-serif; background: radial-gradient(circle at top left, #12254a 0%, var(--bg) 35%, #040a12 100%); color: var(--text); min-height: 100%; }
+    html, body { margin: 0; padding: 0; font-family: Inter, system-ui, sans-serif; background: #07111f; color: var(--text); min-height: 100%; overscroll-behavior-y: none; }
     body { padding: 108px 13px 112px; overflow-x: hidden; }
 
-    body::before,
-    body::after {
-      content: "";
-      position: fixed;
-      width: 220px;
-      height: 220px;
-      border-radius: 999px;
-      filter: blur(60px);
-      opacity: .25;
-      z-index: -2;
-      animation: floatBlob 10s ease-in-out infinite;
-    }
-    body::before { top: -40px; left: -40px; background: #2563eb; }
-    body::after { bottom: 80px; right: -30px; background: #10b981; animation-delay: -4s; }
 
-    @keyframes floatBlob {
-      0%,100% { transform: translate(0,0) scale(1); }
-      50% { transform: translate(12px, 18px) scale(1.08); }
-    }
     @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes pulseGlow {
-      0%,100% { box-shadow: 0 0 0 0 rgba(59,130,246,.24), 0 10px 35px rgba(59,130,246,.18); }
-      50% { box-shadow: 0 0 0 10px rgba(59,130,246,0), 0 16px 45px rgba(34,197,94,.16); }
-    }
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
+      from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
     @keyframes slideUp {
       from { transform: translateY(100%); }
       to { transform: translateY(0); }
     }
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
 
     .hidden { display: none !important; }
     .glass {
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      background: rgba(18, 30, 54, .82);
       border: 1px solid var(--line);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
       box-shadow: var(--shadow);
     }
 
     #loading {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at center, #17315f 0%, #08111f 45%, #02050a 100%);
+      background: #07111f;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 9999;
-      transition: opacity .45s ease;
+      transition: opacity .3s ease;
     }
     .loader-orb {
       width: 150px;
@@ -101,7 +75,6 @@
       display: grid;
       place-items: center;
       margin-bottom: 28px;
-      animation: pulseGlow 2s ease-in-out infinite;
     }
     .loader-orb::before,
     .loader-orb::after {
@@ -141,9 +114,20 @@
       inset: 0;
       width: 42%;
       border-radius: inherit;
-      background: linear-gradient(90deg, #3b82f6, #22c55e, #3b82f6);
-      background-size: 200% 100%;
-      animation: shimmer 1.6s linear infinite;
+      background: #3b82f6;
+    }
+
+    .top-fixed-bar {
+      position: fixed;
+      top: 12px;
+      left: 13px;
+      right: 13px;
+      z-index: 40;
+      border-radius: 24px;
+      padding: 10px;
+      background: rgba(12,22,41,.95);
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,.2);
     }
 
     .top-fixed-bar {
@@ -160,18 +144,8 @@
       -webkit-backdrop-filter: blur(18px);
       box-shadow: 0 14px 35px rgba(0,0,0,.28);
     }
-    .top-fixed-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .help-only-bar {
-      left: auto;
-      right: 13px;
-      width: auto;
-      padding: 8px;
-      border-radius: 18px;
-    }
+    .top-fixed-row { display: flex; align-items: center; gap: 10px; }
+    .help-only-bar { left: auto; right: 13px; width: auto; padding: 8px; border-radius: 18px; }
     .help-only-row { justify-content: center; }
     .icon-btn {
       width: 42px;
@@ -188,6 +162,7 @@
 
     .app-shell { display: none; animation: fadeUp .5s ease both; }
     .profile-card-home { margin: 0 0 12px; }
+    
     .profile-card {
       position: relative;
       margin-top: 0;
@@ -196,19 +171,8 @@
       border-radius: 20px;
       overflow: hidden;
       padding: 12px;
-      background: linear-gradient(135deg, rgba(37,99,235,.95), rgba(124,58,237,.92), rgba(16,185,129,.84));
-      box-shadow: 0 14px 36px rgba(37,99,235,.26);
-    }
-    .profile-card::before {
-      content: "";
-      position: absolute;
-      width: 120px;
-      height: 120px;
-      top: -34px;
-      right: -28px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.12);
-      filter: blur(2px);
+      background: linear-gradient(135deg, #2563eb, #7c3aed, #10b981);
+      box-shadow: 0 8px 24px rgba(37,99,235,.2);
     }
     .profile-row { display: flex; gap: 10px; align-items: center; position: relative; z-index: 1; min-width: 0; }
     .avatar {
@@ -244,8 +208,7 @@
       color: white;
       background: linear-gradient(135deg, #0f172a, #1d4ed8, #10b981);
       border: 1px solid rgba(255,255,255,.1);
-      box-shadow: 0 18px 38px rgba(29,78,216,.28);
-      animation: pulseGlow 2s ease-in-out infinite;
+      box-shadow: 0 8px 24px rgba(29,78,216,.2);
     }
 
     .section-title {
@@ -256,13 +219,14 @@
       font-size: 16px;
       font-weight: 900;
     }
+    
     .action-card, .coin-card, .simple-card {
       border-radius: 20px;
       padding: 13px;
       margin-bottom: 11px;
       position: relative;
       overflow: hidden;
-      animation: fadeUp .35s ease both;
+      animation: fadeUp .2s ease both;
     }
     .action-card {
       display: flex;
@@ -297,9 +261,9 @@
     .coin-card {
       padding-top: 42px;
       cursor: pointer;
-      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+      transition: transform .1s ease;
     }
-    .coin-card:active { transform: scale(.985); }
+    .coin-card:active { transform: scale(.98); }
     .coin-card.offline {
       opacity: .32;
       filter: saturate(.38) brightness(.78);
@@ -330,27 +294,30 @@
     }
     .online { color: #d1fae5; background: linear-gradient(135deg, rgba(16,185,129,.94), rgba(5,150,105,.84)); }
     .offline { color: #ffe4e6; background: linear-gradient(135deg, rgba(239,68,68,.82), rgba(127,29,29,.72)); }
-    .rate-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 13px; }
+    .rate-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 13px; }
     .rate-box {
-      border-radius: 15px;
-      padding: 10px;
+      border-radius: 12px;
+      padding: 8px 4px;
       background: rgba(6,12,24,.44);
       border: 1px solid rgba(255,255,255,.07);
       text-align: center;
     }
-    .rate-box small { display: block; font-size: 9px; font-weight: 800; color: var(--muted); margin-bottom: 6px; }
+    .rate-box small { display: block; font-size: 8px; font-weight: 800; color: var(--muted); margin-bottom: 6px; letter-spacing: -.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .rate-val {
       display: inline-block;
-      min-width: 72px;
-      padding: 6px 10px;
-      border-radius: 12px;
-      font-size: 13px;
+      width: 100%;
+      min-width: 0;
+      padding: 6px 2px;
+      border-radius: 10px;
+      font-size: 12px;
       font-weight: 900;
       color: white;
       background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      box-shadow: 0 10px 20px rgba(29,78,216,.22);
+      box-shadow: 0 8px 16px rgba(29,78,216,.22);
+      box-sizing: border-box;
     }
-    .rate-box:last-child .rate-val { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 10px 20px rgba(16,185,129,.18); }
+    .rate-box:nth-child(2) .rate-val { background: linear-gradient(135deg, #7c3aed, #6d28d9); box-shadow: 0 8px 16px rgba(124,58,237,.18); }
+    .rate-box:last-child .rate-val { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 16px rgba(16,185,129,.18); }
     .coin-foot { text-align: center; margin-top: 11px; font-size: 10px; font-weight: 900; letter-spacing: .14em; color: #7eb7ff; }
 
     .screen { display: none; }
@@ -440,15 +407,16 @@
     .modal-mask, .admin-mask {
       position: fixed;
       inset: 0;
-      background: rgba(1, 7, 16, .74);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      background: rgba(1, 7, 16, .9);
       display: none;
-      align-items: flex-end;
-      justify-content: center;
       z-index: 100;
     }
-    .modal-mask.active, .admin-mask.active { display: flex; }
+    /* Modals use flex for centering bottom sheets */
+    .modal-mask { align-items: flex-end; justify-content: center; }
+    .modal-mask.active { display: flex; }
+    /* Admin mask strictly block for optimal absolute-child scrolling */
+    .admin-mask.active { display: block; }
+    
     .bottom-sheet {
       width: 100%;
       max-width: 560px;
@@ -456,9 +424,9 @@
       overflow: auto;
       padding: 26px 18px 24px;
       border-radius: 32px 32px 0 0;
-      background: linear-gradient(180deg, rgba(19, 31, 56, .98), rgba(9, 17, 32, .98));
+      background: #0d1830;
       border-top: 1px solid rgba(255,255,255,.1);
-      animation: slideUp .28s ease;
+      animation: slideUp .2s ease;
     }
     .sheet-handle {
       width: 58px;
@@ -490,6 +458,7 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
     }
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    
     .cta-btn, .ghost-btn, .danger-btn, .mini-btn {
       border: none;
       cursor: pointer;
@@ -500,10 +469,8 @@
       width: 100%;
       padding: 16px;
       color: white;
-      background: linear-gradient(135deg, #2563eb, #7c3aed, #10b981);
-      background-size: 200% 100%;
-      animation: shimmer 5s linear infinite;
-      box-shadow: 0 18px 35px rgba(37,99,235,.25);
+      background: linear-gradient(135deg, #2563eb, #10b981);
+      box-shadow: 0 8px 24px rgba(37,99,235,.2);
     }
     .ghost-btn {
       width: 100%;
@@ -520,20 +487,22 @@
     .review-row span { color: var(--muted); }
 
     .admin-panel {
+      position: absolute; /* Ensures smooth vertical scrolling on iOS and Android */
+      inset: 0;
       width: 100%;
       height: 100%;
-      overflow: auto;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch; 
       padding: 14px 14px 110px;
-      background: radial-gradient(circle at top right, #17315f 0%, #08111f 35%, #02050a 100%);
-      animation: fadeUp .25s ease;
+      background: #07111f;
+      animation: fadeUp .2s ease;
     }
     .admin-top {
       position: sticky;
       top: 0;
       z-index: 3;
       padding: 10px 0 16px;
-      backdrop-filter: blur(12px);
-      background: linear-gradient(180deg, rgba(8,17,31,.86), rgba(8,17,31,.4), transparent);
+      background: #07111f;
     }
     .admin-head {
       border-radius: 28px;
@@ -650,6 +619,7 @@
       body { max-width: 580px; margin: 0 auto; }
       .nav-dock { max-width: 552px; margin: 0 auto; }
       .bottom-sheet { border-radius: 32px; margin-bottom: 14px; }
+      .admin-panel { max-width: 580px; left: 50%; transform: translateX(-50%); border-radius: 32px; margin: 14px 0; }
     }
   </style>
 </head>
@@ -672,6 +642,7 @@
       </div>
     </div>
 
+    <!-- Home Tab -->
     <section id="home-scr" class="screen active" style="padding-top:52px;">
       <section class="profile-card profile-card-home">
         <div class="profile-row">
@@ -709,16 +680,19 @@
       <div id="market-list-display"></div>
     </section>
 
+    <!-- History Tab -->
     <section id="history-scr" class="screen">
       <div class="section-title"><span>Order History</span></div>
       <div id="history-list-display"></div>
     </section>
 
+    <!-- Leaderboard Tab -->
     <section id="rank-scr" class="screen">
       <div class="section-title"><span>Top Sellers</span></div>
       <div id="rank-list-display"></div>
     </section>
 
+    <!-- Tutorial Tab -->
     <section id="tutorial-scr" class="screen">
       <div class="section-title"><span>Tutorial</span></div>
       <div id="tutorial-content-display"></div>
@@ -758,8 +732,14 @@
         <input type="number" id="input-qty" class="input" placeholder="Amount" oninput="calculatePayout()">
         <input type="text" id="input-sender" class="input" placeholder="Sender Username">
         <div class="grid-2">
-          <select id="input-method" class="select"></select>
+          <select id="input-method" class="select" onchange="renderSavedNumberChips()"></select>
           <input type="text" id="input-number" class="input" placeholder="Payment Number">
+        </div>
+        <!-- Saved Numbers Component -->
+        <div id="saved-numbers-chips" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;"></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:2px;margin-bottom:6px;">
+          <input type="checkbox" id="save-number-check" checked style="width:16px;height:16px;accent-color:#3b82f6;">
+          <label for="save-number-check" style="font-size:13px;color:var(--muted);cursor:pointer;user-select:none;font-weight:600;">Save this number for future use</label>
         </div>
       </div>
 
@@ -798,8 +778,22 @@
     </div>
   </div>
 
-  <div id="admin-master-ui" class="admin-mask" onclick="backdropClose(event, 'admin-master-ui')">
-    <div class="admin-panel" onclick="event.stopPropagation()">
+  <div id="toast-container" style="position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;flex-direction:column;gap:10px;pointer-events:none;"></div>
+  
+  <div id="custom-confirm" class="modal-mask" style="z-index: 100000;" onclick="backdropClose(event, 'custom-confirm')">
+      <div class="simple-card glass" style="width: 90%; max-width: 340px; padding: 24px; text-align: center; background: #0f172a;" onclick="event.stopPropagation()">
+          <div style="font-size: 28px; margin-bottom: 12px;">⚠️</div>
+          <h3 id="confirm-msg" style="margin: 0 0 20px; font-size: 16px;">Are you sure?</h3>
+          <div class="grid-2">
+              <button class="ghost-btn" style="margin:0;" onclick="closeConfirm(false)">Cancel</button>
+              <button class="danger-btn" style="border-radius: 18px;" onclick="closeConfirm(true)">Confirm</button>
+          </div>
+      </div>
+  </div>
+
+  <!-- Admin mask uses direct display:block to ensure pure vertical scrolling -->
+  <div id="admin-master-ui" class="admin-mask">
+    <div class="admin-panel">
       <div class="admin-top">
         <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
           <button class="danger-btn" onclick="closeAdminPanel()">Close ✕</button>
@@ -832,14 +826,14 @@
 
   <script>
     const firebaseConfig = {
- apiKey: "AIzaSyDwPchjHJ8SrtKxXb18diT8c9fHiiMqLII",
-  authDomain: "niva-buyer-zone-9f0d2.firebaseapp.com",
-  databaseURL: "https://niva-buyer-zone-9f0d2-default-rtdb.firebaseio.com",
-  projectId: "niva-buyer-zone-9f0d2",
-  storageBucket: "niva-buyer-zone-9f0d2.firebasestorage.app",
-  messagingSenderId: "92493493182",
-  appId: "1:92493493182:web:edaf82fb0401b4154d3fef",
-  measurementId: "G-P2DHHSESBH"
+      apiKey: "AIzaSyDwPchjHJ8SrtKxXb18diT8c9fHiiMqLII",
+      authDomain: "niva-buyer-zone-9f0d2.firebaseapp.com",
+      databaseURL: "https://niva-buyer-zone-9f0d2-default-rtdb.firebaseio.com",
+      projectId: "niva-buyer-zone-9f0d2",
+      storageBucket: "niva-buyer-zone-9f0d2.firebasestorage.app",
+      messagingSenderId: "92493493182",
+      appId: "1:92493493182:web:edaf82fb0401b4154d3fef",
+      measurementId: "G-P2DHHSESBH"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -851,9 +845,11 @@
     let currentSelectedCoin = "";
     let currentCoinRate = 0;
     let currentAdminRate = 0;
+    let currentBigAdminRate = 0;
     let currentCoinTID = "";
     let currentCoinSubmitLimit = 0;
     let currentCoinAdminMinQty = 100000;
+    let currentCoinBigAdminMinQty = 200000;
     let currentSenderInputType = 'username';
     let currentSenderInputLabel = 'Username';
     let currentAppliedRate = 0;
@@ -862,6 +858,35 @@
     let currentTelegramUser = 'guest';
     let currentUserIdentity = null;
     let historyOrdersListenerAttached = false;
+    let userSavedNumbers = {};
+
+    // Native Alert/Confirm Replacement System
+    function showToast(msg, type='info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.style.cssText = `background: rgba(15,23,42,0.95); color: #fff; padding: 12px 20px; border-radius: 12px; font-size: 14px; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); animation: fadeUp 0.3s ease; backdrop-filter: blur(10px); pointer-events: all; text-align: center; max-width: 90vw;`;
+      if(type === 'error') toast.style.borderLeft = '4px solid #ef4444';
+      if(type === 'success') toast.style.borderLeft = '4px solid #10b981';
+      toast.innerText = msg;
+      container.appendChild(toast);
+      setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(-10px)';
+          toast.style.transition = 'all 0.3s ease';
+          setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    let confirmResolve = null;
+    function customConfirm(msg) {
+      document.getElementById('confirm-msg').innerText = msg;
+      openModal('custom-confirm');
+      return new Promise(resolve => { confirmResolve = resolve; });
+    }
+    function closeConfirm(res) {
+      closeModal('custom-confirm');
+      if(confirmResolve) { confirmResolve(res); confirmResolve = null; }
+    }
 
     function safeHaptic(type, level) {
       try {
@@ -1065,7 +1090,7 @@
         player.playsInline = true;
         player.onloadeddata = null;
         player.onerror = function() {
-          showToast('Video failed to play. Please re-upload the file from Admin.');
+          showToast('Video failed to play. Please re-upload the file from Admin.', 'error');
         };
       }
     }
@@ -1084,21 +1109,24 @@
 
     function toggleTutorialMute() {
       const url = String((currentTutorialData && currentTutorialData.url) || '').trim();
-      if (!url) return showToast('No tutorial video found.');
+      if (!url) return showToast('No tutorial video found.', 'error');
       tutorialSoundMuted = !tutorialSoundMuted;
       const wrap = document.getElementById('tutorial-content-display');
       if (wrap) {
         wrap.innerHTML = getTutorialContentHtml(currentTutorialData || {});
         syncTutorialPlayerState();
       }
-      showToast(tutorialSoundMuted ? 'Tutorial muted.' : 'Tutorial unmuted.');
+      showToast(tutorialSoundMuted ? 'Tutorial muted.' : 'Tutorial unmuted.', 'info');
     }
 
-    function removeTutorialVideo() {
-      if (!confirm('Remove tutorial video?')) return;
+    async function removeTutorialVideo() {
+      const confirmed = await customConfirm('Remove tutorial video?');
+      if (!confirmed) return;
+      
       const storagePath = String((currentTutorialData && currentTutorialData.storagePath) || '').trim();
       const removeDb = db.ref('settings/tutorial').remove();
       const removeStorage = storagePath ? storage.ref(storagePath).delete().catch(() => null) : Promise.resolve();
+      
       Promise.all([removeDb, removeStorage]).then(() => {
         currentTutorialData = {};
         tutorialSoundMuted = true;
@@ -1112,12 +1140,54 @@
         if (note) note.innerText = 'Choose a video from your phone and upload it, or paste a YouTube link and tap Save Link.';
         const wrap = document.getElementById('tutorial-content-display');
         if (wrap) wrap.innerHTML = getTutorialContentHtml({});
-        showToast('Tutorial video removed!');
+        showToast('Tutorial video removed!', 'success');
       });
     }
 
-    function showToast(msg) {
-      alert(msg);
+    function fetchUserSavedNumbers() {
+      const identity = ensureCurrentUserIdentity();
+      if (!identity.uid) return;
+      db.ref(`userProfiles/${identity.uid}/savedNumbers`).on('value', snap => {
+        userSavedNumbers = snap.val() || {};
+        renderSavedNumberChips();
+      });
+    }
+
+    function renderSavedNumberChips() {
+      const methodSelect = document.getElementById('input-method');
+      const container = document.getElementById('saved-numbers-chips');
+      if (!container || !methodSelect) return;
+      
+      const method = methodSelect.value;
+      container.innerHTML = '';
+      if (!method || !userSavedNumbers[method]) return;
+
+      const numbers = Object.keys(userSavedNumbers[method]);
+      if (numbers.length === 0) return;
+
+      let html = '';
+      numbers.forEach(num => {
+        html += `
+          <div style="display:inline-flex; align-items:center; background: rgba(59,130,246,.12); border: 1px solid rgba(59,130,246,.25); border-radius: 10px; overflow:hidden;">
+            <button type="button" style="padding: 6px 10px; font-size: 13px; border:none; background:transparent; color: #93c5fd; font-weight:800; cursor:pointer;" onclick="document.getElementById('input-number').value='${num}';">${num}</button>
+            <button type="button" style="padding: 6px 8px; font-size: 11px; border:none; background:rgba(239,68,68,.15); color: #fca5a5; cursor:pointer; border-left:1px solid rgba(59,130,246,.25);" onclick="deleteSavedNumber('${method}', '${num}')">✕</button>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+    }
+
+    async function deleteSavedNumber(method, number) {
+      const identity = ensureCurrentUserIdentity();
+      if (!identity.uid) return;
+      
+      const confirmed = await customConfirm(`Delete ${number} from saved ${method} numbers?`);
+      if (!confirmed) return;
+      
+      db.ref(`userProfiles/${identity.uid}/savedNumbers/${method}/${number}`).remove().then(() => {
+        safeHaptic('notify', 'success');
+        showToast('Saved number deleted.', 'success');
+      });
     }
 
     function backdropClose(e, id) {
@@ -1134,7 +1204,8 @@
     function openModal(id) {
       const el = document.getElementById(id);
       if (!el) return;
-      el.style.display = 'flex';
+      el.style.display = id === 'custom-confirm' || id === 'admin-master-ui' || id.includes('modal') ? 'flex' : 'block';
+      if(id === 'admin-master-ui') el.style.display = 'block'; // Admin strictly block
       requestAnimationFrame(() => el.classList.add('active'));
     }
 
@@ -1175,6 +1246,8 @@
         db.ref('userProfilesByUsername/' + identity.username).set(identity.uid).catch(() => null);
       }
 
+      fetchUserSavedNumbers(); // Fetch saved methods
+
       const adminShortcut = document.getElementById('admin-shortcut');
       if (ADMIN_LIST.includes(userId)) {
         adminShortcut.style.display = 'block';
@@ -1191,8 +1264,10 @@
           const isOnline = v.status !== false;
           const senderInputType = normalizeSenderInputType(v.senderInputType);
           const senderInputLabel = getSenderInputLabel(senderInputType);
+          const bigRate = parseFloat(v.bigAdminRate || 0);
+          const bigQty = normalizeAdminMinQty(v.bigAdminMinQty || 200000);
           html += `
-            <div class="coin-card glass ${isOnline ? '' : 'offline'}" onclick="${isOnline ? `openOrderModal('${escapeForJsSingleQuote(c.key)}', ${parseFloat(v.userRate || 0)}, ${parseFloat(v.adminRate || 0)}, '${escapeForJsSingleQuote(v.transferId)}', ${normalizeSubmitLimit(v.submitLimit)}, ${normalizeAdminMinQty(v.adminMinQty)}, '${senderInputType}')` : ''}">
+            <div class="coin-card glass ${isOnline ? '' : 'offline'}" onclick="${isOnline ? `openOrderModal('${escapeForJsSingleQuote(c.key)}', ${parseFloat(v.userRate || 0)}, ${parseFloat(v.adminRate || 0)}, ${bigRate}, '${escapeForJsSingleQuote(v.transferId)}', ${normalizeSubmitLimit(v.submitLimit)}, ${normalizeAdminMinQty(v.adminMinQty)}, ${bigQty}, '${senderInputType}')` : ''}">
               <div class="status-badge ${isOnline ? 'online' : 'offline'}">${isOnline ? '● Online' : '● Offline'}</div>
               <div class="left-wrap">
                 <div class="icon-box">🪙</div>
@@ -1202,10 +1277,11 @@
                 </div>
               </div>
               <div class="rate-grid">
-                <div class="rate-box"><small>User Rate</small><div class="rate-val">${parseFloat(v.userRate || 0)}৳</div></div>
-                <div class="rate-box"><small>Admin Rate</small><div class="rate-val">${parseFloat(v.adminRate || 0)}৳</div></div>
+                <div class="rate-box"><small>USER</small><div class="rate-val">${parseFloat(v.userRate || 0)}৳</div></div>
+                <div class="rate-box"><small>MINI ADMIN</small><div class="rate-val">${parseFloat(v.adminRate || 0)}৳</div></div>
+                <div class="rate-box"><small>BIG ADMIN</small><div class="rate-val">${bigRate}৳</div></div>
               </div>
-              <div class="coin-foot">Need: ${senderInputLabel} • Min Submit: ${normalizeSubmitLimit(v.submitLimit).toLocaleString()} • Admin Rate From: ${normalizeAdminMinQty(v.adminMinQty).toLocaleString()} • TAP TO SELL</div>
+              <div class="coin-foot">Need: ${senderInputLabel} • Min Submit: ${normalizeSubmitLimit(v.submitLimit).toLocaleString()} • TAP TO SELL</div>
             </div>`;
         });
         document.getElementById('market-list-display').innerHTML = html || `<div class="empty-state glass action-card">No market data found.</div>`;
@@ -1224,20 +1300,21 @@
           if (v.status !== false) options += `<option value="${p.key}">${p.key}</option>`;
         });
         document.getElementById('input-method').innerHTML = options || '<option value="">No Method</option>';
+        renderSavedNumberChips(); // Re-render chips if methods load
       });
 
       fetchTutorialVideo();
     }
 
-    function openOrderModal(name, userRate, adminRate, tid, submitLimit, adminMinQty, senderInputType = 'username') {
+    function openOrderModal(name, userRate, adminRate, bigAdminRate, tid, submitLimit, adminMinQty, bigAdminMinQty, senderInputType = 'username') {
       currentSelectedCoin = name;
       currentCoinRate = parseFloat(userRate || 0);
       currentAdminRate = parseFloat(adminRate || 0);
+      currentBigAdminRate = parseFloat(bigAdminRate || 0);
       currentCoinTID = tid || '';
       currentCoinSubmitLimit = normalizeSubmitLimit(submitLimit);
-      currentCoinAdminMinQty = adminMinQty === undefined || adminMinQty === null || adminMinQty === ''
-        ? 100000
-        : normalizeAdminMinQty(adminMinQty);
+      currentCoinAdminMinQty = adminMinQty === undefined || adminMinQty === null || adminMinQty === '' ? 100000 : normalizeAdminMinQty(adminMinQty);
+      currentCoinBigAdminMinQty = bigAdminMinQty === undefined || bigAdminMinQty === null || bigAdminMinQty === '' ? 200000 : normalizeAdminMinQty(bigAdminMinQty);
       currentSenderInputType = normalizeSenderInputType(senderInputType);
       currentSenderInputLabel = getSenderInputLabel(currentSenderInputType);
       currentAppliedRate = currentCoinRate;
@@ -1251,22 +1328,28 @@
 
       const qtyInput = document.getElementById('input-qty');
       qtyInput.value = '';
-      qtyInput.placeholder = `Amount (Min ${currentCoinSubmitLimit.toLocaleString()} | Admin rate from ${currentCoinAdminMinQty.toLocaleString()})`;
+      qtyInput.placeholder = `Amount (Min ${currentCoinSubmitLimit.toLocaleString()})`;
       qtyInput.min = currentCoinSubmitLimit;
       const senderInput = document.getElementById('input-sender');
       senderInput.value = '';
       senderInput.placeholder = `Sender ${currentSenderInputLabel}`;
       senderInput.setAttribute('aria-label', `Sender ${currentSenderInputLabel}`);
       document.getElementById('input-number').value = '';
+      
       openModal('order-modal');
+      renderSavedNumberChips();
     }
 
     function resolveAppliedRate(qty) {
       const safeQty = parseFloat(qty || 0) || 0;
       const safeUserRate = parseFloat(currentCoinRate || 0) || 0;
-      const safeAdminRate = parseFloat(currentAdminRate || 0) || 0;
-      const triggerQty = parseFloat(currentCoinAdminMinQty || 0) || 0;
-      if (safeAdminRate > 0 && safeQty >= triggerQty) return safeAdminRate;
+      const safeMiniRate = parseFloat(currentAdminRate || 0) || 0;
+      const safeBigRate = parseFloat(currentBigAdminRate || 0) || 0;
+      const triggerMini = parseFloat(currentCoinAdminMinQty || 0) || 0;
+      const triggerBig = parseFloat(currentCoinBigAdminMinQty || 0) || 0;
+
+      if (safeBigRate > 0 && triggerBig > 0 && safeQty >= triggerBig) return safeBigRate;
+      if (safeMiniRate > 0 && triggerMini > 0 && safeQty >= triggerMini) return safeMiniRate;
       return safeUserRate;
     }
 
@@ -1287,7 +1370,7 @@
     function copyAdminID() {
       navigator.clipboard.writeText(String(currentCoinTID || ''));
       safeHaptic('notify', 'success');
-      showToast('Admin ID copied!');
+      showToast('Admin ID copied!', 'success');
     }
 
     function showConfirmation() {
@@ -1300,12 +1383,12 @@
 
       if (qty < currentCoinSubmitLimit || !sender || !method || !number) {
         safeHaptic('notify', 'error');
-        return showToast(`Fill amount, ${currentSenderInputLabel}, payment method and payment number correctly! (Min ${currentCoinSubmitLimit.toLocaleString()})`);
+        return showToast(`Fill amount, ${currentSenderInputLabel}, payment method and payment number correctly! (Min ${currentCoinSubmitLimit.toLocaleString()})`, 'error');
       }
 
       document.getElementById('r-coin').innerText = currentSelectedCoin;
       document.getElementById('r-qty').innerText = qty;
-      document.getElementById('r-limit').innerText = `${currentCoinSubmitLimit.toLocaleString()} (Admin rate from ${currentCoinAdminMinQty.toLocaleString()})`;
+      document.getElementById('r-limit').innerText = `${currentCoinSubmitLimit.toLocaleString()} (Mini from ${currentCoinAdminMinQty.toLocaleString()})`;
       document.getElementById('r-sender-label').innerText = currentSenderInputLabel;
       document.getElementById('r-sender').innerText = sender;
       document.getElementById('r-method').innerText = method;
@@ -1327,6 +1410,11 @@
 
       const identity = ensureCurrentUserIdentity();
       const orderId = Date.now();
+      
+      const method = document.getElementById('r-method').innerText;
+      const number = document.getElementById('r-number').innerText;
+      const saveNumberChecked = document.getElementById('save-number-check')?.checked;
+
       const payload = {
         id: orderId,
         timestamp: firebase.database.ServerValue.TIMESTAMP,
@@ -1345,26 +1433,32 @@
         sender: document.getElementById('r-sender').innerText,
         senderInputType: currentSenderInputType,
         senderLabel: currentSenderInputLabel,
-        number: document.getElementById('r-number').innerText,
-        method: document.getElementById('r-method').innerText,
+        number: number,
+        method: method,
         status: 'pending',
         targetId: currentCoinTID,
         submitLimit: currentCoinSubmitLimit,
         adminMinQty: currentCoinAdminMinQty,
+        bigAdminMinQty: currentCoinBigAdminMinQty,
         appliedRate: parseFloat(currentAppliedRate || 0)
       };
 
       const updates = {};
       updates['orders/' + orderId] = payload;
-      if (identity.uid) updates['userOrders/' + identity.uid + '/' + orderId] = true;
+      if (identity.uid) {
+          updates['userOrders/' + identity.uid + '/' + orderId] = true;
+          if (saveNumberChecked && method && number) {
+              updates[`userProfiles/${identity.uid}/savedNumbers/${method}/${number}`] = true;
+          }
+      }
 
       db.ref().update(updates).then(() => {
         safeHaptic('notify', 'success');
         closeModal('review-modal');
         renderHistoryOrders([payload]);
-        showToast('Order submitted successfully! Check history for updates.');
+        showToast('Order submitted successfully! Check history for updates.', 'success');
       }).catch(err => {
-        showToast('Error: ' + err.message);
+        showToast('Error: ' + err.message, 'error');
       }).finally(() => {
         btn.disabled = false;
         btn.innerText = 'Confirm & Submit ✅';
@@ -1389,32 +1483,6 @@
       }, err => {
         document.getElementById('history-list-display').innerHTML = `<div class="empty-state glass">History load failed.</div>`;
         console.error(err);
-      });
-    }
-
-    function fetchLeaderboard() {
-      const user = tg.initDataUnsafe.user || { username: 'guest', first_name: 'guest' };
-      const uname = user.username || user.first_name || 'guest';
-      db.ref('orders').orderByChild('user').equalTo(uname).on('value', snap => {
-        let html = '';
-        let completedCount = 0;
-        const orders = [];
-        snap.forEach(item => orders.push(item.val()));
-        orders.reverse().forEach(d => {
-          if (d.status === 'completed') completedCount++;
-          const bg = d.status === 'pending' ? 'rgba(245,158,11,.12)' : d.status === 'completed' ? 'rgba(16,185,129,.12)' : 'rgba(239,68,68,.12)';
-          const color = d.status === 'pending' ? '#fbbf24' : d.status === 'completed' ? '#6ee7b7' : '#fca5a5';
-          html += `
-            <div class="simple-card glass history-card">
-              <div>
-                <b>${d.amt} ${d.coin}</b><br>
-                <small class="muted">Payable: ${formatMoney(d.payable)} • To: ${d.targetId || '---'}</small>
-              </div>
-              <div class="status-chip" style="background:${bg};color:${color};border:1px solid rgba(255,255,255,.06);">${String(d.status || 'pending').toUpperCase()}</div>
-            </div>`;
-        });
-        document.getElementById('history-list-display').innerHTML = html || `<div class="empty-state glass">No history found.</div>`;
-        document.getElementById('suc-count-display').innerText = completedCount;
       });
     }
 
@@ -1455,7 +1523,6 @@
                   <img class="leader-avatar" src="${avatar}" alt="${nick}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(nick)}&background=1d4ed8&color=ffffff&bold=true'">
                   <div class="leader-meta">
                     <b>${nick}</b>
-                    
                   </div>
                 </div>
                 <b style="color:#6ee7b7;">${formatMoney(d.totalAmount)}</b>
@@ -1483,7 +1550,7 @@
       const userId = Number(user.id || 0);
       if (!ADMIN_LIST.includes(userId)) {
         safeHaptic('notify', 'error');
-        return showToast('Access denied! You are not an authorized administrator.');
+        return showToast('Access denied! You are not an authorized administrator.', 'error');
       }
       openModal('admin-master-ui');
       adminActiveTab = 'pending';
@@ -1505,7 +1572,7 @@
         document.getElementById('count-pending').innerText = counts.pending;
         document.getElementById('count-completed').innerText = counts.completed;
         document.getElementById('count-rejected').innerText = counts.rejected;
-        if (document.getElementById('admin-master-ui').style.display === 'flex') renderAdminData();
+        if (document.getElementById('admin-master-ui').style.display === 'block') renderAdminData();
       });
     }
 
@@ -1519,7 +1586,7 @@
     function copyToClipboard(val) {
       navigator.clipboard.writeText(String(val || ''));
       safeHaptic('notify', 'success');
-      showToast('Copied: ' + val);
+      showToast('Copied: ' + val, 'success');
     }
 
     function renderAdminData() {
@@ -1603,13 +1670,15 @@
               <option value="username">Sell form will ask Username</option>
               <option value="code">Sell form will ask Code</option>
             </select>
-            <div class="grid-2">
-              <input type="number" id="new-c-user" class="input" placeholder="User Rate">
-              <input type="number" id="new-c-admin" class="input" placeholder="Admin Rate">
+            <div class="grid-3" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+              <input type="number" id="new-c-user" class="input" style="padding:12px 10px;font-size:13px;" placeholder="User Rate">
+              <input type="number" id="new-c-admin" class="input" style="padding:12px 10px;font-size:13px;" placeholder="Mini Rate">
+              <input type="number" id="new-c-big-admin" class="input" style="padding:12px 10px;font-size:13px;" placeholder="Big Rate">
             </div>
-            <div class="grid-2">
-              <input type="number" id="new-c-limit" class="input" placeholder="Submit Limit">
-              <input type="number" id="new-c-admin-min" class="input" placeholder="Admin Rate From Qty">
+            <div class="grid-3" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+              <input type="number" id="new-c-limit" class="input" style="padding:12px 10px;font-size:13px;" placeholder="Min Sub">
+              <input type="number" id="new-c-admin-min" class="input" style="padding:12px 10px;font-size:13px;" placeholder="Mini Qty">
+              <input type="number" id="new-c-big-admin-min" class="input" style="padding:12px 10px;font-size:13px;" placeholder="Big Qty">
             </div>
             <button class="cta-btn" onclick="addNewCoin()">Add Coin</button>
           </div>
@@ -1696,13 +1765,15 @@
                   <option value="username" ${normalizeSenderInputType(v.senderInputType) === 'username' ? 'selected' : ''}>Sell form asks Username</option>
                   <option value="code" ${normalizeSenderInputType(v.senderInputType) === 'code' ? 'selected' : ''}>Sell form asks Code</option>
                 </select>
-                <div class="grid-2">
-                  <input type="number" class="input" value="${parseFloat(v.userRate || 0)}" onchange="db.ref('marketConfig/${c.key}').update({userRate:parseFloat(this.value||0)})" placeholder="User Rate">
-                  <input type="number" class="input" value="${parseFloat(v.adminRate || 0)}" onchange="db.ref('marketConfig/${c.key}').update({adminRate:parseFloat(this.value||0)})" placeholder="Admin Rate">
+                <div class="grid-3" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+                  <input type="number" class="input" style="padding:10px 8px;font-size:12px;" value="${parseFloat(v.userRate || 0)}" onchange="db.ref('marketConfig/${c.key}').update({userRate:parseFloat(this.value||0)})" placeholder="User">
+                  <input type="number" class="input" style="padding:10px 8px;font-size:12px;" value="${parseFloat(v.adminRate || 0)}" onchange="db.ref('marketConfig/${c.key}').update({adminRate:parseFloat(this.value||0)})" placeholder="Mini">
+                  <input type="number" class="input" style="padding:10px 8px;font-size:12px;" value="${parseFloat(v.bigAdminRate || 0)}" onchange="db.ref('marketConfig/${c.key}').update({bigAdminRate:parseFloat(this.value||0)})" placeholder="Big">
                 </div>
-                <div class="grid-2">
-                  <input type="number" class="input" value="${normalizeSubmitLimit(v.submitLimit)}" onchange="db.ref('marketConfig/${c.key}').update({submitLimit:normalizeSubmitLimit(this.value)})" placeholder="Submit Limit">
-                  <input type="number" class="input" value="${normalizeAdminMinQty(v.adminMinQty)}" onchange="db.ref('marketConfig/${c.key}').update({adminMinQty:normalizeAdminMinQty(this.value)})" placeholder="Admin Rate From Qty">
+                <div class="grid-3" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+                  <input type="number" class="input" style="padding:10px 8px;font-size:12px;" value="${normalizeSubmitLimit(v.submitLimit)}" onchange="db.ref('marketConfig/${c.key}').update({submitLimit:normalizeSubmitLimit(this.value)})" placeholder="Min Sub">
+                  <input type="number" class="input" style="padding:10px 8px;font-size:12px;" value="${normalizeAdminMinQty(v.adminMinQty)}" onchange="db.ref('marketConfig/${c.key}').update({adminMinQty:normalizeAdminMinQty(this.value)})" placeholder="Mini Qty">
+                  <input type="number" class="input" style="padding:10px 8px;font-size:12px;" value="${normalizeAdminMinQty(v.bigAdminMinQty || 200000)}" onchange="db.ref('marketConfig/${c.key}').update({bigAdminMinQty:normalizeAdminMinQty(this.value)})" placeholder="Big Qty">
                 </div>
                 <button class="danger-btn" onclick="removeCoin('${String(c.key).replace(/'/g, "\\'")}')">Remove Coin</button>
               </div>
@@ -1755,35 +1826,43 @@
       const senderInputType = normalizeSenderInputType(document.getElementById('new-c-sender-type').value);
       const ur = parseFloat(document.getElementById('new-c-user').value || 0);
       const ar = parseFloat(document.getElementById('new-c-admin').value || 0);
+      const br = parseFloat(document.getElementById('new-c-big-admin').value || 0);
       const sl = normalizeSubmitLimit(document.getElementById('new-c-limit').value);
       const adminMinQty = normalizeAdminMinQty(document.getElementById('new-c-admin-min').value);
-      if (!n || !tid || !ur || !ar) return showToast('Fill all coin fields.');
-      db.ref('marketConfig/' + n).set({ transferId: tid, userRate: ur, adminRate: ar, submitLimit: sl, adminMinQty, senderInputType, status: true }).then(() => {
+      const bigAdminMinQty = normalizeAdminMinQty(document.getElementById('new-c-big-admin-min').value);
+      
+      if (!n || !tid || !ur) return showToast('Fill required coin fields.', 'error');
+      
+      db.ref('marketConfig/' + n).set({ transferId: tid, userRate: ur, adminRate: ar, bigAdminRate: br, submitLimit: sl, adminMinQty, bigAdminMinQty, senderInputType, status: true }).then(() => {
         safeHaptic('notify', 'success');
         document.getElementById('new-c-name').value = '';
         document.getElementById('new-c-tid').value = '';
         document.getElementById('new-c-sender-type').value = 'username';
         document.getElementById('new-c-user').value = '';
         document.getElementById('new-c-admin').value = '';
+        document.getElementById('new-c-big-admin').value = '';
         document.getElementById('new-c-limit').value = '';
         document.getElementById('new-c-admin-min').value = '';
-        showToast('Coin added successfully!');
+        document.getElementById('new-c-big-admin-min').value = '';
+        showToast('Coin added successfully!', 'success');
       });
     }
 
-    function removeCoin(key) {
-      if (!confirm(`Remove ${key}?`)) return;
+    async function removeCoin(key) {
+      const confirmed = await customConfirm(`Remove ${key}?`);
+      if (!confirmed) return;
       db.ref('marketConfig/' + key).remove();
     }
 
     function addNewPayment() {
       const name = document.getElementById('new-pay-name').value.trim();
-      if (!name) return showToast('Enter payment method name.');
-      db.ref('paymentMethods/' + name).set({ status: true }).then(() => showToast('Payment method added!'));
+      if (!name) return showToast('Enter payment method name.', 'error');
+      db.ref('paymentMethods/' + name).set({ status: true }).then(() => showToast('Payment method added!', 'success'));
     }
 
-    function removePayment(key) {
-      if (!confirm(`Remove ${key}?`)) return;
+    async function removePayment(key) {
+      const confirmed = await customConfirm(`Remove ${key}?`);
+      if (!confirmed) return;
       db.ref('paymentMethods/' + key).remove();
     }
 
@@ -1791,7 +1870,7 @@
       db.ref('settings/links').set({
         channel: document.getElementById('adm-link-chan').value.trim(),
         help: document.getElementById('adm-link-help').value.trim()
-      }).then(() => showToast('Links updated!'));
+      }).then(() => showToast('Links updated!', 'success'));
     }
 
     function handleTutorialFileSelected(event) {
@@ -1804,7 +1883,7 @@
       if (!String(file.type || '').startsWith('video/')) {
         event.target.value = '';
         if (note) note.innerText = 'Only video files are allowed.';
-        return showToast('Please choose a video file.');
+        return showToast('Please choose a video file.', 'error');
       }
       if (note) note.innerText = `Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
     }
@@ -1815,9 +1894,10 @@
       const urlInput = document.getElementById('adm-tutorial-url');
       const note = document.getElementById('adm-tutorial-upload-note');
       const file = fileInput && fileInput.files ? fileInput.files[0] : null;
-      if (!file) return showToast('Select a video file first.');
-      if (!String(file.type || '').startsWith('video/')) return showToast('Only video files are allowed.');
-      if (tutorialUploadInProgress) return showToast('Video upload already in progress.');
+      if (!file) return showToast('Select a video file first.', 'error');
+      if (!String(file.type || '').startsWith('video/')) return showToast('Only video files are allowed.', 'error');
+      if (tutorialUploadInProgress) return showToast('Video upload already in progress.', 'error');
+      
       tutorialUploadInProgress = true;
       const safeName = String(file.name || 'tutorial-video').replace(/[^a-zA-Z0-9._-]/g, '_');
       const path = `tutorials/${Date.now()}_${safeName}`;
@@ -1835,7 +1915,7 @@
         tutorialUploadInProgress = false;
         console.error(err);
         if (note) note.innerText = 'Upload failed. Try again.';
-        showToast('Video upload failed. Check Firebase Storage rules.');
+        showToast('Video upload failed. Check Firebase Storage rules.', 'error');
       }, () => {
         ref.getDownloadURL().then(url => {
           const title = (titleInput && titleInput.value.trim()) || file.name.replace(/\.[^.]+$/, '') || 'Watch Tutorial';
@@ -1859,13 +1939,13 @@
               wrap.innerHTML = getTutorialContentHtml(payload);
               syncTutorialPlayerState();
             }
-            showToast('Tutorial video uploaded!');
+            showToast('Tutorial video uploaded!', 'success');
           });
         }).catch(err => {
           tutorialUploadInProgress = false;
           console.error(err);
           if (note) note.innerText = 'Could not get download URL.';
-          showToast('Upload finished but video URL could not be created.');
+          showToast('Upload finished but video URL could not be created.', 'error');
         });
       });
     }
@@ -1873,7 +1953,7 @@
     function updateTutorialVideo() {
       const title = document.getElementById('adm-tutorial-title').value.trim();
       const url = document.getElementById('adm-tutorial-url').value.trim();
-      if (!url) return showToast('Paste a YouTube link or upload a video first.');
+      if (!url) return showToast('Paste a YouTube link or upload a video first.', 'error');
       db.ref('settings/tutorial').update({ title: title || 'Watch Tutorial', url }).then(() => {
         currentTutorialData = Object.assign({}, currentTutorialData || {}, { title: title || 'Watch Tutorial', url });
         const wrap = document.getElementById('tutorial-content-display');
@@ -1881,7 +1961,7 @@
           wrap.innerHTML = getTutorialContentHtml(currentTutorialData);
           syncTutorialPlayerState();
         }
-        showToast('Tutorial video updated!');
+        showToast('Tutorial video updated!', 'success');
       });
     }
 
@@ -1920,14 +2000,15 @@
           return null;
         }).then(() => {
           safeHaptic('notify', 'success');
-          showToast('Order ' + status + '!');
+          showToast('Order ' + status + '!', 'success');
           renderAdminData();
         });
-      }).catch(err => showToast(err.message));
+      }).catch(err => showToast(err.message, 'error'));
     }
 
-    function deleteOrder(id) {
-      if (!confirm('Delete this order?')) return;
+    async function deleteOrder(id) {
+      const confirmed = await customConfirm('Delete this order?');
+      if (!confirmed) return;
       db.ref('orders/' + id).once('value').then(snap => {
         const order = snap.val() || {};
         const updates = {};
@@ -1935,23 +2016,25 @@
         const ownerUid = String(order.ownerUid || order.userId || '').trim();
         if (ownerUid) updates['userOrders/' + ownerUid + '/' + id] = null;
         return db.ref().update(updates);
-      }).then(() => showToast('Order deleted.'));
+      }).then(() => showToast('Order deleted.', 'success'));
     }
 
-    function deleteLeaderboardUser(username) {
-      if (!confirm(`Remove @${username} from leaderboard?`)) return;
-      db.ref('leaderboard/' + username).remove().then(() => showToast('User removed!'));
+    async function deleteLeaderboardUser(username) {
+      const confirmed = await customConfirm(`Remove @${username} from leaderboard?`);
+      if (!confirmed) return;
+      db.ref('leaderboard/' + username).remove().then(() => showToast('User removed!', 'success'));
     }
 
-    function resetSalesStats() {
-      if (!confirm('Reset Stats?')) return;
+    async function resetSalesStats() {
+      const confirmed = await customConfirm('Reset Stats?');
+      if (!confirmed) return;
       db.ref('orders').once('value').then(snap => {
         let total = 0;
         Object.values(snap.val() || {}).forEach(o => {
           if (o.status === 'completed') total += parseFloat(o.payable || 0);
         });
         return db.ref('stats_reset').set({ resetAmount: total, timestamp: Date.now() });
-      }).then(() => showToast('Sales stats reset snapshot saved!'));
+      }).then(() => showToast('Sales stats reset snapshot saved!', 'success'));
     }
 
     document.addEventListener('DOMContentLoaded', () => {

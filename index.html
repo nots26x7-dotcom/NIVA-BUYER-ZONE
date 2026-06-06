@@ -38,7 +38,6 @@
     html, body { margin: 0; padding: 0; font-family: Inter, system-ui, sans-serif; background: #07111f; color: var(--text); min-height: 100%; overscroll-behavior-y: none; }
     body { padding: 108px 13px 112px; overflow-x: hidden; }
 
-
     @keyframes spin { to { transform: rotate(360deg); } }
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(10px); }
@@ -56,6 +55,7 @@
       box-shadow: var(--shadow);
     }
 
+    /* Loading Orb and Bar Style */
     #loading {
       position: fixed;
       inset: 0;
@@ -404,6 +404,7 @@
       box-shadow: 0 12px 25px rgba(37,99,235,.24);
     }
 
+    /* Modals & Sheet Layout */
     .modal-mask, .admin-mask {
       position: fixed;
       inset: 0;
@@ -411,10 +412,8 @@
       display: none;
       z-index: 100;
     }
-    /* Modals use flex for centering bottom sheets */
     .modal-mask { align-items: flex-end; justify-content: center; }
     .modal-mask.active { display: flex; }
-    /* Admin mask strictly block for optimal absolute-child scrolling */
     .admin-mask.active { display: block; }
     
     .bottom-sheet {
@@ -437,55 +436,7 @@
     }
     .sheet-title { margin: 0; font-size: 24px; font-weight: 900; }
     .sheet-sub { margin: 6px 0 18px; color: var(--muted); font-size: 13px; }
-    .highlight-box {
-      padding: 16px;
-      border-radius: 22px;
-      background: linear-gradient(135deg, rgba(245,158,11,.16), rgba(255,255,255,.04));
-      border: 1px dashed rgba(245,158,11,.5);
-      text-align: center;
-      margin-bottom: 16px;
-    }
-    .highlight-box b { font-size: 26px; letter-spacing: .04em; }
-    .input, .select {
-      width: 100%;
-      border: 1px solid rgba(255,255,255,.08);
-      background: rgba(4, 10, 21, .7);
-      color: white;
-      padding: 15px 16px;
-      border-radius: 18px;
-      font-size: 15px;
-      outline: none;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
-    }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     
-    .cta-btn, .ghost-btn, .danger-btn, .mini-btn {
-      border: none;
-      cursor: pointer;
-      font-weight: 900;
-      border-radius: 18px;
-    }
-    .cta-btn {
-      width: 100%;
-      padding: 16px;
-      color: white;
-      background: linear-gradient(135deg, #2563eb, #10b981);
-      box-shadow: 0 8px 24px rgba(37,99,235,.2);
-    }
-    .ghost-btn {
-      width: 100%;
-      padding: 14px;
-      background: rgba(255,255,255,.04);
-      color: var(--muted);
-      margin-top: 12px;
-    }
-    .danger-btn { background: linear-gradient(135deg, #7f1d1d, #ef4444); color: #fff; padding: 12px 14px; }
-    .mini-btn { background: rgba(255,255,255,.06); color: white; padding: 10px 12px; }
-
-    .review-box { border-radius: 24px; padding: 16px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); }
-    .review-row { display: flex; justify-content: space-between; gap: 10px; padding: 9px 0; }
-    .review-row span { color: var(--muted); }
-
     .admin-panel {
       position: absolute; 
       inset: 0;
@@ -498,7 +449,7 @@
       animation: fadeUp .2s ease;
     }
     
-    /* MODIFIED: Admin top is now relative instead of sticky */
+    /* MODIFIED: Admin top is relative to let it scroll up naturally with other elements */
     .admin-top {
       position: relative;
       z-index: 3;
@@ -552,70 +503,7 @@
       border: 1px solid rgba(255,255,255,.08);
       box-shadow: 0 16px 35px rgba(0,0,0,.22);
     }
-    .admin-order-top { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: 12px; }
-    .admin-order-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; margin-bottom: 12px; }
-    .tile {
-      border-radius: 16px;
-      padding: 12px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.06);
-    }
-    .tile small { display: block; color: #8ca4c8; font-size: 10px; font-weight: 800; margin-bottom: 5px; }
-    .copy-box {
-      padding: 12px;
-      border-radius: 16px;
-      background: rgba(37,99,235,.08);
-      border: 1px dashed rgba(96,165,250,.45);
-      margin-bottom: 12px;
-      cursor: pointer;
-    }
-    .actions-row { display: flex; gap: 8px; }
-    .actions-row button { flex: 1; padding: 12px; border-radius: 14px; border: none; color: white; font-weight: 900; }
-    .approve { background: linear-gradient(135deg, #059669, #22c55e); }
-    .reject { background: linear-gradient(135deg, #991b1b, #ef4444); }
-    .delete { flex: 0 0 48px !important; background: rgba(255,255,255,.08); }
-
-    .manager-card h4, .settings-card h4 { margin: 0 0 14px; font-size: 16px; }
-    .stack { display: grid; gap: 10px; }
-    .switch-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-    .switch {
-      position: relative;
-      width: 52px;
-      height: 30px;
-      display: inline-block;
-    }
-    .switch input { display: none; }
-    .slider {
-      position: absolute;
-      inset: 0;
-      background: rgba(255,255,255,.1);
-      border-radius: 999px;
-      transition: .2s ease;
-    }
-    .slider::before {
-      content: "";
-      position: absolute;
-      width: 22px;
-      height: 22px;
-      top: 4px;
-      left: 4px;
-      border-radius: 50%;
-      background: white;
-      transition: .2s ease;
-    }
-    .switch input:checked + .slider { background: linear-gradient(135deg, #2563eb, #10b981); }
-    .switch input:checked + .slider::before { transform: translateX(22px); }
-
-    .empty-state { text-align: center; padding: 26px 14px; color: var(--muted); }
-    .small-note { font-size: 12px; color: var(--muted); }
-
+    
     @media (min-width: 720px) {
       body { max-width: 580px; margin: 0 auto; }
       .nav-dock { max-width: 552px; margin: 0 auto; }
@@ -736,7 +624,6 @@
           <select id="input-method" class="select" onchange="renderSavedNumberChips()"></select>
           <input type="text" id="input-number" class="input" placeholder="Payment Number">
         </div>
-        <!-- Saved Numbers Component -->
         <div id="saved-numbers-chips" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;"></div>
         <div style="display:flex;align-items:center;gap:8px;margin-top:2px;margin-bottom:6px;">
           <input type="checkbox" id="save-number-check" checked style="width:16px;height:16px;accent-color:#3b82f6;">
@@ -792,7 +679,7 @@
       </div>
   </div>
 
-  <!-- Admin mask uses direct display:block to ensure pure vertical scrolling -->
+  <!-- Admin view shell -->
   <div id="admin-master-ui" class="admin-mask">
     <div class="admin-panel">
       <div class="admin-top">
@@ -861,7 +748,6 @@
     let historyOrdersListenerAttached = false;
     let userSavedNumbers = {};
 
-    // Native Alert/Confirm Replacement System
     function showToast(msg, type='info') {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
@@ -940,22 +826,6 @@
       return order.username || order.user || order.nickname || order.ownerUid || 'unknown';
     }
 
-    function orderBelongsToCurrentUser(order, identity) {
-      if (!order || !identity) return false;
-      const orderOwnerUid = String(order.ownerUid || order.userId || '').trim();
-      const orderUsername = String(order.username || '').trim().toLowerCase();
-      const orderUser = String(order.user || '').trim().toLowerCase();
-      const orderFirstName = String(order.firstName || '').trim().toLowerCase();
-      const userUid = String(identity.uid || '').trim();
-      const username = String(identity.username || '').trim().toLowerCase();
-      const firstName = String(identity.firstName || '').trim().toLowerCase();
-
-      if (orderOwnerUid && userUid && orderOwnerUid === userUid) return true;
-      if (username && (orderUsername === username || orderUser === username)) return true;
-      if (!username && firstName && (orderUser === firstName || orderFirstName === firstName)) return true;
-      return false;
-    }
-
     function renderHistoryOrders(orders) {
       let html = '';
       let completedCount = 0;
@@ -980,12 +850,6 @@
 
       document.getElementById('history-list-display').innerHTML = html || `<div class="empty-state glass">No history found.</div>`;
       document.getElementById('suc-count-display').innerText = completedCount;
-    }
-
-    function syncOrderIntoUserIndex(orderId, payload) {
-      const ownerUid = String((payload && (payload.ownerUid || payload.userId)) || '').trim();
-      if (!ownerUid) return Promise.resolve();
-      return db.ref('userOrders/' + ownerUid + '/' + orderId).set(true).catch(() => null);
     }
 
     function formatMoney(value) {
@@ -1206,7 +1070,7 @@
       const el = document.getElementById(id);
       if (!el) return;
       el.style.display = id === 'custom-confirm' || id === 'admin-master-ui' || id.includes('modal') ? 'flex' : 'block';
-      if(id === 'admin-master-ui') el.style.display = 'block'; // Admin strictly block
+      if(id === 'admin-master-ui') el.style.display = 'block'; 
       requestAnimationFrame(() => el.classList.add('active'));
     }
 
@@ -1225,7 +1089,6 @@
       tg.expand();
       tg.ready();
       const identity = ensureCurrentUserIdentity(true);
-      const user = identity.raw;
       const userId = Number(identity.userId || 0);
       currentTelegramUser = identity.userKey;
 
@@ -1247,7 +1110,7 @@
         db.ref('userProfilesByUsername/' + identity.username).set(identity.uid).catch(() => null);
       }
 
-      fetchUserSavedNumbers(); // Fetch saved methods
+      fetchUserSavedNumbers(); 
 
       const adminShortcut = document.getElementById('admin-shortcut');
       if (ADMIN_LIST.includes(userId)) {
@@ -1301,7 +1164,7 @@
           if (v.status !== false) options += `<option value="${p.key}">${p.key}</option>`;
         });
         document.getElementById('input-method').innerHTML = options || '<option value="">No Method</option>';
-        renderSavedNumberChips(); // Re-render chips if methods load
+        renderSavedNumberChips(); 
       });
 
       fetchTutorialVideo();
@@ -1447,7 +1310,8 @@
       const updates = {};
       updates['orders/' + orderId] = payload;
       if (identity.uid) {
-          updates['userOrders/' + identity.uid + '/' + orderId] = true;
+          // MODIFIED: Storing full payload directly in user's index so it persists even if global orders are deleted
+          updates['userOrders/' + identity.uid + '/' + orderId] = payload;
           if (saveNumberChecked && method && number) {
               updates[`userProfiles/${identity.uid}/savedNumbers/${method}/${number}`] = true;
           }
@@ -1469,18 +1333,39 @@
     function fetchHistory() {
       if (historyOrdersListenerAttached) return;
       historyOrdersListenerAttached = true;
-      db.ref('orders').on('value', snap => {
-        const identity = ensureCurrentUserIdentity(true);
+      const identity = ensureCurrentUserIdentity(true);
+      if (!identity.uid) return;
+
+      // Listening directly to user-specific orders for safety and offline survival
+      db.ref('userOrders/' + identity.uid).on('value', snap => {
         const orders = [];
+        const promises = [];
+        
         snap.forEach(item => {
-          const data = item.val() || {};
-          if (orderBelongsToCurrentUser(data, identity)) {
-            if (!data.id) data.id = item.key;
-            orders.push(data);
-            syncOrderIntoUserIndex(item.key, data);
+          const val = item.val();
+          if (val && typeof val === 'object') {
+            if (!val.id) val.id = item.key;
+            orders.push(val);
+          } else if (val === true) {
+            // Backward compatibility fallback to global orders for old true key indices
+            const p = db.ref('orders/' + item.key).once('value').then(orderSnap => {
+              const orderData = orderSnap.val();
+              if (orderData) {
+                if (!orderData.id) orderData.id = item.key;
+                orders.push(orderData);
+              }
+            });
+            promises.push(p);
           }
         });
-        renderHistoryOrders(orders);
+
+        if (promises.length > 0) {
+          Promise.all(promises).then(() => {
+            renderHistoryOrders(orders);
+          });
+        } else {
+          renderHistoryOrders(orders);
+        }
       }, err => {
         document.getElementById('history-list-display').innerHTML = `<div class="empty-state glass">History load failed.</div>`;
         console.error(err);
@@ -1515,7 +1400,6 @@
           top10.forEach((d, i) => {
             const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`;
             const nick = d.nickname || d.username || d.user || 'Unknown';
-            const tag = '@' + (d.username || d.user || 'guest');
             const avatar = 'https://i.ibb.co/hTfnz7w/photo-6158730640451375188-c.jpg';
             html += `
               <div class="simple-card glass leader-card">
@@ -1582,12 +1466,6 @@
       document.querySelectorAll('.admin-tab').forEach(x => x.classList.remove('active'));
       el.classList.add('active');
       renderAdminData();
-    }
-
-    function copyToClipboard(val) {
-      navigator.clipboard.writeText(String(val || ''));
-      safeHaptic('notify', 'success');
-      showToast('Copied: ' + val, 'success');
     }
 
     function renderAdminData() {
@@ -1674,9 +1552,8 @@
         snap.forEach(child => {
           const order = child.val() || {};
           if (order.status !== 'pending') {
+            // MODIFIED: Only delete from global orders collection; do NOT set updates['userOrders/' + userId + '/' + child.key] to null
             updates['orders/' + child.key] = null;
-            const ownerUid = String(order.ownerUid || order.userId || '').trim();
-            if (ownerUid) updates['userOrders/' + ownerUid + '/' + child.key] = null;
           }
         });
         return db.ref().update(updates);
@@ -1767,8 +1644,17 @@
     function fetchAdminSettingsData() {
       db.ref('leaderboard').on('value', snap => {
         let html = '';
+        const users = [];
+        
         snap.forEach(u => {
           const d = u.val() || {};
+          users.push(d);
+        });
+
+        // MODIFIED: Sorting leaderboard manager list descendingly based on sell amount (Taka)
+        users.sort((a, b) => (parseFloat(b.totalAmount) || 0) - (parseFloat(a.totalAmount) || 0));
+
+        users.forEach(d => {
           html += `
             <div class="switch-row">
               <div>
@@ -2003,8 +1889,17 @@
     function updateOrderStatus(id, status, user, payable) {
       db.ref('orders/' + id).once('value').then(orderSnap => {
         const orderData = orderSnap.val() || {};
+        const ownerUid = orderData.ownerUid || '';
         const leaderboardKey = orderData.username || orderData.user || orderData.ownerUid || user;
-        return db.ref('orders/' + id).update({ status }).then(() => {
+        
+        const updates = {};
+        updates['orders/' + id + '/status'] = status;
+        if (ownerUid) {
+          // MODIFIED: Also updating status inside user's permanent index so their screen updates instantly
+          updates['userOrders/' + ownerUid + '/' + id + '/status'] = status;
+        }
+
+        return db.ref().update(updates).then(() => {
           if (status === 'completed' && leaderboardKey && leaderboardKey !== 'undefined') {
             const ref = db.ref('leaderboard/' + leaderboardKey);
             ref.once('value').then(snap => {
@@ -2045,11 +1940,9 @@
       const confirmed = await customConfirm('Delete this order?');
       if (!confirmed) return;
       db.ref('orders/' + id).once('value').then(snap => {
-        const order = snap.val() || {};
         const updates = {};
+        // MODIFIED: Deleting only from public pending orders lists to make it disappear from admin control dashboard
         updates['orders/' + id] = null;
-        const ownerUid = String(order.ownerUid || order.userId || '').trim();
-        if (ownerUid) updates['userOrders/' + ownerUid + '/' + id] = null;
         return db.ref().update(updates);
       }).then(() => showToast('Order deleted.', 'success'));
     }

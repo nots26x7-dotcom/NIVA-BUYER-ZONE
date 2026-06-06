@@ -487,7 +487,7 @@
     .review-row span { color: var(--muted); }
 
     .admin-panel {
-      position: absolute; /* Ensures smooth vertical scrolling on iOS and Android */
+      position: absolute; 
       inset: 0;
       width: 100%;
       height: 100%;
@@ -497,9 +497,10 @@
       background: #07111f;
       animation: fadeUp .2s ease;
     }
+    
+    /* MODIFIED: Admin top is now relative instead of sticky */
     .admin-top {
-      position: sticky;
-      top: 0;
+      position: relative;
       z-index: 3;
       padding: 10px 0 16px;
       background: #07111f;
@@ -1602,15 +1603,17 @@
       db.ref('orders').once('value').then(snap => {
         const orders = snap.val() || {};
         const list = Object.values(orders).sort((a, b) => (b.id || 0) - (a.id || 0));
-        let html = '';
+        let itemsHtml = '';
+        let count = 0;
 
         list.forEach(o => {
           const shouldShow = isHistory ? o.status !== 'pending' : o.status === 'pending';
           if (!shouldShow) return;
+          count++;
           const color = o.status === 'pending' ? '#f59e0b' : o.status === 'completed' ? '#10b981' : '#ef4444';
           const senderLabel = o.senderLabel || getSenderInputLabel(o.senderInputType);
           const senderCopyValue = escapeForJsSingleQuote(o.sender || '');
-          html += `
+          itemsHtml += `
             <div class="admin-order">
               <div class="admin-order-top">
                 <div>
@@ -1650,7 +1653,39 @@
             </div>`;
         });
 
-        area.innerHTML = html || `<div class="empty-state glass">No records found.</div>`;
+        let finalHtml = '';
+        if (isHistory && count > 0) {
+          finalHtml += `<div style="margin-bottom: 12px;"><button class="danger-btn" style="width: 100%; padding: 14px; border-radius: 18px;" onclick="clearAllHistoryOrders()">🗑️ Clear All History</button></div>`;
+        }
+
+        area.innerHTML = finalHtml + (itemsHtml || `<div class="empty-state glass">No records found.</div>`);
+      });
+    }
+
+    async function clearAllHistoryOrders() {
+      const confirmed = await customConfirm('Are you sure you want to delete all completed and rejected orders from history?');
+      if (!confirmed) return;
+      
+      const btn = document.querySelector('button[onclick="clearAllHistoryOrders()"]');
+      if(btn) { btn.disabled = true; btn.innerText = 'Clearing...'; }
+
+      db.ref('orders').once('value').then(snap => {
+        const updates = {};
+        snap.forEach(child => {
+          const order = child.val() || {};
+          if (order.status !== 'pending') {
+            updates['orders/' + child.key] = null;
+            const ownerUid = String(order.ownerUid || order.userId || '').trim();
+            if (ownerUid) updates['userOrders/' + ownerUid + '/' + child.key] = null;
+          }
+        });
+        return db.ref().update(updates);
+      }).then(() => {
+        showToast('All history cleared successfully!', 'success');
+        renderAdminData(); 
+      }).catch(err => {
+        showToast('Error: ' + err.message, 'error');
+        if(btn) { btn.disabled = false; btn.innerText = '🗑️ Clear All History'; }
       });
     }
 

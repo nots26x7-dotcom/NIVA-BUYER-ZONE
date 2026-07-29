@@ -550,7 +550,6 @@
       <input type="number" id="c-qty" class="form-input" placeholder="e.g. 5500" inputmode="decimal" min="0" step="1">
       <div class="coin-k-hint">Enter your full coin amount. Example: <b>5500 = 5,500 coins</b> | <b>1000000 = 1M coins</b></div>
       <input type="text" id="c-sender" class="form-input" placeholder="Sender Username / Transfer Code">
-      <input type="text" id="c-trx-id" class="form-input" placeholder="Transaction ID">
       <!-- Hidden fields (used by submit logic) -->
       <select id="m-select" class="hidden"></select>
       <input type="text" id="m-num" class="hidden">
@@ -828,8 +827,8 @@
             <div class="settings-group-title"><div class="stitle-bar" style="background:var(--danger);"></div>🔒 SUBMISSION REQUIREMENT</div>
             <div class="pay-row" style="align-items:flex-start;">
               <div class="pay-name" style="flex-direction:column;align-items:flex-start;gap:4px;">
-                <span>Require Proof + Transaction ID</span>
-                <div style="font-size:10px;font-weight:600;color:var(--subtext);line-height:1.4;">When ON, users must upload a payment proof screenshot and enter a Transaction ID before submitting a Coin Sell or VPN order. When OFF, both become optional.</div>
+                <span>Require Proof Screenshot</span>
+                <div style="font-size:10px;font-weight:600;color:var(--subtext);line-height:1.4;">When ON, users must upload a payment proof screenshot before submitting a Coin Sell or VPN order. When OFF, it becomes optional. Transaction ID is always optional on Coin Sell and always required on VPN orders, regardless of this setting.</div>
               </div>
               <label class="switch" style="margin-left:auto;flex-shrink:0;"><input type="checkbox" id="require-proof-trx-toggle" onchange="updateDbField('settings/requireProofTrxId', this.checked)"><span class="slider"></span></label>
             </div>
@@ -1644,7 +1643,7 @@
       // Placeholder using full coin min
       $('c-qty').placeholder = `e.g. ${selMinSubmitLimit} (Min: ${formatKDisplay(selMinSubmitLimit/1000)})`;
       $('c-sender').placeholder = selInputType === 'code' ? 'Enter Transfer Code' : 'Sender Username';
-      ['c-qty','c-sender','c-trx-id'].forEach(id => { if($(id)) $(id).value = ''; });
+      ['c-qty','c-sender'].forEach(id => { if($(id)) $(id).value = ''; });
       $('coin-unit-val').textContent = '—'; $('base-val').textContent = '0.00 ৳'; $('c-res').textContent = '0.00 ৳';
       resetProofInput(); applyProofRequirementUI(); finalP = 0;
       // Reset payment method selection and render cards
@@ -1673,8 +1672,7 @@
       const label = requireProofTrxId ? 'Required' : 'Optional';
       if($('proof-required-badge')) $('proof-required-badge').textContent = label;
       if($('vpn-proof-required-badge')) $('vpn-proof-required-badge').textContent = label;
-      if($('c-trx-id')) $('c-trx-id').placeholder = requireProofTrxId ? 'Transaction ID' : 'Transaction ID (Optional)';
-      if($('vpn-pay-trx')) $('vpn-pay-trx').placeholder = requireProofTrxId ? 'Sender Number / Transaction ID' : 'Sender Number / Transaction ID (Optional)';
+      if($('vpn-pay-trx')) $('vpn-pay-trx').placeholder = 'Sender Number / Transaction ID';
     }
     function resetProofInput(){
       proofFileName = ''; proofImageDataUrl = ''; proofProcessing = false;
@@ -1696,10 +1694,9 @@
       if(!requireFirebase()) return;
       const q = Number($('c-qty').value || 0); // full coin amount entered by user
       const qK = q / 1000;
-      const sender = $('c-sender').value.trim(), number = $('m-num').value.trim(), method = $('m-select').value, trxId = $('c-trx-id') ? $('c-trx-id').value.trim() : '';
+      const sender = $('c-sender').value.trim(), number = $('m-num').value.trim(), method = $('m-select').value;
       if(!selC || !q || q < selMinSubmitLimit || !sender || !method || !number){ showToast('Fill all fields correctly','error'); return; }
       if(requireProofTrxId){
-        if(!trxId){ showToast('Enter transaction ID','error'); return; }
         if(!proofImageDataUrl){ showToast('Upload proof screenshot','error'); return; }
       }
       calc();
@@ -1712,7 +1709,7 @@
       if(submitting || !requireFirebase() || guardBannedUser()) return;
       const q = Number($('c-qty').value || 0); // full coin amount entered by user
       const qK = q / 1000;
-      const sender = $('c-sender').value.trim(), number = $('m-num').value.trim(), method = $('m-select').value, trxId = $('c-trx-id') ? $('c-trx-id').value.trim() : '';
+      const sender = $('c-sender').value.trim(), number = $('m-num').value.trim(), method = $('m-select').value;
       let activeRate = selR;
       for(const tier of selPricingTiers){ if(q >= Number(tier.from) && (Number(tier.to)===0||q<=Number(tier.to))){ activeRate=Number(tier.rate); break; } }
       const coinUnit = qK; // rate applied per 1,000 coins
@@ -1720,7 +1717,7 @@
       const orderRef = db.ref('orders').push(); const orderId = orderRef.key;
       const orderData = {
         id:orderId, user_id:currentUserId, userId:currentUserId, telegram_chat_id:currentUserId, userKey:userRefKey, user:userDisplayName, username:userUsername, order_type:'coin',
-        coin:selC, amt:q, coinUnit:parseFloat(coinUnit.toFixed(4)), payable:parseFloat(finalP.toFixed(2)), sender, number, method, trx_id:trxId, targetId:currentTID, appliedRate:activeRate,
+        coin:selC, amt:q, coinUnit:parseFloat(coinUnit.toFixed(4)), payable:parseFloat(finalP.toFixed(2)), sender, number, method, targetId:currentTID, appliedRate:activeRate,
         proof_image_url:proofImageDataUrl, proof_file_name:proofFileName, proof_uploaded:!!proofImageDataUrl, status:'pending', order_status:'pending', payment_status:'pending', timestamp:firebase.database.ServerValue.TIMESTAMP, created_at:firebase.database.ServerValue.TIMESTAMP
       };
       orderRef.set(orderData).then(() => {
@@ -1786,8 +1783,8 @@
       if(submitting || !requireFirebase() || guardBannedUser()) return;
       const numOrTrx = $('vpn-pay-trx').value.trim();
       if(!selVpnBrand || !selVpnPlanName || !selVpnPayMethod){ showToast('Fill all fields correctly','error'); return; }
+      if(!numOrTrx){ showToast('Enter transaction ID','error'); return; }
       if(requireProofTrxId){
-        if(!numOrTrx){ showToast('Enter transaction ID','error'); return; }
         if(!vpnProofImageDataUrl){ showToast('Upload payment proof screenshot','error'); return; }
       }
       

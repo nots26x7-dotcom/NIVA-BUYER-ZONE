@@ -558,7 +558,7 @@
       <div class="sell-pay-section">
         <div class="sell-pay-section-title">💳 PAYMENT METHOD</div>
         <div id="sell-pay-cards"></div>
-        <div class="manage-pay-link" onclick="closeOrderModal();userSwitchTab('payment-settings-scr');">⚙ Manage Payment Numbers →</div>
+        <div class="manage-pay-link" onclick="closeOrderModal();userSwitchTab('payment-settings-scr');">⚙ Save Your Payment Number →</div>
       </div>
       <div class="calc-box"><div class="calc-row"><span style="color:var(--subtext);">Coin Unit</span><span id="coin-unit-val" style="font-weight:800;" class="coin-k-display">—</span></div><div class="calc-row"><span style="color:var(--subtext);">Base Amount</span><span id="base-val" style="font-weight:800;">0.00 ৳</span></div><div class="calc-row"><span style="color:var(--danger);">Send Fee</span><span id="fee-val" style="color:var(--danger);font-weight:800;">- 5.00 ৳</span></div><div class="calc-divider"></div><div class="calc-row"><span style="color:var(--subtext);">Net Payable</span><span id="c-res" style="color:var(--sky-dark);">0.00 ৳</span></div></div>
       <div class="proof-upload" id="proof-upload-box">
@@ -1577,7 +1577,7 @@
       const check = $('sell-pay-check-' + method);
       if(card) card.classList.add('active');
       if(check) check.innerHTML = '✓';
-      if(!number){ showToast('No number saved for ' + method + '. Tap "Manage Payment Numbers" to set it.', 'warning'); }
+      if(!number){ showToast('No number saved for ' + method + '. Tap "Save Your Payment Number" to set it.', 'warning'); }
     }
 
     // Format K/M display

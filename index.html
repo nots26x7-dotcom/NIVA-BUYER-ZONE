@@ -482,6 +482,7 @@
       <div>
         <div class="profile-name" id="u-name">—</div>
         <div class="profile-tag" id="u-tag">@—</div>
+        <div id="tg-debug-line" style="font-size:9px;opacity:.55;margin-top:2px;"></div>
       </div>
       <div class="approved-chip"><small>APPROVED</small><b id="suc-count">0</b></div>
     </div>
@@ -1358,6 +1359,11 @@
     function initUserProfile(){
       $('u-name').textContent = userDisplayName || 'Guest';
       $('u-tag').textContent = '@' + (userUsername || 'no_username');
+      if($('tg-debug-line')){
+        const tgFound = !!window.Telegram?.WebApp;
+        const initLen = (tg.initData || '').length;
+        $('tg-debug-line').textContent = `[debug] TG SDK:${tgFound?'found':'missing'} initData:${initLen}chars id:${currentUserId}`;
+      }
       $('pfp').src = tgUser.photo_url || DEFAULT_PROFILE_IMAGE;
       $('loader-logo').src = DEFAULT_LOADER_LOGO;
       $('brand-text').textContent = normalizeBrandName(APP_DEFAULT_NAME);

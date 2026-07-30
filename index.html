@@ -76,6 +76,12 @@
     .vpn-premium-btn{background:linear-gradient(135deg,rgba(167,139,250,.15),rgba(167,139,250,.04));border-color:var(--purple);box-shadow:0 4px 14px rgba(167,139,250,.15);}
     .vpn-premium-btn:active{transform:scale(.98);background:rgba(167,139,250,.2);}
 
+    .payment-settings-btn{background:linear-gradient(135deg,rgba(52,211,153,.15),rgba(52,211,153,.04));border-color:var(--emerald);box-shadow:0 4px 14px rgba(52,211,153,.15);}
+    .payment-settings-btn:active{transform:scale(.98);background:rgba(52,211,153,.2);}
+
+    .dev-info-qa-btn{background:linear-gradient(135deg,rgba(99,102,241,.15),rgba(99,102,241,.04));border-color:#6366f1;box-shadow:0 4px 14px rgba(99,102,241,.15);}
+    .dev-info-qa-btn:active{transform:scale(.98);background:rgba(99,102,241,.2);}
+
     .coin-card{background:var(--panel2);border:1px solid var(--border);border-radius:var(--radius-xl);padding:16px;margin-bottom:10px;position:relative;overflow:hidden;box-shadow:var(--shadow-sm);transition:all .2s ease;animation:riseUp .4s ease both;}
     .coin-card.online{cursor:pointer;}
     .coin-card.online:active{box-shadow:0 0 0 2px var(--sky),var(--shadow-md);transform:scale(.98);}
@@ -471,32 +477,32 @@
     .coin-k-display{font-size:11px;font-weight:800;color:var(--emerald);}
 
     /* ===== DEVELOPER CONTACT INFO — FOOTER CARD (0-lag: single-run entrance only, no loops) ===== */
-    .dev-info-card{position:relative;margin-top:10px;background:linear-gradient(180deg,var(--panel2),var(--card-solid));border:1px solid var(--border);border-radius:14px;padding:12px 10px 10px;text-align:center;overflow:hidden;box-shadow:var(--shadow-md);animation:riseUp .5s ease both;}
-    .dev-info-topbar{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#6366f1,#a78bfa,#818cf8,#6366f1);background-size:200% 100%;}
-    .dev-avatar-wrap{position:relative;width:40px;height:40px;margin:0 auto 6px;}
-    .dev-avatar-glow{position:absolute;inset:-5px;border-radius:50%;background:radial-gradient(circle,rgba(167,139,250,.35),transparent 70%);}
-    .dev-avatar-img{position:relative;width:40px;height:40px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(167,139,250,.55);box-shadow:0 4px 12px rgba(99,102,241,.4);display:block;background:var(--panel);}
-    .dev-name{font-size:12px;font-weight:900;color:var(--text);letter-spacing:.2px;}
+    .dev-info-card{position:relative;margin-top:6px;background:linear-gradient(180deg,var(--panel2),var(--card-solid));border:1px solid var(--border);border-radius:22px;padding:28px 18px 20px;text-align:center;overflow:hidden;box-shadow:var(--shadow-lg);animation:riseUp .4s ease both;}
+    .dev-info-topbar{position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#6366f1,#a78bfa,#818cf8,#6366f1);background-size:200% 100%;}
+    .dev-avatar-wrap{position:relative;width:86px;height:86px;margin:2px auto 14px;}
+    .dev-avatar-glow{position:absolute;inset:-11px;border-radius:50%;background:radial-gradient(circle,rgba(167,139,250,.35),transparent 70%);}
+    .dev-avatar-img{position:relative;width:86px;height:86px;border-radius:50%;object-fit:cover;border:3px solid rgba(167,139,250,.55);box-shadow:0 8px 24px rgba(99,102,241,.4);display:block;background:var(--panel);}
+    .dev-name{font-size:19px;font-weight:900;color:var(--text);letter-spacing:.2px;}
     .dev-name span{background:linear-gradient(90deg,#818cf8,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent;}
-    .dev-role{font-size:7.5px;font-weight:800;color:var(--subtext);letter-spacing:1px;text-transform:uppercase;margin-top:2px;}
-    .dev-desc{font-size:9px;font-weight:500;line-height:1.4;color:var(--subtext);margin:6px 0 8px;padding:0 2px;}
-    .dev-contact-title{font-size:7.5px;font-weight:900;letter-spacing:1px;color:#a78bfa;margin-bottom:6px;display:flex;align-items:center;justify-content:center;gap:6px;}
-    .dev-contact-title::before,.dev-contact-title::after{content:'';flex:1;max-width:22px;height:1px;background:linear-gradient(90deg,transparent,var(--border));}
+    .dev-role{font-size:10.5px;font-weight:800;color:var(--subtext);letter-spacing:2px;text-transform:uppercase;margin-top:5px;}
+    .dev-desc{font-size:12.5px;font-weight:500;line-height:1.75;color:var(--subtext);margin:16px 0 18px;padding:0 2px;}
+    .dev-contact-title{font-size:10px;font-weight:900;letter-spacing:2px;color:#a78bfa;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .dev-contact-title::before,.dev-contact-title::after{content:'';flex:1;max-width:34px;height:1px;background:linear-gradient(90deg,transparent,var(--border));}
     .dev-contact-title::after{background:linear-gradient(90deg,var(--border),transparent);}
-    .dev-contact-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-    .dev-contact-btn{display:flex;align-items:center;gap:6px;padding:6px;border-radius:9px;text-decoration:none;transition:transform .15s ease;border:1px solid var(--border);}
+    .dev-contact-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .dev-contact-btn{display:flex;align-items:center;gap:10px;padding:12px;border-radius:14px;text-decoration:none;transition:transform .15s ease;border:1px solid var(--border);}
     .dev-contact-btn:active{transform:scale(.96);}
-    .dev-contact-icon{width:22px;height:22px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;}
-    .dev-contact-icon svg{width:11px;height:11px;}
+    .dev-contact-icon{width:37px;height:37px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;}
+    .dev-contact-icon svg{width:18px;height:18px;}
     .dev-contact-btn.dev-tg{background:rgba(14,165,233,.1);border-color:rgba(14,165,233,.3);}
     .dev-contact-btn.dev-tg .dev-contact-icon{background:linear-gradient(135deg,#0ea5e9,#38bdf8);}
     .dev-contact-btn.dev-wa{background:rgba(37,211,102,.1);border-color:rgba(37,211,102,.3);}
     .dev-contact-btn.dev-wa .dev-contact-icon{background:linear-gradient(135deg,#25d366,#128c7e);}
     .dev-contact-text{display:flex;flex-direction:column;text-align:left;min-width:0;}
-    .dev-contact-text b{font-size:9px;font-weight:800;color:var(--text);}
-    .dev-contact-text small{font-size:7px;font-weight:700;color:var(--subtext);margin-top:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;}
-    .dev-cta{margin-top:8px;font-size:8.5px;font-weight:700;color:var(--sky-dark);background:var(--sky-light);border:1px solid rgba(56,189,248,.25);padding:6px 8px;border-radius:9px;line-height:1.3;}
-    .dev-footnote{margin-top:6px;font-size:7px;font-weight:700;color:var(--gray-mid);letter-spacing:.5px;}
+    .dev-contact-text b{font-size:12px;font-weight:800;color:var(--text);}
+    .dev-contact-text small{font-size:9.5px;font-weight:700;color:var(--subtext);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;}
+    .dev-cta{margin-top:17px;font-size:11.5px;font-weight:700;color:var(--sky-dark);background:var(--sky-light);border:1px solid rgba(56,189,248,.25);padding:11px 14px;border-radius:12px;line-height:1.65;}
+    .dev-footnote{margin-top:13px;font-size:9px;font-weight:700;color:var(--gray-mid);letter-spacing:1px;}
   </style>
 </head>
 <body>
@@ -529,6 +535,14 @@
       <button class="qa-btn vpn-premium-btn" type="button" id="open-vpn-btn" style="grid-column:1/-1;">
         <div class="qa-icon" style="background:var(--purple);color:#fff;">🌐</div>
         <div><div class="qa-main-text" style="color:var(--purple);">BUY PREMIUM VPN</div><div class="qa-sub-text">High-speed secure connections</div></div>
+      </button>
+      <button class="qa-btn payment-settings-btn" type="button" id="open-payment-settings-btn" style="grid-column:1/-1;">
+        <div class="qa-icon" style="background:var(--emerald);color:#fff;">💾</div>
+        <div><div class="qa-main-text" style="color:var(--emerald);font-size:15px;">SAVE PAYMENT NUMBER</div><div class="qa-sub-text">Auto-fill your number when selling coins</div></div>
+      </button>
+      <button class="qa-btn dev-info-qa-btn" type="button" id="open-devinfo-btn" style="grid-column:1/-1;">
+        <div class="qa-icon" style="background:#6366f1;color:#fff;">👨‍💻</div>
+        <div><div class="qa-main-text" style="color:#6366f1;">DEVELOPER INFO</div><div class="qa-sub-text">Contact & hire the developer</div></div>
       </button>
       <button class="qa-btn qa-admin hidden" type="button" id="admin-btn" style="grid-column:1/-1;"><div class="qa-icon" style="background:var(--sky-light);color:var(--sky-dark);">🛡️</div><div><div class="qa-main-text">Admin Panel</div><div class="qa-sub-text" style="color:var(--sky-dark);">RESTRICTED ACCESS</div></div></button>
     </div>
@@ -569,36 +583,39 @@
       <div id="tutorial-list"></div>
     </div>
 
+    <!-- ================= DEVELOPER INFO SCREEN ================= -->
+    <div id="dev-info-scr" style="display:none;padding-top:6px;">
+      <div class="sec-title" style="justify-content:space-between;width:100%;"><div style="display:flex;align-items:center;gap:7px;">DEVELOPER INFO</div><button type="button" class="settings-back-inline" onclick="userSwitchTab('home-scr')" style="padding:4px 8px;">← Back</button></div>
+      <div class="dev-info-card">
+        <div class="dev-info-topbar"></div>
+        <div class="dev-avatar-wrap">
+          <div class="dev-avatar-glow"></div>
+          <img src="https://i.ibb.co/7JcNhkNg/6276213028382511770.jpg" alt="Developer" class="dev-avatar-img" onerror="this.style.background='var(--panel)';this.removeAttribute('src')">
+        </div>
+        <div class="dev-name">Developed by <span>S26X</span></div>
+        <div class="dev-role">⚡ Full Stack Developer</div>
+        <div class="dev-desc">যেকোনো ধরনের ওয়েবসাইট কিংবা টেলিগ্রাম মিনি অ্যাপ তৈরি করতে চাইলে নিচের বাটনে ক্লিক করে সরাসরি যোগাযোগ করুন। দ্রুত রেসপন্স, প্রফেশনাল কোয়ালিটি এবং সম্পূর্ণ কাস্টম ডিজাইন — সবকিছু এক জায়গায়।</div>
+        <div class="dev-contact-title">DEVELOPER CONTACT INFO</div>
+        <div class="dev-contact-row">
+          <a href="https://t.me/S26X_BEAST" target="_blank" rel="noopener" class="dev-contact-btn dev-tg">
+            <span class="dev-contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></span>
+            <span class="dev-contact-text"><b>Telegram</b><small>@S26X_BEAST</small></span>
+          </a>
+          <a href="https://wa.me/8801577489330" target="_blank" rel="noopener" class="dev-contact-btn dev-wa">
+            <span class="dev-contact-icon"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.48 1.32 5L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm5.83 14.19c-.24.68-1.4 1.32-1.93 1.4-.5.08-1.14.11-1.83-.11-.42-.14-.96-.32-1.65-.62-2.91-1.26-4.8-4.19-4.95-4.39-.14-.2-1.18-1.57-1.18-3 0-1.43.75-2.13 1.02-2.42.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.42-.07.65.5.24.58.81 2 .88 2.15.07.15.12.32.02.52-.1.2-.15.32-.29.5-.15.18-.31.4-.44.53-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.03 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.72-.84.91-1.13.19-.29.38-.24.64-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.13.07.75-.17 1.43z"/></svg></span>
+            <span class="dev-contact-text"><b>WhatsApp</b><small>+880 1577-489330</small></span>
+          </a>
+        </div>
+        <div class="dev-cta">🚀 যেকোনো ধরনের ওয়েবসাইট বানাতে এখনই ইনবক্স করুন — কাস্টম ডিজাইন, দ্রুত ডেলিভারি, ফুল সাপোর্ট!</div>
+        <div class="dev-footnote">© 2026 S26X • ALL RIGHTS RESERVED</div>
+      </div>
+    </div>
+
     <nav class="nav-dock" id="user-nav">
       <button class="nav-tab active" id="tab-home" type="button" data-screen="home-scr"><span class="nav-icon">🏠</span><span class="nav-label">Market</span></button>
       <button class="nav-tab" id="tab-hist" type="button" data-screen="history-scr"><span class="nav-icon">🕒</span><span class="nav-label">History</span></button>
       <button class="nav-tab" id="tab-tutorial" type="button" data-screen="tutorial-scr"><span class="nav-icon">▶️</span><span class="nav-label">Tutorial</span></button>
     </nav>
-
-    <!-- ================= DEVELOPER CONTACT INFO — FOOTER CARD ================= -->
-    <div class="dev-info-card">
-      <div class="dev-info-topbar"></div>
-      <div class="dev-avatar-wrap">
-        <div class="dev-avatar-glow"></div>
-        <img src="https://i.ibb.co/7JcNhkNg/6276213028382511770.jpg" alt="Developer" class="dev-avatar-img" onerror="this.style.background='var(--panel)';this.removeAttribute('src')">
-      </div>
-      <div class="dev-name">Developed by <span>S26X</span></div>
-      <div class="dev-role">⚡ Full Stack Developer</div>
-      <div class="dev-desc">যেকোনো ধরনের ওয়েবসাইট কিংবা টেলিগ্রাম মিনি অ্যাপ তৈরি করতে চাইলে নিচের বাটনে ক্লিক করে সরাসরি যোগাযোগ করুন। দ্রুত রেসপন্স, প্রফেশনাল কোয়ালিটি এবং সম্পূর্ণ কাস্টম ডিজাইন — সবকিছু এক জায়গায়।</div>
-      <div class="dev-contact-title">DEVELOPER CONTACT INFO</div>
-      <div class="dev-contact-row">
-        <a href="https://t.me/S26X_BEAST" target="_blank" rel="noopener" class="dev-contact-btn dev-tg">
-          <span class="dev-contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></span>
-          <span class="dev-contact-text"><b>Telegram</b><small>@S26X_BEAST</small></span>
-        </a>
-        <a href="https://wa.me/8801577489330" target="_blank" rel="noopener" class="dev-contact-btn dev-wa">
-          <span class="dev-contact-icon"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.48 1.32 5L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2zm5.83 14.19c-.24.68-1.4 1.32-1.93 1.4-.5.08-1.14.11-1.83-.11-.42-.14-.96-.32-1.65-.62-2.91-1.26-4.8-4.19-4.95-4.39-.14-.2-1.18-1.57-1.18-3 0-1.43.75-2.13 1.02-2.42.26-.29.57-.36.76-.36.19 0 .38 0 .55.01.18.01.42-.07.65.5.24.58.81 2 .88 2.15.07.15.12.32.02.52-.1.2-.15.32-.29.5-.15.18-.31.4-.44.53-.15.15-.3.31-.13.6.17.29.76 1.25 1.63 2.03 1.12 1 2.06 1.31 2.35 1.46.29.15.46.13.63-.08.17-.2.72-.84.91-1.13.19-.29.38-.24.64-.14.26.1 1.66.78 1.94.92.29.15.48.22.55.34.07.13.07.75-.17 1.43z"/></svg></span>
-          <span class="dev-contact-text"><b>WhatsApp</b><small>+880 1577-489330</small></span>
-        </a>
-      </div>
-      <div class="dev-cta">🚀 যেকোনো ধরনের ওয়েবসাইট বানাতে এখনই ইনবক্স করুন — কাস্টম ডিজাইন, দ্রুত ডেলিভারি, ফুল সাপোর্ট!</div>
-      <div class="dev-footnote">© 2026 S26X • ALL RIGHTS RESERVED</div>
-    </div>
   </div>
 
   <div id="order-modal" class="modal-mask">
@@ -1876,7 +1893,7 @@
     }
 
     function userSwitchTab(screenId){
-      ['home-scr','vpn-scr','history-scr','tutorial-scr','payment-settings-scr'].forEach(s => {
+      ['home-scr','vpn-scr','history-scr','tutorial-scr','payment-settings-scr','dev-info-scr'].forEach(s => {
         const el = $(s); if(!el) return;
         const show = s === screenId;
         el.style.display = show ? 'block' : 'none';
@@ -2363,6 +2380,8 @@
       $('help-btn').addEventListener('click', () => openSafeLink(helpLinkValue));
       $('channel-btn').addEventListener('click', () => openSafeLink(channelLinkValue));
       $('open-vpn-btn').addEventListener('click', () => userSwitchTab('vpn-scr'));
+      $('open-payment-settings-btn').addEventListener('click', () => userSwitchTab('payment-settings-scr'));
+      $('open-devinfo-btn').addEventListener('click', () => userSwitchTab('dev-info-scr'));
       $('admin-btn').addEventListener('click', showAdminPanel);
       $('return-user-btn').addEventListener('click', showUserPanel);
       $('admin-back-btn').addEventListener('click', showUserPanel);

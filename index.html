@@ -636,6 +636,7 @@
     <div class="denied-box">
       <div class="denied-icon">⛔</div><div class="denied-title">Access Denied</div>
       <div class="denied-text">This panel is restricted to authorized Telegram admin accounts only.</div>
+      <div class="denied-text" style="margin-top:8px;font-size:11px;opacity:.7;">Detected Telegram ID: <b id="denied-detected-id">—</b></div>
       <button class="btn-action btn-danger" type="button" id="return-user-btn">← Return to User Panel</button>
     </div>
   </div>
@@ -1856,7 +1857,7 @@
       try { history.replaceState(null,'',cleanAdminRouteFromUrl()); } catch(e) {}
     }
     function showAdminPanel(){
-      if(!isAdmin){ $('access-denied').style.display = 'flex'; return; }
+      if(!isAdmin){ if($('denied-detected-id')) $('denied-detected-id').textContent = currentUserId || '0 (no Telegram user data received)'; $('access-denied').style.display = 'flex'; return; }
       $('user-panel').classList.add('hidden'); $('user-nav').classList.add('hidden'); $('admin-panel').classList.remove('hidden');
       if(!adminStarted){ startAdminSystem(); adminStarted = true; }
     }

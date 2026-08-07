@@ -561,7 +561,9 @@
     .lb-admin-name{font-size:12.5px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
     .lb-admin-sub{font-size:9.5px;font-weight:600;color:var(--subtext);margin-top:1px;}
     .lb-admin-amt{font-size:12px;font-weight:900;color:var(--gold);white-space:nowrap;}
-    @media(max-width:380px){.lb-podium{gap:2px;}.lb-pod-card{width:84px;}.lb-pod-pedestal{width:66px;}.lb-admin-row{grid-template-columns:18px 32px 1fr auto;}.lb-admin-amt{display:none;}}
+    .lb-row-amt{font-size:11.5px;font-weight:900;color:var(--gold);white-space:nowrap;flex-shrink:0;}
+    .lb-row-sub{font-size:9.5px;font-weight:650;color:var(--subtext);margin-top:1px;}
+    @media(max-width:380px){.lb-podium{gap:2px;}.lb-pod-card{width:84px;}.lb-pod-pedestal{width:66px;}.lb-admin-row{grid-template-columns:18px 32px 1fr auto;}.lb-admin-amt{display:none;}.lb-row-amt{font-size:10px;}}
   </style>
 </head>
 <body>
@@ -640,6 +642,19 @@
     <div id="tutorial-scr" style="display:none;padding-top:6px;">
       <div class="sec-title">TUTORIAL VIDEOS</div>
       <div id="tutorial-list"></div>
+    </div>
+
+    <!-- ================= LEADERBOARD SCREEN ================= -->
+    <div id="leaderboard-scr" style="display:none;padding-top:6px;">
+      <div class="lb-hero">
+        <div class="lb-hero-icon">🏆</div>
+        <div>
+          <div class="lb-hero-title">TOP SELLERS</div>
+          <div class="lb-hero-sub" id="lb-hero-sub">Rankings update in real time as orders get approved</div>
+        </div>
+      </div>
+      <div class="lb-podium" id="lb-podium"></div>
+      <div class="lb-list" id="lb-list"></div>
     </div>
 
     <!-- ================= DEVELOPER INFO SCREEN ================= -->
@@ -1533,7 +1548,77 @@
       db.ref('vpnPaymentMethods').on('value', snap => { vpnPaymentMethodsCache = snap.val() || {}; renderUserVpnPayments(vpnPaymentMethodsCache); });
       db.ref('orders').orderByChild('userKey').equalTo(userRefKey).on('value', snap => renderUserHistory(snap.val() || {}));
       db.ref('tutorialVideos').on('value', snap => { tutorialCache = snap.val() || {}; renderTutorialVideos(tutorialCache); });
+      startLeaderboardListener();
       setTimeout(finishLoading, 3500);
+    }
+
+    // ================= LEADERBOARD SYSTEM =================
+    let leaderboardCache = [];
+    function startLeaderboardListener(){
+      if(!firebaseReady || !db) return;
+      // Indexed, filtered query — only pulls approved orders, not the whole orders table, so this stays light even as order volume grows
+      db.ref('orders').orderByChild('order_status').equalTo('approved').on('value', snap => {
+        leaderboardCache = buildLeaderboardRanking(snap.val() || {});
+        // Only touch the DOM if the leaderboard tab is actually open right now — background updates never cause lag on other tabs
+        const scr = $('leaderboard-scr');
+        if(scr && scr.style.display !== 'none') renderLeaderboard();
+      });
+    }
+    function buildLeaderboardRanking(ordersObj){
+      const map = new Map();
+      Object.values(ordersObj || {}).forEach(o => {
+        if(!o || !o.userKey) return;
+        const key = o.userKey;
+        if(!map.has(key)) map.set(key, { userKey:key, name:o.user || o.username || 'Trader', coins:0, taka:0, orders:0 });
+        const u = map.get(key);
+        u.coins += Number(o.amt) || 0;
+        u.taka += Number(o.payable) || 0;
+        u.orders += 1;
+        if(o.user) u.name = o.user; // keep freshest display name
+      });
+      return Array.from(map.values())
+        .filter(u => u.coins > 0)
+        .sort((a,b) => b.coins - a.coins)
+        .slice(0, 20); // top 20 is plenty for a leaderboard and keeps render cheap
+    }
+    function renderLeaderboard(){
+      const podEl = $('lb-podium'), listEl = $('lb-list'), subEl = $('lb-hero-sub');
+      if(!podEl || !listEl) return;
+      const rows = leaderboardCache || [];
+      if(!rows.length){
+        podEl.innerHTML = '';
+        listEl.innerHTML = '<div class="empty-state">No sellers yet — be the first on the board! 🚀</div>';
+        if(subEl) subEl.textContent = 'Rankings update in real time as orders get approved';
+        return;
+      }
+      if(subEl) subEl.textContent = `${rows.length} seller${rows.length>1?'s':''} ranked by total coins sold`;
+      const medals = ['🥇','🥈','🥉'];
+      podEl.innerHTML = [0,1,2].map(i => {
+        const u = rows[i];
+        if(!u) return `<div class="lb-pod-card rk-${i+1} lb-empty-podium-slot">
+          <div class="lb-avatar-ring"><div class="lb-avatar-glow"></div><img class="lb-avatar-img" src="${DEFAULT_PROFILE_IMAGE}" alt=""></div>
+          <div class="lb-pod-name">—</div><div class="lb-pod-badge">#${i+1}</div>
+          <div class="lb-pod-pedestal"><span class="lb-pod-pedestal-num">${i+1}</span></div>
+        </div>`;
+        return `<div class="lb-pod-card rk-${i+1}">
+          ${i===0?'<div class="lb-crown">👑</div>':''}
+          <div class="lb-avatar-ring"><div class="lb-avatar-glow"></div><img class="lb-avatar-img" src="${DEFAULT_PROFILE_IMAGE}" alt=""></div>
+          <div class="lb-pod-name">${escapeHtml(u.name)}</div>
+          <div class="lb-pod-badge">${formatCoinNum(u.coins)} coins</div>
+          <div class="lb-pod-pedestal"><span class="lb-pod-pedestal-num">${medals[i]}</span></div>
+        </div>`;
+      }).join('');
+      const rest = rows.slice(3);
+      listEl.innerHTML = rest.length ? rest.map((u, idx) => `
+        <div class="lb-row-card" style="animation-delay:${idx*.03}s;">
+          <div class="lb-row-rank">#${idx+4}</div>
+          <div class="lb-row-avatar-wrap"><img class="lb-row-avatar" src="${DEFAULT_PROFILE_IMAGE}" alt=""></div>
+          <div style="flex:1;min-width:0;">
+            <div class="lb-row-name">${escapeHtml(u.name)}</div>
+            <div class="lb-row-sub">${u.orders} order${u.orders>1?'s':''} approved</div>
+          </div>
+          <div class="lb-row-amt">${formatCoinNum(u.coins)}</div>
+        </div>`).join('') : '';
     }
 
     function renderMarket(data){
@@ -1953,7 +2038,7 @@
     }
 
     function userSwitchTab(screenId){
-      ['home-scr','vpn-scr','history-scr','tutorial-scr','payment-settings-scr','dev-info-scr'].forEach(s => {
+      ['home-scr','vpn-scr','history-scr','tutorial-scr','leaderboard-scr','payment-settings-scr','dev-info-scr'].forEach(s => {
         const el = $(s); if(!el) return;
         const show = s === screenId;
         el.style.display = show ? 'block' : 'none';
@@ -1963,6 +2048,8 @@
       document.querySelectorAll('#user-nav .nav-tab').forEach(tab => tab.classList.toggle('active', tab.dataset.screen === screenId));
       // Render payment settings page when switching to it
       if(screenId === 'payment-settings-scr') renderPaymentSettingsPage();
+      // Render leaderboard only when it's actually opened (lazy render = zero lag on other tabs)
+      if(screenId === 'leaderboard-scr') renderLeaderboard();
       // Refresh sell form cards when returning home (in case settings changed)
       if(screenId === 'home-scr') renderSellFormPaymentCards();
       try{ tg.HapticFeedback.impactOccurred('light'); }catch(e){}

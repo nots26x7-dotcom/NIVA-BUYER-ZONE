@@ -564,6 +564,32 @@
     .lb-row-amt{font-size:11.5px;font-weight:900;color:var(--gold);white-space:nowrap;flex-shrink:0;}
     .lb-row-sub{font-size:9.5px;font-weight:650;color:var(--subtext);margin-top:1px;}
     @media(max-width:380px){.lb-podium{gap:2px;}.lb-pod-card{width:84px;}.lb-pod-pedestal{width:66px;}.lb-admin-row{grid-template-columns:18px 32px 1fr auto;}.lb-admin-amt{display:none;}.lb-row-amt{font-size:10px;}}
+
+    /* ================= REFERRAL CARD ================= */
+    .ref-card{background:linear-gradient(150deg,rgba(251,191,36,.14),rgba(251,191,36,.03));border:1px solid rgba(251,191,36,.35);border-radius:var(--radius-xl);padding:16px;margin-bottom:14px;box-shadow:0 6px 20px rgba(251,191,36,.08);animation:riseUp .45s .04s ease both;}
+    .ref-card-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+    .ref-card-icon{width:40px;height:40px;border-radius:12px;background:rgba(251,191,36,.18);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+    .ref-card-title{font-size:14.5px;font-weight:900;color:var(--text);}
+    .ref-card-sub{font-size:10px;font-weight:700;color:var(--subtext);margin-top:2px;}
+    .ref-card-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+    .ref-stat-box{background:rgba(0,0,0,.22);border:1px solid var(--border);border-radius:14px;padding:10px 12px;}
+    .ref-stat-box small{display:block;font-size:9px;font-weight:800;letter-spacing:.5px;color:var(--subtext);text-transform:uppercase;margin-bottom:4px;}
+    .ref-stat-box b{font-size:15px;font-weight:900;color:var(--gold);}
+    .ref-link-row{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.25);border:1px dashed rgba(251,191,36,.3);border-radius:13px;padding:10px 12px;margin-bottom:12px;}
+    .ref-link-text{flex:1;min-width:0;font-size:10.5px;font-weight:700;color:var(--subtext);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .ref-copy-btn{flex-shrink:0;background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.35);color:var(--gold);font-size:10px;font-weight:900;padding:8px 10px;border-radius:10px;letter-spacing:.4px;}
+    .ref-withdraw-btn{width:100%;background:linear-gradient(135deg,var(--gold),rgba(251,191,36,.7));border:none;color:#1c1300;padding:13px;border-radius:13px;font-size:13px;font-weight:900;letter-spacing:.3px;box-shadow:0 6px 18px rgba(251,191,36,.25);}
+
+    /* ================= FORCE JOIN OVERLAY ================= */
+    #force-join-scr{position:fixed;inset:0;background:var(--bg);z-index:9500;display:none;align-items:center;justify-content:center;padding:24px;}
+    .fj-channel-card{display:flex;align-items:center;gap:11px;background:rgba(0,0,0,.22);border:1px solid var(--border);border-radius:15px;padding:11px 12px;margin-bottom:9px;text-align:left;}
+    .fj-channel-icon{width:38px;height:38px;border-radius:11px;background:rgba(56,189,248,.14);color:var(--sky-dark);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+    .fj-channel-name{font-size:12.5px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .fj-channel-sub{font-size:9.5px;font-weight:650;color:var(--subtext);margin-top:1px;}
+    .fj-join-btn{flex-shrink:0;background:linear-gradient(135deg,var(--sky-dark),rgba(56,189,248,.7));border:none;color:#000;font-size:10.5px;font-weight:900;padding:8px 13px;border-radius:10px;}
+
+    /* ================= WITHDRAW / REFERRAL SHARED ================= */
+    #wd-history-list .pay-row{margin-bottom:7px;}
   </style>
 </head>
 <body>
@@ -587,6 +613,25 @@
         <div id="tg-debug-line" style="font-size:9px;opacity:.55;margin-top:2px;"></div>
       </div>
       <div class="approved-chip"><small>APPROVED</small><b id="suc-count">0</b></div>
+    </div>
+
+    <div class="ref-card">
+      <div class="ref-card-head">
+        <div class="ref-card-icon">🎁</div>
+        <div style="flex:1;min-width:0;">
+          <div class="ref-card-title">Referral Program</div>
+          <div class="ref-card-sub">Invite friends & earn ৳ for every referral</div>
+        </div>
+      </div>
+      <div class="ref-card-stats">
+        <div class="ref-stat-box"><small>Referral Balance</small><b id="ref-balance-val">0.00৳</b></div>
+        <div class="ref-stat-box"><small>Total Referrals</small><b id="ref-count-val">0</b></div>
+      </div>
+      <div class="ref-link-row">
+        <div class="ref-link-text" id="ref-link-val">—</div>
+        <button class="ref-copy-btn" type="button" id="ref-copy-btn">⧉ COPY</button>
+      </div>
+      <button class="ref-withdraw-btn" type="button" id="ref-withdraw-btn">💸 Withdraw Balance</button>
     </div>
 
     <div class="sec-title">QUICK ACCESS</div>
@@ -799,6 +844,16 @@
     </div>
   </div>
 
+  <div id="force-join-scr">
+    <div class="denied-box" style="border-color:rgba(56,189,248,.3);">
+      <div class="denied-icon">📢</div>
+      <div class="denied-title" style="color:var(--sky-dark);">Join Required Channels</div>
+      <div class="denied-text">Please join the channel(s) below, then tap Verify to continue.</div>
+      <div id="force-join-list" style="text-align:left;margin-bottom:2px;"></div>
+      <button class="btn-action btn-cyan" type="button" id="force-join-verify-btn" style="margin-top:16px;">✓ Verify Membership</button>
+    </div>
+  </div>
+
   <div id="admin-panel" class="hidden">
     <div class="admin-header"><div><div class="header-brand" id="admin-brand-name">NIVA BUYER ZONE</div><div class="header-sub">ADMIN CONTROL PANEL</div></div><button class="back-btn" type="button" id="admin-back-btn">← Back</button></div>
     <div class="stats-row"><div class="stat-box"><div class="stat-icon" style="background:rgba(251,191,36,.1);color:var(--warning);">⏳</div><div><div class="stat-label">PENDING ORDERS</div><div class="stat-value" id="stat-pending" style="color:var(--warning);">0</div></div></div></div>
@@ -807,6 +862,7 @@
       <button class="tab-item" id="admin-tab-approved" type="button" data-admin-tab="approved">APPROVED<span class="tab-badge" id="cnt-completed">0</span></button>
       <button class="tab-item" id="admin-tab-rejected" type="button" data-admin-tab="rejected">REJECTED<span class="tab-badge" id="cnt-rejected">0</span></button>
       <button class="tab-item" id="admin-tab-payment" type="button" data-admin-tab="payment">PAYMENT<span class="tab-badge" id="cnt-payment">0</span></button>
+      <button class="tab-item" id="admin-tab-withdraw" type="button" data-admin-tab="withdraw">WITHDRAW<span class="tab-badge" id="cnt-withdraw">0</span></button>
       <button class="tab-item" id="admin-tab-settings" type="button" data-admin-tab="settings">⚙ SETTINGS</button>
     </div>
     
@@ -814,6 +870,10 @@
       <div id="payment-tools" class="payment-tools hidden">
          <input type="search" id="payment-search" class="form-input" placeholder="Search username, coin ID, target ID">
          <select id="payment-filter" class="form-input"><option value="pending">Pending Payment</option><option value="paid">Paid Payment</option><option value="all">All Payments</option></select>
+      </div>
+      <div id="withdraw-tools" class="payment-tools hidden">
+         <input type="search" id="withdraw-search" class="form-input" placeholder="Search username or user ID">
+         <select id="withdraw-filter" class="form-input"><option value="pending">Pending</option><option value="approved">Approved</option><option value="rejected">Rejected</option><option value="all">All</option></select>
       </div>
       <div id="order-list"></div>
     </div>
@@ -869,6 +929,16 @@
             <button class="settings-module-card" type="button" data-settings-module="tutorial-management">
               <div class="settings-module-icon" style="background:rgba(56,189,248,.12);color:var(--sky-dark);">🎬</div>
               <div><div class="settings-module-title">Tutorial Management</div><div class="settings-module-desc">Add and manage tutorial videos.</div></div>
+              <div class="settings-module-arrow">›</div>
+            </button>
+            <button class="settings-module-card" type="button" data-settings-module="referral-settings">
+              <div class="settings-module-icon" style="background:rgba(251,191,36,.1);color:var(--gold);">🎁</div>
+              <div><div class="settings-module-title">Referral Program</div><div class="settings-module-desc">Set referral bonus & minimum withdraw amount.</div></div>
+              <div class="settings-module-arrow">›</div>
+            </button>
+            <button class="settings-module-card" type="button" data-settings-module="force-join">
+              <div class="settings-module-icon" style="background:rgba(56,189,248,.12);color:var(--sky-dark);">📢</div>
+              <div><div class="settings-module-title">Force Join Channels</div><div class="settings-module-desc">Require users to join channels before using the app.</div></div>
               <div class="settings-module-arrow">›</div>
             </button>
           </div>
@@ -1044,6 +1114,39 @@
           <div class="settings-page-head"><div class="settings-breadcrumb"><span>Settings</span><span>›</span><span>Tutorial Management</span></div><div class="settings-page-title-row"><div class="settings-page-title">Tutorial Management</div><button class="settings-back-inline" type="button" data-settings-back>← Back</button></div></div>
           <div class="settings-group"><div class="settings-group-title"><div class="stitle-bar" style="background:var(--sky-dark);"></div>🎬 TUTORIAL MANAGEMENT</div><div class="add-form"><input type="url" id="tutorial-url" class="form-input" placeholder="YouTube Video Link (watch, youtu.be, embed)"><input type="text" id="tutorial-title" class="form-input" placeholder="Video Title (Optional)"><button class="btn-action btn-cyan" type="button" id="add-tutorial-btn">+ Add Tutorial Video</button></div><div id="tutorial-admin-list"></div></div>
         </div>
+
+        <div id="settings-referral-settings" class="settings-page settings-module-page hidden" data-settings-page="referral-settings">
+          <div class="settings-page-head"><div class="settings-breadcrumb"><span>Settings</span><span>›</span><span>Referral Program</span></div><div class="settings-page-title-row"><div class="settings-page-title">Referral Program</div><button class="settings-back-inline" type="button" data-settings-back>← Back</button></div></div>
+          <div class="settings-group">
+            <div class="settings-group-title"><div class="stitle-bar" style="background:var(--gold);"></div>🎁 REFERRAL SETTINGS</div>
+            <div class="notice-box"><div class="notice-title">💡 How it works</div><div class="notice-text">Set how much a user earns (৳) every time someone opens the app via their referral link, and the minimum amount a user must have to request a withdraw.</div></div>
+            <input type="number" id="ref-amount-per-referral" class="form-input" placeholder="Bonus per Referral (৳) e.g. 5" step="0.01">
+            <input type="number" id="ref-min-withdraw" class="form-input" placeholder="Minimum Withdraw Amount (৳) e.g. 50" step="0.01">
+            <button class="btn-action btn-cyan" type="button" id="save-referral-settings-btn">💾 Save Referral Settings</button>
+          </div>
+          <div class="settings-group">
+            <div class="settings-group-title"><div class="stitle-bar" style="background:var(--emerald);"></div>📊 REFERRAL OVERVIEW</div>
+            <div class="user-tracking-grid">
+              <div class="user-track-stat"><small>Total Referrers</small><b id="ref-total-referrers">0</b></div>
+              <div class="user-track-stat"><small>Total Paid Out</small><b id="ref-total-paid">0.00৳</b></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="settings-force-join" class="settings-page settings-module-page hidden" data-settings-page="force-join">
+          <div class="settings-page-head"><div class="settings-breadcrumb"><span>Settings</span><span>›</span><span>Force Join Channels</span></div><div class="settings-page-title-row"><div class="settings-page-title">Force Join Channels</div><button class="settings-back-inline" type="button" data-settings-back>← Back</button></div></div>
+          <div class="settings-group">
+            <div class="settings-group-title"><div class="stitle-bar" style="background:var(--sky-dark);"></div>📢 FORCE JOIN CHANNELS</div>
+            <div class="notice-box"><div class="notice-title">💡 How it works</div><div class="notice-text">The bot must be added as ADMIN in each channel below for auto-verification to work. You can add multiple channels — users must join ALL of them before using the app. Enter the channel's @username, or its numeric chat ID for private channels.</div></div>
+            <div class="add-form" style="display:flex;flex-direction:column;gap:9px;margin-bottom:12px;">
+              <input type="text" id="new-fj-name" class="form-input" placeholder="Channel Display Name">
+              <input type="text" id="new-fj-link" class="form-input" placeholder="Channel Join Link (https://t.me/...)">
+              <input type="text" id="new-fj-chatid" class="form-input" placeholder="Channel @username or Chat ID">
+              <button class="btn-action btn-cyan" type="button" id="add-fj-btn">+ Add Channel</button>
+            </div>
+            <div id="fj-list"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div> 
@@ -1123,6 +1226,24 @@
     <div class="confirm-box"><div class="confirm-icon">💸</div><div class="confirm-title">Mark Payment as Paid</div><p id="payment-modal-desc" style="font-size:13px;color:var(--subtext);text-align:center;margin-bottom:12px;line-height:1.5;"></p><input type="text" id="payment-ref-input" class="form-input" placeholder="Payment transaction / reference ID"><div class="confirm-btns"><button class="btn-back" type="button" id="payment-cancel-btn">Cancel</button><button class="btn-go" type="button" id="payment-paid-btn">✓ Mark Paid</button></div></div>
   </div>
   <input type="file" id="payment-proof-file" accept="image/*" class="hidden">
+
+  <!-- ================= WITHDRAW MODAL ================= -->
+  <div id="withdraw-modal" class="modal-mask z-[2600]">
+    <div class="bottom-sheet">
+      <div class="sheet-handle"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;"><div class="sheet-title">🎁 Withdraw Referral Balance</div><button class="x-btn" type="button" id="close-withdraw-btn">✕</button></div>
+      <div class="notice-box">
+        <div class="notice-title">💰 Balance & Limit</div>
+        <div class="notice-text">Available Balance: <b id="wd-balance-val">0.00৳</b>&nbsp; | &nbsp;Minimum Withdraw: <b id="wd-min-val">0.00৳</b></div>
+      </div>
+      <input type="number" id="wd-amount-input" class="form-input" placeholder="Enter amount to withdraw (৳)" step="0.01" min="0">
+      <div class="sec-title" style="margin-top:4px;">SELECT PAYMENT METHOD</div>
+      <div id="wd-pay-options" style="margin-bottom:14px;"></div>
+      <button class="btn-go" type="button" id="wd-submit-btn" style="width:100%;">✓ Submit Withdraw Request</button>
+      <div class="sec-title" style="margin-top:18px;">RECENT WITHDRAW HISTORY</div>
+      <div id="wd-history-list"></div>
+    </div>
+  </div>
 
   <div id="proof-modal" class="confirm-mask z-[5000]">
     <div class="proof-viewer-box">
@@ -1217,6 +1338,10 @@
     
     // Config Caches
     let marketCache = {}, vpnConfigCache = {}, paymentMethodsCache = {}, vpnPaymentMethodsCache = {}, tutorialCache = {}, userRegistryCache = {}, globalOrders = {};
+    // Referral / Withdraw / Force-Join Caches
+    let referralSettingsCache = {}, forceJoinChannelsCache = {}, myWithdrawalsCache = {}, withdrawalsCache = {};
+    let selectedWithdrawMethod = '', selectedWithdrawNumber = '';
+    const REFERRAL_BOT_APP_LINK = "https://t.me/NivaBuyerZone_bot/app";
     let currentAdminTab = 'pending', adminStarted = false, adminConfirmCallback = null;
     let paymentTargetOrderId = '', proofModalSrc = '', paymentProofTargetOrderId = '', paymentProofProcessing = false;
     let broadcastNoticeImageDataUrl = '', broadcastNoticeImageFileName = '', broadcastNoticeImageProcessing = false, leaderboardUserListOpen = false, userTrackingSearchTerm = '';
@@ -1534,7 +1659,7 @@
     function startUserListeners(){
       if(!firebaseReady) return;
       registerCurrentUser();
-      if(currentUserId){ db.ref('users/' + userRefKey).on('value', snap => { userRegistryCache = {...userRegistryCache, [userRefKey]: snap.val()||{}}; if(guardBannedUser()){} }); }
+      if(currentUserId){ db.ref('users/' + userRefKey).on('value', snap => { userRegistryCache = {...userRegistryCache, [userRefKey]: snap.val()||{}}; if(guardBannedUser()){} renderReferralCard(); }); }
       db.ref('settings/branding').on('value', snap => {
         const b = snap.val() || {}; const name = normalizeBrandName(b.siteName || APP_DEFAULT_NAME);
         document.title = name; $('brand-text').textContent = name; $('admin-brand-name').textContent = name; sanitizeLegacyBrandInDom();
@@ -1548,6 +1673,10 @@
       db.ref('vpnPaymentMethods').on('value', snap => { vpnPaymentMethodsCache = snap.val() || {}; renderUserVpnPayments(vpnPaymentMethodsCache); });
       db.ref('orders').orderByChild('userKey').equalTo(userRefKey).on('value', snap => renderUserHistory(snap.val() || {}));
       db.ref('tutorialVideos').on('value', snap => { tutorialCache = snap.val() || {}; renderTutorialVideos(tutorialCache); });
+      db.ref('settings/referral').on('value', snap => { referralSettingsCache = snap.val() || {}; renderReferralCard(); });
+      db.ref('settings/forceJoinChannels').on('value', snap => { forceJoinChannelsCache = snap.val() || {}; checkForceJoinStatus(); });
+      if(currentUserId){ db.ref('withdrawals').orderByChild('userKey').equalTo(userRefKey).on('value', snap => { myWithdrawalsCache = snap.val() || {}; renderMyWithdrawals(); }); }
+      processReferralIfNeeded();
       startLeaderboardListener();
       setTimeout(finishLoading, 3500);
     }
@@ -1577,8 +1706,8 @@
         if(o.user) u.name = o.user; // keep freshest display name
       });
       return Array.from(map.values())
-        .filter(u => u.coins > 0)
-        .sort((a,b) => b.coins - a.coins)
+        .filter(u => u.taka > 0)
+        .sort((a,b) => b.taka - a.taka) // ranked by total BDT sold, not coin count
         .slice(0, 20); // top 20 is plenty for a leaderboard and keeps render cheap
     }
     function renderLeaderboard(){
@@ -1591,7 +1720,7 @@
         if(subEl) subEl.textContent = 'Rankings update in real time as orders get approved';
         return;
       }
-      if(subEl) subEl.textContent = `${rows.length} seller${rows.length>1?'s':''} ranked by total coins sold`;
+      if(subEl) subEl.textContent = `${rows.length} seller${rows.length>1?'s':''} ranked by total BDT sold`;
       const medals = ['🥇','🥈','🥉'];
       podEl.innerHTML = [0,1,2].map(i => {
         const u = rows[i];
@@ -1604,7 +1733,7 @@
           ${i===0?'<div class="lb-crown">👑</div>':''}
           <div class="lb-avatar-ring"><div class="lb-avatar-glow"></div><img class="lb-avatar-img" src="${DEFAULT_PROFILE_IMAGE}" alt=""></div>
           <div class="lb-pod-name">${escapeHtml(u.name)}</div>
-          <div class="lb-pod-badge">${formatCoinNum(u.coins)} coins</div>
+          <div class="lb-pod-badge">${money(u.taka)}</div>
           <div class="lb-pod-pedestal"><span class="lb-pod-pedestal-num">${medals[i]}</span></div>
         </div>`;
       }).join('');
@@ -1617,8 +1746,188 @@
             <div class="lb-row-name">${escapeHtml(u.name)}</div>
             <div class="lb-row-sub">${u.orders} order${u.orders>1?'s':''} approved</div>
           </div>
-          <div class="lb-row-amt">${formatCoinNum(u.coins)}</div>
+          <div class="lb-row-amt">${money(u.taka)}</div>
         </div>`).join('') : '';
+    }
+
+    // ================= REFERRAL SYSTEM =================
+    function getReferralLink(){ return `${REFERRAL_BOT_APP_LINK}?startapp=ref_${currentUserId || 0}`; }
+    function copyReferralLink(){ copyTextValue(getReferralLink(), 'Referral Link'); }
+
+    function renderReferralCard(){
+      const me = userRegistryCache[userRefKey] || {};
+      const balance = Number(me.referralBalance || 0);
+      const count = Number(me.referralCount || 0);
+      if($('ref-balance-val')) $('ref-balance-val').textContent = money(balance);
+      if($('ref-count-val')) $('ref-count-val').textContent = count;
+      if($('ref-link-val')) $('ref-link-val').textContent = getReferralLink();
+    }
+
+    function extractReferrerId(){
+      const sp = String(tg.initDataUnsafe?.start_param || '').trim();
+      const m = sp.match(/^ref_(\d+)$/);
+      return m ? m[1] : '';
+    }
+
+    // Credits the referrer exactly once per new user — guarded by a referral_processed flag
+    // written to the referred user's own record BEFORE the bonus transaction runs.
+    async function processReferralIfNeeded(){
+      if(!firebaseReady || !db || !currentUserId) return;
+      const refId = extractReferrerId();
+      if(!refId) return;
+      const refKey = 'tg_' + refId;
+      if(refKey === userRefKey) return; // can't refer yourself
+      try{
+        const myRef = db.ref('users/' + userRefKey);
+        const snap = await myRef.once('value');
+        const me = snap.val() || {};
+        if(me.referral_processed) return; // already handled, never re-credit
+        await myRef.update({ referredBy: refKey, referral_processed: true });
+        const setSnap = await db.ref('settings/referral').once('value');
+        const bonus = Number((setSnap.val()||{}).amountPerReferral || 0);
+        if(bonus > 0){
+          await db.ref('users/' + refKey + '/referralBalance').transaction(cur => (Number(cur)||0) + bonus);
+          await db.ref('users/' + refKey + '/referralCount').transaction(cur => (Number(cur)||0) + 1);
+          sendTelegramMessage(refId, `🎉 <b>নতুন রেফারেল!</b>\n\nআপনার রেফার লিংক দিয়ে একজন নতুন ইউজার জয়েন করেছে।\n💰 <b>বোনাস পেয়েছেন:</b> ${bonus.toFixed(2)}৳`);
+        }
+      }catch(e){}
+    }
+
+    // ================= WITHDRAW SYSTEM =================
+    function openWithdrawModal(){
+      if(guardBannedUser()) return;
+      const me = userRegistryCache[userRefKey] || {};
+      const balance = Number(me.referralBalance || 0);
+      const minW = Number((referralSettingsCache||{}).minWithdraw || 0);
+      $('wd-balance-val').textContent = money(balance);
+      $('wd-min-val').textContent = money(minW);
+      $('wd-amount-input').value = '';
+      selectedWithdrawMethod = ''; selectedWithdrawNumber = '';
+      renderWithdrawPayOptions();
+      renderMyWithdrawals();
+      $('withdraw-modal').classList.add('active');
+    }
+    function closeWithdrawModal(){ $('withdraw-modal').classList.remove('active'); }
+
+    function renderWithdrawPayOptions(){
+      const container = $('wd-pay-options'); if(!container) return;
+      const saved = getUserSavedPayments();
+      const methods = Object.entries(paymentMethodsCache || {}).filter(([key,v]) => v && v.status !== false && saved[key]);
+      if(!methods.length){
+        container.innerHTML = '<div class="pay-settings-empty">⚠️ No saved payment number found.<br>Go to "Save Payment Number" and save one first.</div>';
+        return;
+      }
+      container.innerHTML = methods.map(([key,v]) => {
+        const num = saved[key];
+        const logoHtml = v.logo ? `<img src="${escapeHtml(v.logo)}" alt="${escapeHtml(key)}">` : '💳';
+        return `<div class="sell-pay-card" id="wd-pay-card-${escapeHtml(key)}" onclick="selectWithdrawPayMethod('${escapeHtml(key)}','${escapeHtml(num)}')">
+          <div class="sell-pay-check" id="wd-pay-check-${escapeHtml(key)}"></div>
+          <div class="sell-pay-icon">${logoHtml}</div>
+          <div style="flex:1;min-width:0;"><div class="sell-pay-name">${escapeHtml(key)}</div><div class="sell-pay-num">${escapeHtml(num)}</div></div>
+        </div>`;
+      }).join('');
+    }
+    function selectWithdrawPayMethod(method, number){
+      selectedWithdrawMethod = method; selectedWithdrawNumber = number;
+      document.querySelectorAll('#wd-pay-options .sell-pay-card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('#wd-pay-options .sell-pay-check').forEach(c => { c.innerHTML = ''; });
+      const card = $('wd-pay-card-' + method), check = $('wd-pay-check-' + method);
+      if(card) card.classList.add('active'); if(check) check.innerHTML = '✓';
+    }
+
+    function submitWithdrawRequest(){
+      if(!requireFirebase() || guardBannedUser()) return;
+      const me = userRegistryCache[userRefKey] || {};
+      const balance = Number(me.referralBalance || 0);
+      const minW = Number((referralSettingsCache||{}).minWithdraw || 0);
+      const amount = Number($('wd-amount-input').value || 0);
+      if(!selectedWithdrawMethod || !selectedWithdrawNumber){ showToast('Select a payment method','error'); return; }
+      if(!amount || amount <= 0){ showToast('Enter a valid amount','error'); return; }
+      if(minW > 0 && amount < minW){ showToast(`Minimum withdraw is ${money(minW)}`,'error'); return; }
+      if(amount > balance){ showToast('Insufficient referral balance','error'); return; }
+      const btn = $('wd-submit-btn'); btn.disabled = true; btn.textContent = '⏳ Submitting...';
+      const balRef = db.ref('users/' + userRefKey + '/referralBalance');
+      balRef.transaction(cur => {
+        const curBal = Number(cur || 0);
+        if(curBal < amount) return; // abort — insufficient at commit time
+        return curBal - amount;
+      }).then(result => {
+        if(!result.committed){ showToast('Insufficient referral balance','error'); btn.disabled=false; btn.textContent='✓ Submit Withdraw Request'; return; }
+        const wRef = db.ref('withdrawals').push(); const wId = wRef.key;
+        const wData = {
+          id:wId, userKey:userRefKey, user:userDisplayName, username:userUsername, telegram_chat_id:currentUserId,
+          amount: parseFloat(amount.toFixed(2)), method:selectedWithdrawMethod, number:selectedWithdrawNumber,
+          status:'pending', created_at:firebase.database.ServerValue.TIMESTAMP
+        };
+        wRef.set(wData).then(() => {
+          sendTelegramMessage(TELEGRAM_ADMIN_CHAT_ID, `💸 <b>NEW WITHDRAW REQUEST</b>\n\n👤 <b>User:</b> ${tgEscape(orderUserLabel(wData))}\n🆔 <b>User ID:</b> ${tgEscape(currentUserId)}\n💰 <b>Amount:</b> ${Number(amount).toFixed(2)}৳\n💳 <b>Method:</b> ${tgEscape(selectedWithdrawMethod)}\n📱 <b>Number:</b> ${tgEscape(selectedWithdrawNumber)}\n\n🆔 <b>Request ID:</b> #${tgEscape(String(wId).slice(-7))}`);
+          showToast('✓ Withdraw request submitted!','success');
+          closeWithdrawModal();
+        }).catch(() => { showToast('Failed to submit. Balance refunded, try again.','error'); balRef.transaction(cur => (Number(cur)||0) + amount); });
+      }).catch(() => { showToast('Failed. Try again.','error'); }).finally(() => { btn.disabled=false; btn.textContent='✓ Submit Withdraw Request'; });
+    }
+
+    function renderMyWithdrawals(){
+      const wrap = $('wd-history-list'); if(!wrap) return;
+      const arr = Object.values(myWithdrawalsCache || {}).sort((a,b) => Number(b.created_at||0) - Number(a.created_at||0)).slice(0, 10);
+      if(!arr.length){ wrap.innerHTML = '<div class="empty-state" style="padding:16px;">No withdrawal history yet</div>'; return; }
+      wrap.innerHTML = arr.map(w => {
+        const status = String(w.status || 'pending');
+        const cls = status === 'approved' ? 'good' : status === 'rejected' ? 'bad' : '';
+        return `<div class="pay-row"><div class="pay-name">${money(w.amount)} <small style="font-weight:600;color:var(--subtext);">via ${escapeHtml(w.method)}</small></div><span class="mini-pill ${cls}">${escapeHtml(status.toUpperCase())}</span></div>`;
+      }).join('');
+    }
+
+    // ================= FORCE JOIN CHANNELS =================
+    function normalizeChannelChatId(v){
+      const s = String(v || '').trim();
+      if(!s) return '';
+      if(/^-?\d+$/.test(s)) return s; // numeric chat id (private channels)
+      if(/^https?:\/\/t\.me\//i.test(s)){
+        const uname = s.replace(/^https?:\/\/t\.me\//i, '').split(/[/?]/)[0];
+        return uname ? '@' + uname : '';
+      }
+      return '@' + s.replace(/^@/, '');
+    }
+    async function checkChannelMembership(chatId, userId){
+      try{
+        const url = telegramApiUrl('getChatMember') + `?chat_id=${encodeURIComponent(chatId)}&user_id=${encodeURIComponent(userId)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if(!data || data.ok !== true) return false;
+        const status = String(data.result?.status || '').toLowerCase();
+        return ['member','administrator','creator','owner'].includes(status);
+      }catch(e){ return false; }
+    }
+    function renderForceJoinScreen(list){
+      const wrap = $('force-join-list'); if(!wrap) return;
+      wrap.innerHTML = (list || []).map(c => `<div class="fj-channel-card">
+          <div class="fj-channel-icon">📢</div>
+          <div style="flex:1;min-width:0;">
+            <div class="fj-channel-name">${escapeHtml(c.name || 'Channel')}</div>
+            <div class="fj-channel-sub">Tap to join, then verify below</div>
+          </div>
+          <button class="fj-join-btn" type="button" onclick="openSafeLink('${escapeHtml(c.link || '')}')">Join</button>
+        </div>`).join('') || '<div class="empty-state">No channels to join</div>';
+    }
+    async function checkForceJoinStatus(){
+      const overlay = $('force-join-scr');
+      if(isAdmin){ if(overlay) overlay.style.display = 'none'; return true; } // admins are never gated out
+      const channels = Object.entries(forceJoinChannelsCache || {}).filter(([,v]) => v && v.status !== false && v.chatId);
+      if(!channels.length || !currentUserId){ if(overlay) overlay.style.display = 'none'; return true; }
+      const results = await Promise.all(channels.map(async ([key,v]) => ({ key, v, joined: await checkChannelMembership(v.chatId, currentUserId) })));
+      const notJoined = results.filter(r => !r.joined);
+      renderForceJoinScreen(notJoined.map(r => ({ key:r.key, ...r.v })));
+      if(overlay) overlay.style.display = notJoined.length ? 'flex' : 'none';
+      return !notJoined.length;
+    }
+    async function handleForceJoinVerify(){
+      const btn = $('force-join-verify-btn');
+      if(btn){ btn.disabled = true; btn.textContent = '⏳ Checking...'; }
+      const ok = await checkForceJoinStatus();
+      if(btn){ btn.disabled = false; btn.textContent = '✓ Verify Membership'; }
+      if(ok){ showToast('✓ Verified! Welcome aboard.','success'); try{ tg.HapticFeedback.notificationOccurred('success'); }catch(e){} }
+      else{ showToast('Please join all channels first.','error'); try{ tg.HapticFeedback.notificationOccurred('error'); }catch(e){} }
     }
 
     function renderMarket(data){
@@ -2111,7 +2420,7 @@
         $('stat-pending').textContent = cnt.pending; $('cnt-pending').textContent = cnt.pending; $('cnt-completed').textContent = cnt.approved; $('cnt-rejected').textContent = cnt.rejected; if($('cnt-payment')) $('cnt-payment').textContent = cnt.payment;
         if(currentAdminTab !== 'settings') renderAdminOrders(); renderUserTrackingSystem();
       });
-      db.ref('users').on('value', snap => { userRegistryCache = snap.val() || {}; renderUserTrackingSystem(); });
+      db.ref('users').on('value', snap => { userRegistryCache = snap.val() || {}; renderUserTrackingSystem(); updateReferralOverviewStats(); });
       db.ref('marketConfig').on('value', snap => { marketCache = snap.val() || {}; renderAdminCoins(marketCache); });
       db.ref('vpnConfig').on('value', snap => { vpnConfigCache = snap.val() || {}; renderAdminVpns(vpnConfigCache); });
       db.ref('paymentMethods').on('value', snap => { paymentMethodsCache = snap.val() || {}; renderAdminCoinPayments(paymentMethodsCache); });
@@ -2121,6 +2430,97 @@
       db.ref('settings/links').on('value', snap => { const l = snap.val() || {}; $('link-channel').value = l.channel || ''; $('link-help').value = l.help || ''; });
       db.ref('settings/disclaimer').on('value', snap => { disclaimerNoticeValue = normalizeDisclaimerNotice(typeof snap.val() === 'string' ? snap.val() : snap.val()?.noticeText); renderDisclaimerNotice(); });
       db.ref('settings/requireProofTrxId').on('value', snap => { const v = snap.val() !== false; requireProofTrxId = v; if($('require-proof-trx-toggle')) $('require-proof-trx-toggle').checked = v; applyProofRequirementUI(); });
+      db.ref('withdrawals').on('value', snap => {
+        withdrawalsCache = snap.val() || {};
+        const pendingCount = Object.values(withdrawalsCache).filter(w => w.status === 'pending').length;
+        if($('cnt-withdraw')) $('cnt-withdraw').textContent = pendingCount;
+        if(currentAdminTab === 'withdraw') renderAdminWithdrawals();
+        updateReferralOverviewStats();
+      });
+      db.ref('settings/referral').on('value', snap => {
+        const r = snap.val() || {};
+        referralSettingsCache = r;
+        if($('ref-amount-per-referral') && document.activeElement !== $('ref-amount-per-referral')) $('ref-amount-per-referral').value = r.amountPerReferral || '';
+        if($('ref-min-withdraw') && document.activeElement !== $('ref-min-withdraw')) $('ref-min-withdraw').value = r.minWithdraw || '';
+      });
+      db.ref('settings/forceJoinChannels').on('value', snap => { forceJoinChannelsCache = snap.val() || {}; renderAdminForceJoin(forceJoinChannelsCache); });
+    }
+
+    function updateReferralOverviewStats(){
+      const users = Object.values(userRegistryCache || {});
+      const totalReferrers = users.filter(u => Number(u.referralCount || 0) > 0).length;
+      const totalPaid = Object.values(withdrawalsCache || {}).filter(w => w.status === 'approved').reduce((s,w) => s + Number(w.amount||0), 0);
+      if($('ref-total-referrers')) $('ref-total-referrers').textContent = totalReferrers;
+      if($('ref-total-paid')) $('ref-total-paid').textContent = money(totalPaid);
+    }
+
+    function renderAdminWithdrawals(){
+      const q = $('withdraw-search') ? $('withdraw-search').value.trim().toLowerCase() : '';
+      const filter = $('withdraw-filter') ? $('withdraw-filter').value : 'pending';
+      let arr = Object.values(withdrawalsCache || {}).filter(w => {
+        if(filter !== 'all' && String(w.status||'pending') !== filter) return false;
+        if(q) return `${w.user||''} ${w.username||''} ${w.method||''} ${w.number||''}`.toLowerCase().includes(q);
+        return true;
+      }).sort((a,b) => Number(b.created_at||0) - Number(a.created_at||0));
+      if(!arr.length){ $('order-list').innerHTML = '<div class="empty-state">No withdrawal requests</div>'; return; }
+      $('order-list').innerHTML = arr.map((w,i) => {
+        const status = String(w.status || 'pending');
+        const displayName = w.username && w.username !== 'no_username' ? '@' + w.username : (w.user || '—');
+        let actionBtns = '';
+        if(status === 'pending'){
+          actionBtns = `<button class="btn-accept" type="button" onclick="approveWithdrawal('${escapeHtml(w.id)}')">✓ Approve</button><button class="btn-reject" type="button" onclick="rejectWithdrawal('${escapeHtml(w.id)}')">✗ Reject & Refund</button>`;
+        }
+        return `<div class="order-card ${status}" style="animation-delay:${i*.04}s;">
+          <div class="order-header"><div><div class="order-user">${escapeHtml(displayName)}</div><div class="order-id">#${escapeHtml(String(w.id).slice(-7))}</div></div><span class="order-badge badge-${status}">${status.toUpperCase()}</span></div>
+          <div class="info-grid">
+            <div class="info-cell"><small>AMOUNT</small><b style="color:var(--emerald);font-size:14px;">${money(w.amount)}</b></div>
+            <div class="info-cell"><small>METHOD</small><b>${escapeHtml(w.method)}</b></div>
+            <div class="info-cell" style="grid-column:1/-1;"><small>PAYMENT NUMBER</small><b style="cursor:pointer;color:var(--sky-dark);display:inline-flex;align-items:center;gap:4px;" onclick="copyTextValue('${escapeHtml(w.number)}','Payment Number')" title="Click to Copy">${escapeHtml(w.number)} <span>⧉</span></b></div>
+          </div>
+          <div class="order-actions">${actionBtns}</div>
+        </div>`;
+      }).join('');
+    }
+
+    function approveWithdrawal(id){
+      const w = withdrawalsCache[id]; if(!w) return;
+      adminConfirm('Approve Withdrawal?', `Confirm you have sent ${money(w.amount)} to ${w.method} - ${w.number}.`, '✅', () => {
+        db.ref('withdrawals/'+id).update({status:'approved', processed_at:firebase.database.ServerValue.TIMESTAMP}).then(() => {
+          if(w.telegram_chat_id) sendTelegramMessage(w.telegram_chat_id, `✅ <b>উইথড্র অনুমোদিত হয়েছে</b>\n\n💰 <b>পরিমাণ:</b> ${Number(w.amount).toFixed(2)}৳\n💳 <b>মাধ্যম:</b> ${tgEscape(w.method)}\n📱 <b>নম্বর:</b> ${tgEscape(w.number)}\n\nআপনার পেমেন্ট পাঠানো হয়েছে, চেক করুন।`);
+          showToast('Withdrawal Approved','success'); renderAdminWithdrawals();
+        });
+      });
+    }
+    function rejectWithdrawal(id){
+      const w = withdrawalsCache[id]; if(!w) return;
+      adminConfirm('Reject Withdrawal?', 'The amount will be refunded back to the user\'s referral balance.', '❌', () => {
+        db.ref('users/'+w.userKey+'/referralBalance').transaction(cur => (Number(cur)||0) + Number(w.amount||0)).then(() => {
+          db.ref('withdrawals/'+id).update({status:'rejected', processed_at:firebase.database.ServerValue.TIMESTAMP}).then(() => {
+            if(w.telegram_chat_id) sendTelegramMessage(w.telegram_chat_id, `❌ <b>উইথড্র বাতিল হয়েছে</b>\n\n💰 <b>পরিমাণ:</b> ${Number(w.amount).toFixed(2)}৳ আপনার রেফারেল ব্যালেন্সে ফেরত দেওয়া হয়েছে।\n\nবিস্তারিত জানতে সাপোর্টে যোগাযোগ করুন।`);
+            showToast('Rejected & Refunded','warning'); renderAdminWithdrawals();
+          });
+        });
+      });
+    }
+
+    function renderAdminForceJoin(data){
+      const entries = Object.entries(data || {});
+      if(!$('fj-list')) return;
+      $('fj-list').innerHTML = entries.map(([key,v]) => `<div class="pay-row"><div class="pay-name">📢 ${escapeHtml(v.name||key)}<br><small style="font-weight:600;color:var(--subtext);">${escapeHtml(v.chatId||'')}</small></div><div class="pay-controls"><label class="switch"><input type="checkbox" onchange="updateDbField('settings/forceJoinChannels/${escapeHtml(key)}/status', this.checked)" ${v.status!==false?'checked':''}><span class="slider"></span></label><button class="del-btn" onclick="db.ref('settings/forceJoinChannels/${escapeHtml(key)}').remove()">DEL</button></div></div>`).join('') || '<div class="empty-state">No channels added</div>';
+    }
+    function addForceJoinChannel(){
+      const n = $('new-fj-name').value.trim(), link = $('new-fj-link').value.trim(), rawChat = $('new-fj-chatid').value.trim();
+      if(!n || !rawChat){ showToast('Enter channel name and chat ID/username','error'); return; }
+      const chatId = normalizeChannelChatId(rawChat);
+      const key = safeDbKey(n);
+      db.ref('settings/forceJoinChannels/'+key).set({ name:n, link: normalizeLink(link || rawChat), chatId, status:true }).then(() => {
+        $('new-fj-name').value=''; $('new-fj-link').value=''; $('new-fj-chatid').value='';
+        showToast('Channel Added','success');
+      });
+    }
+    function saveReferralSettings(){
+      const amt = Number($('ref-amount-per-referral').value || 0), minW = Number($('ref-min-withdraw').value || 0);
+      db.ref('settings/referral').set({ amountPerReferral: amt, minWithdraw: minW }).then(() => showToast('Saved','success'));
     }
     
     function adminSwitchTab(tab){
@@ -2128,7 +2528,8 @@
       const isSet = tab === 'settings'; $('order-section').style.display = isSet ? 'none' : 'block'; $('settings-section').style.display = isSet ? 'block' : 'none';
       $('order-section').classList.add('no-replay-anim'); $('settings-section').classList.add('no-replay-anim');
       if($('payment-tools')) $('payment-tools').classList.toggle('hidden', tab !== 'payment');
-      if(isSet){ openSettingsMain(); }else{ renderAdminOrders(); }
+      if($('withdraw-tools')) $('withdraw-tools').classList.toggle('hidden', tab !== 'withdraw');
+      if(isSet){ openSettingsMain(); }else if(tab === 'withdraw'){ renderAdminWithdrawals(); }else{ renderAdminOrders(); }
     }
     function openSettingsMain(){ $('settings-main-page').classList.remove('hidden'); document.querySelectorAll('.settings-module-page').forEach(p => p.classList.add('hidden')); }
     function openSettingsModule(key){
@@ -2596,6 +2997,21 @@
       $('payment-search').addEventListener('input', renderAdminOrders);
       $('payment-filter').addEventListener('change', renderAdminOrders);
       $('add-tutorial-btn').addEventListener('click', () => { const id = db.ref('tutorialVideos').push().key; db.ref('tutorialVideos/'+id).set({video_title:$('tutorial-title').value||'Video', youtube_url:$('tutorial-url').value, created_at:firebase.database.ServerValue.TIMESTAMP}).then(()=>{ $('tutorial-title').value=''; $('tutorial-url').value=''; showToast('Added','success'); }); });
+
+      // Referral / Withdraw
+      $('ref-copy-btn').addEventListener('click', copyReferralLink);
+      $('ref-withdraw-btn').addEventListener('click', openWithdrawModal);
+      $('close-withdraw-btn').addEventListener('click', closeWithdrawModal);
+      $('wd-submit-btn').addEventListener('click', submitWithdrawRequest);
+
+      // Force Join
+      if($('force-join-verify-btn')) $('force-join-verify-btn').addEventListener('click', handleForceJoinVerify);
+      if($('add-fj-btn')) $('add-fj-btn').addEventListener('click', addForceJoinChannel);
+
+      // Admin: Referral & Withdraw tab
+      if($('save-referral-settings-btn')) $('save-referral-settings-btn').addEventListener('click', saveReferralSettings);
+      if($('withdraw-search')) $('withdraw-search').addEventListener('input', renderAdminWithdrawals);
+      if($('withdraw-filter')) $('withdraw-filter').addEventListener('change', renderAdminWithdrawals);
     }
 
     document.addEventListener('DOMContentLoaded', () => {

@@ -615,32 +615,17 @@
       <div class="approved-chip"><small>APPROVED</small><b id="suc-count">0</b></div>
     </div>
 
-    <div class="ref-card">
-      <div class="ref-card-head">
-        <div class="ref-card-icon">🎁</div>
-        <div style="flex:1;min-width:0;">
-          <div class="ref-card-title">Referral Program</div>
-          <div class="ref-card-sub">Invite friends & earn ৳ for every referral</div>
-        </div>
-      </div>
-      <div class="ref-card-stats">
-        <div class="ref-stat-box"><small>Referral Balance</small><b id="ref-balance-val">0.00৳</b></div>
-        <div class="ref-stat-box"><small>Total Referrals</small><b id="ref-count-val">0</b></div>
-      </div>
-      <div class="ref-link-row">
-        <div class="ref-link-text" id="ref-link-val">—</div>
-        <button class="ref-copy-btn" type="button" id="ref-copy-btn">⧉ COPY</button>
-      </div>
-      <button class="ref-withdraw-btn" type="button" id="ref-withdraw-btn">💸 Withdraw Balance</button>
-    </div>
-
     <div class="sec-title">QUICK ACCESS</div>
     <div class="qa-grid" id="quick-grid" style="animation:riseUp .4s .06s ease both;">
       <button class="qa-btn" type="button" id="help-btn"><div class="qa-icon" style="background:var(--sky-light);color:var(--sky-dark);">🎧</div><div><div class="qa-main-text">Help Line</div><div class="qa-sub-text">24/7 Support</div></div></button>
       <button class="qa-btn" type="button" id="channel-btn"><div class="qa-icon" style="background:rgba(124,58,237,.15);color:#a78bfa;">📢</div><div><div class="qa-main-text">Channel</div><div class="qa-sub-text">News & Updates</div></div></button>
-      <button class="qa-btn vpn-premium-btn" type="button" id="open-vpn-btn" style="grid-column:1/-1;">
+      <button class="qa-btn vpn-premium-btn" type="button" id="open-vpn-btn">
         <div class="qa-icon" style="background:var(--purple);color:#fff;">🌐</div>
-        <div><div class="qa-main-text" style="color:var(--purple);">BUY PREMIUM VPN</div><div class="qa-sub-text">High-speed secure connections</div></div>
+        <div><div class="qa-main-text" style="color:var(--purple);font-size:13px;">PREMIUM VPN</div><div class="qa-sub-text">Secure connections</div></div>
+      </button>
+      <button class="qa-btn vpn-premium-btn" type="button" id="open-proxy-btn">
+        <div class="qa-icon" style="background:var(--sky-dark);color:#fff;">🛰️</div>
+        <div><div class="qa-main-text" style="color:var(--sky-dark);font-size:13px;">PROXY SELL</div><div class="qa-sub-text">Fast private proxies</div></div>
       </button>
       <button class="qa-btn payment-settings-btn" type="button" id="open-payment-settings-btn" style="grid-column:1/-1;">
         <div class="qa-icon" style="background:var(--emerald);color:#fff;">💾</div>
@@ -679,9 +664,37 @@
       <div id="vpn-brand-list"></div>
     </div>
 
+    <div id="proxy-scr" style="display:none;padding-top:6px;">
+      <div class="sec-title" style="justify-content:space-between;width:100%;"><div style="display:flex;align-items:center;gap:7px;">PROXY SELL STORE</div><button type="button" class="settings-back-inline" onclick="userSwitchTab('home-scr')" style="padding:4px 8px;">← Back</button></div>
+      <div id="proxy-brand-list"></div>
+    </div>
+
     <div id="history-scr" style="display:none;padding-top:6px;">
       <div class="sec-title">ORDER HISTORY</div>
       <div id="history-list"></div>
+    </div>
+
+    <!-- ================= REFERRAL SCREEN ================= -->
+    <div id="referral-scr" style="display:none;padding-top:6px;">
+      <div class="sec-title">REFERRAL PROGRAM</div>
+      <div class="ref-card">
+        <div class="ref-card-head">
+          <div class="ref-card-icon">🎁</div>
+          <div style="flex:1;min-width:0;">
+            <div class="ref-card-title">Referral Program</div>
+            <div class="ref-card-sub">Invite friends & earn ৳ for every referral</div>
+          </div>
+        </div>
+        <div class="ref-card-stats">
+          <div class="ref-stat-box"><small>Referral Balance</small><b id="ref-balance-val">0.00৳</b></div>
+          <div class="ref-stat-box"><small>Total Referrals</small><b id="ref-count-val">0</b></div>
+        </div>
+        <div class="ref-link-row">
+          <div class="ref-link-text" id="ref-link-val">—</div>
+          <button class="ref-copy-btn" type="button" id="ref-copy-btn">⧉ COPY</button>
+        </div>
+        <button class="ref-withdraw-btn" type="button" id="ref-withdraw-btn">💸 Withdraw Balance</button>
+      </div>
     </div>
 
     <div id="tutorial-scr" style="display:none;padding-top:6px;">
@@ -733,6 +746,7 @@
     <nav class="nav-dock" id="user-nav">
       <button class="nav-tab active" id="tab-home" type="button" data-screen="home-scr"><span class="nav-icon">🏠</span><span class="nav-label">Market</span></button>
       <button class="nav-tab" id="tab-hist" type="button" data-screen="history-scr"><span class="nav-icon">🕒</span><span class="nav-label">History</span></button>
+      <button class="nav-tab" id="tab-referral" type="button" data-screen="referral-scr"><span class="nav-icon">🎁</span><span class="nav-label">Refer</span></button>
       <button class="nav-tab" id="tab-tutorial" type="button" data-screen="tutorial-scr"><span class="nav-icon">▶️</span><span class="nav-label">Tutorial</span></button>
       <button class="nav-tab" id="tab-leaderboard" type="button" data-screen="leaderboard-scr"><span class="nav-icon">🏆</span><span class="nav-label">Leaders</span></button>
     </nav>
@@ -812,6 +826,46 @@
               </div>
            </div>
            <button class="btn-primary" type="button" id="submit-vpn-order-btn">CONFIRM VPN ORDER →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="proxy-checkout-modal" class="modal-mask z-[2500]">
+    <div class="bottom-sheet">
+      <div class="sheet-handle"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div class="sheet-title" id="proxy-checkout-title">Select Plan</div>
+        <button class="x-btn" type="button" id="close-proxy-checkout-btn">✕</button>
+      </div>
+
+      <!-- Plan Step -->
+      <div id="proxy-step-plans">
+        <div id="proxy-plan-container"></div>
+      </div>
+
+      <!-- Payment Step -->
+      <div id="proxy-step-payment" class="hidden">
+        <div style="margin-bottom:16px;text-align:center;">
+          <b style="font-size:12px;color:var(--subtext);display:block;margin-bottom:4px;">Amount Payable</b>
+          <span id="proxy-payable-amount" style="font-size:24px;font-weight:900;color:var(--sky-dark);">0.00 ৳</span>
+        </div>
+        <div class="sec-title" style="margin-bottom:10px;">1. SELECT PAYMENT METHOD</div>
+        <div class="vpn-pay-grid" id="proxy-pay-methods-grid"></div>
+        <div id="proxy-pay-details" class="hidden">
+           <div class="transfer-id-box" style="margin-bottom:12px;"><small>SEND MONEY TO THIS NUMBER</small><div class="tid-value" id="proxy-pay-target">—</div><button class="copy-btn" type="button" onclick="copyTextValue(document.getElementById('proxy-pay-target').textContent, 'Payment Number')">⧉ COPY NUMBER</button></div>
+           <input type="text" id="proxy-pay-trx" class="form-input" placeholder="Sender Number / Transaction ID" style="text-align:center;font-weight:900;">
+           <div class="proof-upload" style="margin-bottom:14px;">
+              <input type="file" id="proxy-proof-file" accept="image/*" class="hidden">
+              <div class="proof-head"><span>📸 Proof / Screenshot</span><small id="proxy-proof-required-badge">Required</small></div>
+              <button class="proof-select-btn" type="button" id="proxy-proof-select-btn">+ Upload Payment Screenshot</button>
+              <div class="proof-preview hidden" id="proxy-proof-preview">
+                <img id="proxy-proof-preview-img" alt="Proof Screenshot Preview">
+                <div class="proof-preview-meta"><b id="proxy-proof-file-name">Screenshot selected</b><small id="proxy-proof-file-size">Ready to submit</small></div>
+                <button class="proof-remove-btn" type="button" id="proxy-proof-remove-btn">Remove</button>
+              </div>
+           </div>
+           <button class="btn-primary" type="button" id="submit-proxy-order-btn">CONFIRM PROXY ORDER →</button>
         </div>
       </div>
     </div>
@@ -909,6 +963,16 @@
             <button class="settings-module-card" type="button" data-settings-module="vpn-payment-methods">
               <div class="settings-module-icon" style="background:var(--success-bg);color:var(--success);">💳</div>
               <div><div class="settings-module-title">VPN Payment Methods</div><div class="settings-module-desc">Manage payment methods for VPNs.</div></div>
+              <div class="settings-module-arrow">›</div>
+            </button>
+            <button class="settings-module-card" type="button" data-settings-module="proxy-management">
+              <div class="settings-module-icon" style="background:rgba(56,189,248,.12);color:var(--sky-dark);">🛰️</div>
+              <div><div class="settings-module-title">Proxy Management</div><div class="settings-module-desc">Add proxy brands, plans, and manage stock.</div></div>
+              <div class="settings-module-arrow">›</div>
+            </button>
+            <button class="settings-module-card" type="button" data-settings-module="proxy-payment-methods">
+              <div class="settings-module-icon" style="background:var(--success-bg);color:var(--success);">💳</div>
+              <div><div class="settings-module-title">Proxy Payment Methods</div><div class="settings-module-desc">Manage payment methods for Proxy Sell.</div></div>
               <div class="settings-module-arrow">›</div>
             </button>
             <button class="settings-module-card" type="button" data-settings-module="order-verification">
@@ -1107,6 +1171,52 @@
                 <button class="btn-action btn-emerald" type="button" id="add-vpn-payment-btn">Add Method</button>
              </div>
              <div id="vpn-payment-list"></div>
+          </div>
+        </div>
+
+        <div id="settings-proxy-management" class="settings-page settings-module-page hidden" data-settings-page="proxy-management">
+          <div class="settings-page-head"><div class="settings-breadcrumb"><span>Settings</span><span>›</span><span>Proxy Management</span></div><div class="settings-page-title-row"><div class="settings-page-title">Proxy Management</div><button class="settings-back-inline" type="button" data-settings-back>← Back</button></div></div>
+          <div class="settings-group">
+            <div class="settings-group-title"><div class="stitle-bar" style="background:var(--sky-dark);"></div>🛰️ PROXY BRANDS & STOCK</div>
+            <div class="notice-box"><div class="notice-title">💡 How stock works</div><div class="notice-text">For each brand, add stock either one at a time with "Single Field", or paste many proxies at once (one per line) with "Bulk Box".</div></div>
+            <div class="add-form">
+               <input type="text" id="px-name" class="form-input" placeholder="Proxy Brand / Category Name">
+               <div class="proof-upload" style="margin-bottom:12px;">
+                 <input type="file" id="px-logo-file" accept="image/*" class="hidden">
+                 <div class="proof-head"><span>📸 Proxy Logo Image</span><small>Gallery</small></div>
+                 <button class="proof-select-btn" type="button" onclick="document.getElementById('px-logo-file').click()">+ Select Logo</button>
+                 <div class="proof-preview hidden" id="px-logo-preview">
+                   <img id="px-logo-preview-img" alt="Proxy Logo">
+                   <div class="proof-preview-meta"><b id="px-logo-file-name">Selected</b></div>
+                   <button class="proof-remove-btn" type="button" id="px-logo-remove-btn">Remove</button>
+                 </div>
+               </div>
+               <button class="btn-action btn-cyan" type="button" id="add-proxy-btn">+ Add Proxy Brand</button>
+            </div>
+            <div id="adm-proxy-list"></div>
+          </div>
+        </div>
+
+        <div id="settings-proxy-payment-methods" class="settings-page settings-module-page hidden" data-settings-page="proxy-payment-methods">
+          <div class="settings-page-head"><div class="settings-breadcrumb"><span>Settings</span><span>›</span><span>Proxy Payment Methods</span></div><div class="settings-page-title-row"><div class="settings-page-title">Proxy Payment Methods</div><button class="settings-back-inline" type="button" data-settings-back>← Back</button></div></div>
+          <div class="settings-group">
+             <div class="settings-group-title"><div class="stitle-bar" style="background:var(--emerald);"></div>💳 PROXY PAYMENTS</div>
+             <div class="add-form" style="display:flex;flex-direction:column;gap:9px;margin-bottom:12px;">
+                <input type="text" id="new-proxy-pay" class="form-input" placeholder="Method Name (e.g. bKash)">
+                <input type="text" id="new-proxy-pay-num" class="form-input" placeholder="Payment Number">
+                <div class="proof-upload" style="margin-bottom:0;">
+                   <input type="file" id="proxy-p-logo-file" accept="image/*" class="hidden">
+                   <div class="proof-head"><span>📸 Method Logo</span><small>Gallery</small></div>
+                   <button class="proof-select-btn" type="button" onclick="document.getElementById('proxy-p-logo-file').click()">+ Select Logo</button>
+                   <div class="proof-preview hidden" id="proxy-p-logo-preview">
+                     <img id="proxy-p-logo-preview-img" alt="Pay Logo">
+                     <div class="proof-preview-meta"><b id="proxy-p-logo-file-name">Selected</b></div>
+                     <button class="proof-remove-btn" type="button" id="proxy-p-logo-remove-btn">Remove</button>
+                   </div>
+                </div>
+                <button class="btn-action btn-emerald" type="button" id="add-proxy-payment-btn">Add Method</button>
+             </div>
+             <div id="proxy-payment-list"></div>
           </div>
         </div>
 
@@ -1337,7 +1447,7 @@
     let currentSellPayMethod = '', currentSellPayNumber = '';
     
     // Config Caches
-    let marketCache = {}, vpnConfigCache = {}, paymentMethodsCache = {}, vpnPaymentMethodsCache = {}, tutorialCache = {}, userRegistryCache = {}, globalOrders = {};
+    let marketCache = {}, vpnConfigCache = {}, proxyConfigCache = {}, paymentMethodsCache = {}, vpnPaymentMethodsCache = {}, proxyPaymentMethodsCache = {}, tutorialCache = {}, userRegistryCache = {}, globalOrders = {};
     // Referral / Withdraw / Force-Join Caches
     let referralSettingsCache = {}, forceJoinChannelsCache = {}, myWithdrawalsCache = {}, withdrawalsCache = {};
     let selectedWithdrawMethod = '', selectedWithdrawNumber = '';
@@ -1348,13 +1458,15 @@
     const ACTIVE_USER_WINDOW_MS = 10 * 60 * 1000;
 
     // Logo Caches
-    let cLogoDataUrl = '', editCLogoDataUrl = '', vpnLogoDataUrl = '', payLogoDataUrl = '', vpnPayLogoDataUrl = '';
+    let cLogoDataUrl = '', editCLogoDataUrl = '', vpnLogoDataUrl = '', payLogoDataUrl = '', vpnPayLogoDataUrl = '', proxyLogoDataUrl = '', proxyPayLogoDataUrl = '';
     let editCoinTargetKey = '';
 
     // VPN States
     let selVpnBrand = '', selVpnPlanName = '', selVpnPlanPrice = 0, selVpnPayMethod = '', selVpnPayNumberTarget = '';
+    let selProxyBrand = '', selProxyPlanName = '', selProxyPlanPrice = 0, selProxyPayMethod = '', selProxyPayNumberTarget = '';
     let vpnProofFileName = '', vpnProofImageDataUrl = '', vpnProofProcessing = false;
-    let deliveryTargetOrderId = '', deliveryTargetVpnBrand = '';
+    let proxyProofFileName = '', proxyProofImageDataUrl = '', proxyProofProcessing = false;
+    let deliveryTargetOrderId = '', deliveryTargetVpnBrand = '', deliveryTargetType = 'vpn';
 
     window.addEventListener('error', (event) => { setTimeout(finishLoading, 0); });
     window.addEventListener('unhandledrejection', (event) => { setTimeout(finishLoading, 0); });
@@ -1583,20 +1695,23 @@
       if(order.order_type === 'vpn'){
         return `🆕 <b>NEW VPN ORDER</b>\n\n👤 <b>User:</b> ${tgEscape(orderUserLabel(order))}\n🆔 <b>User ID:</b> ${tgEscape(order.userId || order.user_id || '—')}\n🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}\n📦 <b>Plan:</b> ${tgEscape(order.vpn_plan || '—')}\n💰 <b>Payout:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>Method:</b> ${tgEscape(order.method || '—')}\n📱 <b>Payment:</b> ${tgEscape(getOrderPaymentNumber(order))}\n📸 <b>Proof:</b> ${order.proof_uploaded ? 'Uploaded' : 'Not uploaded'}\n\n🆔 <b>Order ID:</b> #${tgEscape(orderShortId(order))}\n⏳ <b>Status:</b> Pending`;
       }
+      if(order.order_type === 'proxy'){
+        return `🆕 <b>NEW PROXY ORDER</b>\n\n👤 <b>User:</b> ${tgEscape(orderUserLabel(order))}\n🆔 <b>User ID:</b> ${tgEscape(order.userId || order.user_id || '—')}\n🛰️ <b>Proxy:</b> ${tgEscape(order.proxy_brand || '—')}\n📦 <b>Plan:</b> ${tgEscape(order.proxy_plan || '—')}\n💰 <b>Payout:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>Method:</b> ${tgEscape(order.method || '—')}\n📱 <b>Payment:</b> ${tgEscape(getOrderPaymentNumber(order))}\n📸 <b>Proof:</b> ${order.proof_uploaded ? 'Uploaded' : 'Not uploaded'}\n\n🆔 <b>Order ID:</b> #${tgEscape(orderShortId(order))}\n⏳ <b>Status:</b> Pending`;
+      }
       return `🆕 <b>NEW COIN ORDER</b>\n\n👤 <b>User:</b> ${tgEscape(orderUserLabel(order))}\n🆔 <b>User ID:</b> ${tgEscape(order.userId || order.user_id || '—')}\n🪙 <b>Coin:</b> ${tgEscape(order.coin || '—')}\n📦 <b>Amount:</b> ${Number(order.amt || 0).toLocaleString()}\n💰 <b>Payout:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>Method:</b> ${tgEscape(order.method || '—')}\n📱 <b>Payment:</b> ${tgEscape(getOrderPaymentNumber(order))}\n📨 <b>Sender:</b> ${tgEscape(order.sender || '—')}\n🎯 <b>Target ID:</b> ${tgEscape(order.targetId || order.target_id || '—')}\n📸 <b>Proof:</b> ${order.proof_uploaded ? 'Uploaded' : 'Not uploaded'}\n\n🆔 <b>Order ID:</b> #${tgEscape(orderShortId(order))}\n⏳ <b>Status:</b> Pending`;
     }
     
     function buildUserOrderSubmittedMessage(order){
-      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}\n📦 <b>Plan:</b> ${tgEscape(order.vpn_plan || '—')}` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
+      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}\n📦 <b>Plan:</b> ${tgEscape(order.vpn_plan || '—')}` : order.order_type === 'proxy' ? `🛰️ <b>Proxy:</b> ${tgEscape(order.proxy_brand || '—')}\n📦 <b>Plan:</b> ${tgEscape(order.proxy_plan || '—')}` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
       return `📩 <b>অর্ডার গ্রহণ করা হয়েছে</b>\n\nআপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে। আমাদের টিম অর্ডারটি যাচাই করছে।\n\n🆔 <b>অর্ডার আইডি:</b> #${tgEscape(orderShortId(order))}\n${details}\n💰 <b>পেমেন্ট:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>মাধ্যম:</b> ${tgEscape(order.method || '—')}\n📱 <b>পেমেন্ট নম্বর:</b> ${tgEscape(getOrderPaymentNumber(order))}\n\n<b>আমাদের সাথে নিরাপদ লেনদেনের জন্য ধন্যবাদ।</b>`;
     }
     
     function buildOrderStatusMessage(order, orderStatus){
       const status = String(orderStatus || '').toLowerCase();
-      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
+      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}` : order.order_type === 'proxy' ? `🛰️ <b>Proxy:</b> ${tgEscape(order.proxy_brand || '—')}` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
 
       if(status === 'approved' || status === 'completed'){
-        let extra = order.order_type === 'vpn' ? `\n🔐 <b>Credentials:</b> Check App History` : `\n💰 <b>পেমেন্ট:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>মাধ্যম:</b> ${tgEscape(order.method || '—')}\n📱 <b>পেমেন্ট নম্বর:</b> ${tgEscape(getOrderPaymentNumber(order))}`;
+        let extra = (order.order_type === 'vpn' || order.order_type === 'proxy') ? `\n🔐 <b>Credentials:</b> Check App History` : `\n💰 <b>পেমেন্ট:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>মাধ্যম:</b> ${tgEscape(order.method || '—')}\n📱 <b>পেমেন্ট নম্বর:</b> ${tgEscape(getOrderPaymentNumber(order))}`;
         return `✅ <b>অর্ডার অনুমোদিত হয়েছে</b>\n\nআপনার অর্ডারটি যাচাই করে অনুমোদন করা হয়েছে।\n\n🆔 <b>অর্ডার আইডি:</b> #${tgEscape(orderShortId(order))}\n${details}${extra}\n\n<b>আমাদের সাথে নিরাপদ লেনদেনের জন্য ধন্যবাদ।</b>`;
       }
 
@@ -1608,7 +1723,7 @@
     }
 
     function buildPaymentPaidMessage(order){
-      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
+      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}` : order.order_type === 'proxy' ? `🛰️ <b>Proxy:</b> ${tgEscape(order.proxy_brand || '—')}` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
       return `💸 <b>পেমেন্ট সম্পন্ন হয়েছে</b>\n\nআপনার অর্ডারের পেমেন্ট সফলভাবে সম্পন্ন করা হয়েছে। অনুগ্রহ করে আপনার পেমেন্ট অ্যাকাউন্ট চেক করুন।\n\n🆔 <b>অর্ডার আইডি:</b> #${tgEscape(orderShortId(order))}\n${details}\n💰 <b>পেমেন্ট:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>মাধ্যম:</b> ${tgEscape(order.method || '—')}\n📱 <b>পেমেন্ট নম্বর:</b> ${tgEscape(getOrderPaymentNumber(order))}\n🔖 <b>রেফারেন্স:</b> ${tgEscape(order.payment_reference_id || '—')}\n\n<b>আমাদের সাথে নিরাপদ লেনদেনের জন্য ধন্যবাদ।</b>`;
     }
 
@@ -1669,8 +1784,10 @@
       db.ref('settings/requireProofTrxId').on('value', snap => { requireProofTrxId = snap.val() !== false; applyProofRequirementUI(); });
       db.ref('marketConfig').on('value', snap => { marketCache = snap.val() || {}; renderMarket(marketCache); finishLoading(); });
       db.ref('vpnConfig').on('value', snap => { vpnConfigCache = snap.val() || {}; renderVpns(vpnConfigCache); });
+      db.ref('proxyConfig').on('value', snap => { proxyConfigCache = snap.val() || {}; renderProxies(proxyConfigCache); });
       db.ref('paymentMethods').on('value', snap => { paymentMethodsCache = snap.val() || {}; renderUserCoinPayments(paymentMethodsCache); });
       db.ref('vpnPaymentMethods').on('value', snap => { vpnPaymentMethodsCache = snap.val() || {}; renderUserVpnPayments(vpnPaymentMethodsCache); });
+      db.ref('proxyPaymentMethods').on('value', snap => { proxyPaymentMethodsCache = snap.val() || {}; renderUserProxyPayments(proxyPaymentMethodsCache); });
       db.ref('orders').orderByChild('userKey').equalTo(userRefKey).on('value', snap => renderUserHistory(snap.val() || {}));
       db.ref('tutorialVideos').on('value', snap => { tutorialCache = snap.val() || {}; renderTutorialVideos(tutorialCache); });
       db.ref('settings/referral').on('value', snap => { referralSettingsCache = snap.val() || {}; renderReferralCard(); });
@@ -1998,6 +2115,16 @@
       }).join('');
     }
 
+    function renderProxies(data){
+      const entries = Object.entries(data || {});
+      if(!entries.length){ $('proxy-brand-list').innerHTML = '<div class="empty-state">No proxies available</div>'; return; }
+      $('proxy-brand-list').innerHTML = entries.map(([key,v],idx) => {
+        const on = v.status !== false;
+        const logo = v.logo ? `<img src="${escapeHtml(v.logo)}">` : '<span style="font-size:24px;">🛰️</span>';
+        return `<div class="coin-card ${on?'online':''}" onclick="${on ? `openProxyModal('${escapeHtml(key)}')` : ''}" style="animation-delay:${idx*.06}s;"><div class="coin-card-top"><div class="coin-logo-wrap">${logo}</div><div><div class="coin-name-txt">${escapeHtml(v.name || key)}</div><div class="coin-label-txt">PROXY SELL</div></div><div class="status-pill ${on?'on':'off'}"><div class="s-dot ${on?'on':'off'}"></div>${on?'ONLINE':'OFFLINE'}</div></div></div>`;
+      }).join('');
+    }
+
     function renderUserCoinPayments(data){
       const entries = Object.entries(data || {}).filter(([,v]) => v && v.status !== false);
       // Populate hidden select (keeps existing submit logic working)
@@ -2136,15 +2263,25 @@
       }
     }
 
+    function renderUserProxyPayments(data){
+      const entries = Object.entries(data || {}).filter(([,v]) => v && v.status !== false);
+      if($('proxy-pay-methods-grid')) {
+         $('proxy-pay-methods-grid').innerHTML = entries.map(([key,v]) => {
+            const logoHtml = v.logo ? `<img src="${escapeHtml(v.logo)}">` : `<div style="width:40px;height:40px;border-radius:10px;background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:16px;">💳</div>`;
+            return `<div class="vpn-pay-card" data-pay-key="${escapeHtml(key)}" data-pay-num="${escapeHtml(v.number || '')}" onclick="selectProxyPayMethod('${escapeHtml(key)}', '${escapeHtml(v.number || '')}')">${logoHtml}<b>${escapeHtml(key)}</b></div>`;
+         }).join('');
+      }
+    }
+
     function renderUserHistory(data){
       const arr = Object.values(data || {}).sort((a,b) => getCreatedAt(b) - getCreatedAt(a));
       const approved = arr.filter(o => getOrderStatus(o) === 'approved').length;
       $('suc-count').textContent = approved;
       if(!arr.length){ $('history-list').innerHTML = '<div class="empty-state">No orders yet</div>'; return; }
       $('history-list').innerHTML = arr.map((o,i) => {
-        const info = getUserStatusInfo(o), isVpn = o.order_type === 'vpn', os = getOrderStatus(o);
-        const title = isVpn ? `${escapeHtml(o.vpn_brand)} - ${escapeHtml(o.vpn_plan)}` : escapeHtml(o.coin);
-        const badge = isVpn ? `<span class="hist-type-badge">VPN</span>` : `<span class="hist-type-badge" style="background:var(--sky-dark);">COIN</span>`;
+        const info = getUserStatusInfo(o), isVpn = o.order_type === 'vpn', isProxy = o.order_type === 'proxy', os = getOrderStatus(o);
+        const title = isVpn ? `${escapeHtml(o.vpn_brand)} - ${escapeHtml(o.vpn_plan)}` : isProxy ? `${escapeHtml(o.proxy_brand)} - ${escapeHtml(o.proxy_plan)}` : escapeHtml(o.coin);
+        const badge = isVpn ? `<span class="hist-type-badge">VPN</span>` : isProxy ? `<span class="hist-type-badge" style="background:var(--purple);">PROXY</span>` : `<span class="hist-type-badge" style="background:var(--sky-dark);">COIN</span>`;
         let detailsHtml = '';
         if(isVpn){
            detailsHtml = `<div class="hist-info-cell"><div class="hic-label">PAYMENT</div><div class="hic-value">${escapeHtml(o.method)} (${escapeHtml(o.number)})</div></div><div class="hist-info-cell"><div class="hic-label">ORDER STATUS</div><div class="hic-value">${escapeHtml(info.label)}</div></div>`;
@@ -2153,6 +2290,14 @@
                <div style="font-size:9px;font-weight:900;color:var(--purple);margin-bottom:6px;text-transform:uppercase;">🔐 Delivery Credentials</div>
                <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);padding:8px 10px;border-radius:8px;margin-bottom:6px;"><div><span style="font-size:8px;color:var(--subtext);display:block;">Email / ID</span><b style="font-size:11px;">${escapeHtml(o.delivered_email)}</b></div><button class="info-copy-btn" onclick="copyTextValue('${escapeHtml(o.delivered_email)}', 'Email')" style="margin:0;">Copy</button></div>
                <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);padding:8px 10px;border-radius:8px;"><div><span style="font-size:8px;color:var(--subtext);display:block;">Password</span><b style="font-size:11px;">${escapeHtml(o.delivered_pass)}</b></div><button class="info-copy-btn" onclick="copyTextValue('${escapeHtml(o.delivered_pass)}', 'Password')" style="margin:0;">Copy</button></div>
+             </div>`;
+           }
+        }else if(isProxy){
+           detailsHtml = `<div class="hist-info-cell"><div class="hic-label">PAYMENT</div><div class="hic-value">${escapeHtml(o.method)} (${escapeHtml(o.number)})</div></div><div class="hist-info-cell"><div class="hic-label">ORDER STATUS</div><div class="hic-value">${escapeHtml(info.label)}</div></div>`;
+           if(os === 'approved' && o.delivered_proxy){
+             detailsHtml += `<div style="grid-column:1/-1;background:rgba(56,189,248,.1);border:1px dashed var(--sky-dark);border-radius:10px;padding:10px;margin-top:4px;">
+               <div style="font-size:9px;font-weight:900;color:var(--sky-dark);margin-bottom:6px;text-transform:uppercase;">🛰️ Your Proxy</div>
+               <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);padding:8px 10px;border-radius:8px;"><div><span style="font-size:8px;color:var(--subtext);display:block;">Proxy</span><b style="font-size:11px;">${escapeHtml(o.delivered_proxy)}</b></div><button class="info-copy-btn" onclick="copyTextValue('${escapeHtml(o.delivered_proxy)}', 'Proxy')" style="margin:0;">Copy</button></div>
              </div>`;
            }
         }else{
@@ -2346,8 +2491,83 @@
       }).catch(err => { showToast('Submit failed','error'); }).finally(() => { submitting = false; btn.textContent = 'CONFIRM VPN ORDER →'; btn.disabled = false; });
     }
 
+    function openProxyModal(key){
+      if(guardBannedUser()) return;
+      const px = proxyConfigCache[key]; if(!px) return;
+      selProxyBrand = key; selProxyPlanName = ''; selProxyPlanPrice = 0; selProxyPayMethod = ''; selProxyPayNumberTarget = '';
+      $('proxy-checkout-title').textContent = px.name || key;
+
+      const plansContainer = $('proxy-plan-container'); plansContainer.innerHTML = '';
+      if(px.plans){
+         px.plans.forEach((p, idx) => {
+            if(p.name && p.price > 0){
+               plansContainer.innerHTML += `<div class="vpn-plan-card" onclick="selectProxyPlan('${escapeHtml(p.name)}', ${p.price})"><span>${escapeHtml(p.name)}</span><b>${money(p.price)}</b></div>`;
+            }
+         });
+      }else{ plansContainer.innerHTML = `<div style="color:var(--subtext);text-align:center;">No active plans available right now.</div>`; }
+
+      $('proxy-step-plans').classList.remove('hidden'); $('proxy-step-payment').classList.add('hidden');
+      $('proxy-checkout-modal').classList.add('active'); try{ tg.HapticFeedback.impactOccurred('light'); }catch(e){}
+    }
+    function selectProxyPlan(planName, price){
+      selProxyPlanName = planName; selProxyPlanPrice = price;
+      $('proxy-payable-amount').textContent = money(price);
+      $('proxy-step-plans').classList.add('hidden'); $('proxy-step-payment').classList.remove('hidden');
+      document.querySelectorAll('#proxy-pay-methods-grid .vpn-pay-card').forEach(c => c.classList.remove('active'));
+      $('proxy-pay-details').classList.add('hidden');
+      resetProxyProofInput();
+    }
+    function selectProxyPayMethod(key, targetNum){
+      selProxyPayMethod = key; selProxyPayNumberTarget = targetNum;
+      document.querySelectorAll('#proxy-pay-methods-grid .vpn-pay-card').forEach(c => {
+         if(c.dataset.payKey === key) c.classList.add('active'); else c.classList.remove('active');
+      });
+      $('proxy-pay-target').textContent = targetNum || 'N/A';
+      $('proxy-pay-details').classList.remove('hidden');
+      try{ tg.HapticFeedback.impactOccurred('light'); }catch(e){}
+    }
+    function resetProxyProofInput(){
+      proxyProofFileName = ''; proxyProofImageDataUrl = ''; proxyProofProcessing = false;
+      if($('proxy-proof-file')) $('proxy-proof-file').value = '';
+      if($('proxy-proof-preview')) $('proxy-proof-preview').classList.add('hidden');
+      if($('proxy-proof-preview-img')) $('proxy-proof-preview-img').removeAttribute('src');
+      if($('proxy-proof-select-btn')) $('proxy-proof-select-btn').textContent = '+ Upload Payment Screenshot';
+    }
+    async function handleProxyProofFileChange(e){
+      const file = e.target.files && e.target.files[0]; if(!file) return;
+      if(!/^image\//i.test(file.type || '')){ resetProxyProofInput(); showToast('Only image upload','error'); return; }
+      try{
+        proxyProofProcessing = true; proxyProofFileName = file.name || 'proxy_proof.jpg'; $('proxy-proof-select-btn').textContent = 'Processing...';
+        proxyProofImageDataUrl = await compressImageFile(file);
+        $('proxy-proof-preview-img').src = proxyProofImageDataUrl; $('proxy-proof-file-name').textContent = proxyProofFileName; $('proxy-proof-preview').classList.remove('hidden'); $('proxy-proof-select-btn').textContent = 'Change Screenshot'; showToast('Screenshot ready','success');
+      }catch(err){ resetProxyProofInput(); showToast('Process failed','error'); }finally{ proxyProofProcessing = false; }
+    }
+    function submitProxyOrder(){
+      if(submitting || !requireFirebase() || guardBannedUser()) return;
+      const numOrTrx = $('proxy-pay-trx').value.trim();
+      if(!selProxyBrand || !selProxyPlanName || !selProxyPayMethod){ showToast('Fill all fields correctly','error'); return; }
+      if(!numOrTrx){ showToast('Enter transaction ID','error'); return; }
+      if(requireProofTrxId){
+        if(!proxyProofImageDataUrl){ showToast('Upload payment proof screenshot','error'); return; }
+      }
+
+      submitting = true; const btn = $('submit-proxy-order-btn'); btn.textContent = '⏳ Submitting...'; btn.disabled = true;
+      const orderRef = db.ref('orders').push(); const orderId = orderRef.key;
+      const orderData = {
+        id:orderId, user_id:currentUserId, userId:currentUserId, telegram_chat_id:currentUserId, userKey:userRefKey, user:userDisplayName, username:userUsername, order_type:'proxy',
+        proxy_brand:selProxyBrand, proxy_plan:selProxyPlanName, payable:parseFloat(selProxyPlanPrice.toFixed(2)), method:selProxyPayMethod, number:numOrTrx, targetId:selProxyPayNumberTarget,
+        proof_image_url:proxyProofImageDataUrl, proof_file_name:proxyProofFileName, proof_uploaded:!!proxyProofImageDataUrl, status:'pending', order_status:'pending', payment_status:'pending', timestamp:firebase.database.ServerValue.TIMESTAMP, created_at:firebase.database.ServerValue.TIMESTAMP
+      };
+      orderRef.set(orderData).then(() => {
+        if(proxyProofImageDataUrl) sendTelegramPhoto(TELEGRAM_ADMIN_CHAT_ID, proxyProofImageDataUrl, buildNewOrderMessage(orderData));
+        else sendTelegramMessage(TELEGRAM_ADMIN_CHAT_ID, buildNewOrderMessage(orderData));
+        sendUserTelegramMessage(orderData, buildUserOrderSubmittedMessage(orderData));
+        $('proxy-checkout-modal').classList.remove('active'); showToast('✓ Proxy Order Submitted!','success'); userSwitchTab('history-scr');
+      }).catch(err => { showToast('Submit failed','error'); }).finally(() => { submitting = false; btn.textContent = 'CONFIRM PROXY ORDER →'; btn.disabled = false; });
+    }
+
     function userSwitchTab(screenId){
-      ['home-scr','vpn-scr','history-scr','tutorial-scr','leaderboard-scr','payment-settings-scr','dev-info-scr'].forEach(s => {
+      ['home-scr','vpn-scr','proxy-scr','history-scr','referral-scr','tutorial-scr','leaderboard-scr','payment-settings-scr','dev-info-scr'].forEach(s => {
         const el = $(s); if(!el) return;
         const show = s === screenId;
         el.style.display = show ? 'block' : 'none';
@@ -2361,6 +2581,9 @@
       if(screenId === 'leaderboard-scr') renderLeaderboard();
       // Refresh sell form cards when returning home (in case settings changed)
       if(screenId === 'home-scr') renderSellFormPaymentCards();
+      // Refresh referral card + proxy brand list on tab open
+      if(screenId === 'referral-scr') renderReferralCard();
+      if(screenId === 'proxy-scr') renderProxies(proxyConfigCache);
       try{ tg.HapticFeedback.impactOccurred('light'); }catch(e){}
     }
     function openSafeLink(url){ const s = normalizeLink(url); if(!s){ showToast('Link not set.','error'); return; } window.open(s,'_blank','noopener,noreferrer'); }
@@ -2423,8 +2646,10 @@
       db.ref('users').on('value', snap => { userRegistryCache = snap.val() || {}; renderUserTrackingSystem(); updateReferralOverviewStats(); });
       db.ref('marketConfig').on('value', snap => { marketCache = snap.val() || {}; renderAdminCoins(marketCache); });
       db.ref('vpnConfig').on('value', snap => { vpnConfigCache = snap.val() || {}; renderAdminVpns(vpnConfigCache); });
+      db.ref('proxyConfig').on('value', snap => { proxyConfigCache = snap.val() || {}; renderAdminProxies(proxyConfigCache); });
       db.ref('paymentMethods').on('value', snap => { paymentMethodsCache = snap.val() || {}; renderAdminCoinPayments(paymentMethodsCache); });
       db.ref('vpnPaymentMethods').on('value', snap => { vpnPaymentMethodsCache = snap.val() || {}; renderAdminVpnPayments(vpnPaymentMethodsCache); });
+      db.ref('proxyPaymentMethods').on('value', snap => { proxyPaymentMethodsCache = snap.val() || {}; renderAdminProxyPayments(proxyPaymentMethodsCache); });
       db.ref('tutorialVideos').on('value', snap => { tutorialCache = snap.val() || {}; renderAdminTutorials(tutorialCache); });
       db.ref('settings/branding').on('value', snap => { const b = snap.val() || {}; $('site-name').value = normalizeBrandName(b.siteName || APP_DEFAULT_NAME); });
       db.ref('settings/links').on('value', snap => { const l = snap.val() || {}; $('link-channel').value = l.channel || ''; $('link-help').value = l.help || ''; });
@@ -2554,13 +2779,14 @@
       
       if(!arr.length){ $('order-list').innerHTML = `<div class="empty-state">No orders here</div>`; return; }
       $('order-list').innerHTML = arr.map((o,i) => {
-        const os = getOrderStatus(o), ps = getPaymentStatus(o), isVpn = o.order_type === 'vpn';
+        const os = getOrderStatus(o), ps = getPaymentStatus(o), isVpn = o.order_type === 'vpn', isProxy = o.order_type === 'proxy';
         const displayName = o.username && o.username !== 'no_username' ? '@' + o.username : (o.user || '—');
         const cardClass = currentAdminTab === 'payment' ? (ps === 'paid' ? 'paid' : 'payment') : os;
         
         let actionBtns = '';
         if(os === 'pending'){
-           if(isVpn){ actionBtns = `<button class="btn-accept" type="button" onclick="openStockDeliveryModal('${escapeHtml(o.id)}', '${escapeHtml(o.vpn_brand)}')">📦 Deliver Account</button><button class="btn-reject" type="button" onclick="updateOrderStatus('${escapeHtml(o.id)}','rejected')">✗ Reject</button>`; }
+           if(isVpn){ actionBtns = `<button class="btn-accept" type="button" onclick="openStockDeliveryModal('${escapeHtml(o.id)}', '${escapeHtml(o.vpn_brand)}', 'vpn')">📦 Deliver Account</button><button class="btn-reject" type="button" onclick="updateOrderStatus('${escapeHtml(o.id)}','rejected')">✗ Reject</button>`; }
+           else if(isProxy){ actionBtns = `<button class="btn-accept" type="button" onclick="openStockDeliveryModal('${escapeHtml(o.id)}', '${escapeHtml(o.proxy_brand)}', 'proxy')">📦 Deliver Proxy</button><button class="btn-reject" type="button" onclick="updateOrderStatus('${escapeHtml(o.id)}','rejected')">✗ Reject</button>`; }
            else{ actionBtns = `<button class="btn-accept" type="button" onclick="updateOrderStatus('${escapeHtml(o.id)}','approved')">✓ Approve</button><button class="btn-reject" type="button" onclick="updateOrderStatus('${escapeHtml(o.id)}','rejected')">✗ Reject</button>`; }
         }
         if(currentAdminTab === 'payment' && os === 'approved' && ps === 'pending'){
@@ -2573,6 +2799,11 @@
         let gridHtml = '';
         if(isVpn){
             gridHtml += `<div class="info-cell"><small>VPN / PLAN</small><b>${escapeHtml(o.vpn_brand)} - ${escapeHtml(o.vpn_plan)}</b></div>`;
+            gridHtml += `<div class="info-cell"><small>METHOD</small><b>${escapeHtml(o.method)}</b></div>`;
+            gridHtml += `<div class="info-cell"><small>PAYMENT NUMBER</small><b style="cursor:pointer; color:var(--sky-dark); display:inline-flex; align-items:center; gap:4px;" onclick="copyTextValue('${escapeHtml(o.number)}', 'Payment Number')" title="Click to Copy">${escapeHtml(o.number)} <span>⧉</span></b></div>`;
+            gridHtml += `<div class="info-cell"><small>TARGET ID</small><b>${escapeHtml(o.targetId || '—')}</b></div>`;
+        } else if(isProxy){
+            gridHtml += `<div class="info-cell"><small>PROXY / PLAN</small><b>${escapeHtml(o.proxy_brand)} - ${escapeHtml(o.proxy_plan)}</b></div>`;
             gridHtml += `<div class="info-cell"><small>METHOD</small><b>${escapeHtml(o.method)}</b></div>`;
             gridHtml += `<div class="info-cell"><small>PAYMENT NUMBER</small><b style="cursor:pointer; color:var(--sky-dark); display:inline-flex; align-items:center; gap:4px;" onclick="copyTextValue('${escapeHtml(o.number)}', 'Payment Number')" title="Click to Copy">${escapeHtml(o.number)} <span>⧉</span></b></div>`;
             gridHtml += `<div class="info-cell"><small>TARGET ID</small><b>${escapeHtml(o.targetId || '—')}</b></div>`;
@@ -2610,27 +2841,35 @@
       }); 
     }
 
-    function openStockDeliveryModal(orderId, brandKey){
-       deliveryTargetOrderId = orderId; deliveryTargetVpnBrand = brandKey;
-       const stockObj = (vpnConfigCache[brandKey] || {}).stock || {};
+    function openStockDeliveryModal(orderId, brandKey, type){
+       deliveryTargetOrderId = orderId; deliveryTargetVpnBrand = brandKey; deliveryTargetType = type || 'vpn';
+       const cache = deliveryTargetType === 'proxy' ? proxyConfigCache : vpnConfigCache;
+       const stockObj = (cache[brandKey] || {}).stock || {};
        const stockKeys = Object.keys(stockObj);
-       const listHtml = stockKeys.length ? stockKeys.map(sk => `<div class="user-row"><div style="display:flex;flex-direction:column;"><b style="font-size:12px;">${escapeHtml(stockObj[sk].email)}</b><span style="font-size:10px;color:var(--subtext);">${escapeHtml(stockObj[sk].pass)}</span></div><button class="btn-action btn-emerald" style="width:auto;padding:8px 12px;font-size:11px;" onclick="approveAndDeliverVpn('${orderId}', '${brandKey}', '${sk}')">Deliver</button></div>`).join('') : '<div class="empty-state">No stock available. Please add stock in settings.</div>';
+       let listHtml;
+       if(deliveryTargetType === 'proxy'){
+          listHtml = stockKeys.length ? stockKeys.map(sk => `<div class="user-row"><div style="display:flex;flex-direction:column;"><b style="font-size:12px;">${escapeHtml(stockObj[sk].value)}</b></div><button class="btn-action btn-emerald" style="width:auto;padding:8px 12px;font-size:11px;" onclick="approveAndDeliverStock('${orderId}', '${brandKey}', '${sk}', 'proxy')">Deliver</button></div>`).join('') : '<div class="empty-state">No stock available. Please add stock in settings.</div>';
+       } else {
+          listHtml = stockKeys.length ? stockKeys.map(sk => `<div class="user-row"><div style="display:flex;flex-direction:column;"><b style="font-size:12px;">${escapeHtml(stockObj[sk].email)}</b><span style="font-size:10px;color:var(--subtext);">${escapeHtml(stockObj[sk].pass)}</span></div><button class="btn-action btn-emerald" style="width:auto;padding:8px 12px;font-size:11px;" onclick="approveAndDeliverStock('${orderId}', '${brandKey}', '${sk}', 'vpn')">Deliver</button></div>`).join('') : '<div class="empty-state">No stock available. Please add stock in settings.</div>';
+       }
        $('admin-stock-select-list').innerHTML = listHtml;
        $('admin-stock-modal').classList.add('active');
     }
-    function approveAndDeliverVpn(orderId, brandKey, stockKey){
-       const order = globalOrders[orderId], stockItem = ((vpnConfigCache[brandKey] || {}).stock || {})[stockKey];
+    function approveAndDeliverStock(orderId, brandKey, stockKey, type){
+       const t = type || 'vpn';
+       const cache = t === 'proxy' ? proxyConfigCache : vpnConfigCache;
+       const cfgPath = t === 'proxy' ? 'proxyConfig' : 'vpnConfig';
+       const order = globalOrders[orderId], stockItem = ((cache[brandKey] || {}).stock || {})[stockKey];
        if(!order || !stockItem) return;
-       const patch = {
-          order_status: 'approved', status: 'completed', payment_status: 'pending', approved_at: firebase.database.ServerValue.TIMESTAMP,
-          delivered_email: stockItem.email, delivered_pass: stockItem.pass
-       };
+       const patch = t === 'proxy'
+          ? { order_status: 'approved', status: 'completed', payment_status: 'pending', approved_at: firebase.database.ServerValue.TIMESTAMP, delivered_proxy: stockItem.value }
+          : { order_status: 'approved', status: 'completed', payment_status: 'pending', approved_at: firebase.database.ServerValue.TIMESTAMP, delivered_email: stockItem.email, delivered_pass: stockItem.pass };
        Object.assign(order, patch); // update local order object for telegram
        db.ref('orders/'+orderId).update(patch).then(() => {
-          db.ref(`vpnConfig/${brandKey}/stock/${stockKey}`).remove();
+          db.ref(`${cfgPath}/${brandKey}/stock/${stockKey}`).remove();
           $('admin-stock-modal').classList.remove('active');
           sendUserTelegramMessage(order, buildOrderStatusMessage(order, 'approved'));
-          renderAdminOrders(); showToast('VPN Delivered!','success'); adminSwitchTab('approved');
+          renderAdminOrders(); showToast(t === 'proxy' ? 'Proxy Delivered!' : 'VPN Delivered!','success'); adminSwitchTab('approved');
        });
     }
 
@@ -2775,6 +3014,37 @@
       db.ref(`vpnConfig/${brandKey}/stock`).push({email:em, pass:ps}).then(()=>{ showToast('Stock Added','success'); });
     }
 
+    function renderAdminProxies(data){
+      const entries = Object.entries(data || {});
+      $('adm-proxy-list').innerHTML = entries.map(([key,v]) => {
+         let plansHtml = (v.plans || []).map((p, idx) => `<div class="form-row2" style="margin-bottom:8px;"><input type="text" class="form-input" placeholder="Plan Name" value="${escapeHtml(p.name||'')}" onchange="updateDbField('proxyConfig/${escapeHtml(key)}/plans/${idx}/name', this.value)"><input type="number" class="form-input" placeholder="Price" value="${p.price||''}" onchange="updateDbField('proxyConfig/${escapeHtml(key)}/plans/${idx}/price', Number(this.value))"></div>`).join('');
+         if(!(v.plans && v.plans.length >= 2)){
+            const startIdx = v.plans ? v.plans.length : 0;
+            for(let idx=startIdx; idx<2; idx++) {
+               plansHtml += `<div class="form-row2" style="margin-bottom:8px;"><input type="text" class="form-input" placeholder="Plan Name" onchange="updateDbField('proxyConfig/${escapeHtml(key)}/plans/${idx}/name', this.value)"><input type="number" class="form-input" placeholder="Price" onchange="updateDbField('proxyConfig/${escapeHtml(key)}/plans/${idx}/price', Number(this.value))"></div>`;
+            }
+         }
+
+         const stockList = Object.keys(v.stock||{}).map(sk => `<div class="user-row" style="padding:6px 10px;"><div style="font-size:10px;"><b>${escapeHtml(v.stock[sk].value)}</b></div><button class="del-btn" onclick="db.ref('proxyConfig/${escapeHtml(key)}/stock/${escapeHtml(sk)}').remove()">DEL</button></div>`).join('');
+
+         return `<div class="coin-box ${v.status===false?'offline':''}"><div class="coin-box-header"><div class="coin-name-row">${v.logo ? `<img src="${escapeHtml(v.logo)}" class="coin-logo-sm">` : '<span>🛰️</span>'}<span class="coin-key">${escapeHtml(v.name||key)}</span></div><label class="switch"><input type="checkbox" onchange="updateDbField('proxyConfig/${escapeHtml(key)}/status', this.checked)" ${v.status!==false?'checked':''}><span class="slider"></span></label></div><div style="font-size:10px;font-weight:900;color:var(--sky-dark);margin-bottom:6px;">PROXY PLANS</div>${plansHtml}<div class="add-form" style="margin-top:12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:900;color:var(--purple);margin-bottom:6px;">ADD STOCK</div><div style="display:flex;gap:6px;margin-bottom:8px;"><button type="button" class="btn-action btn-blue" style="padding:7px;font-size:9px;margin:0;" onclick="document.getElementById('px-single-${escapeHtml(key)}').classList.remove('hidden');document.getElementById('px-bulk-${escapeHtml(key)}').classList.add('hidden');">Single Field</button><button type="button" class="btn-action btn-cyan" style="padding:7px;font-size:9px;margin:0;" onclick="document.getElementById('px-single-${escapeHtml(key)}').classList.add('hidden');document.getElementById('px-bulk-${escapeHtml(key)}').classList.remove('hidden');">Bulk Box</button></div><div id="px-single-${escapeHtml(key)}"><input type="text" id="px-val-${escapeHtml(key)}" class="form-input" placeholder="Proxy (ip:port:user:pass)" style="margin-bottom:8px;"><button class="btn-action btn-cyan" style="padding:8px;font-size:10px;" onclick="addProxyStockItem('${escapeHtml(key)}')">+ Add One to Stock</button></div><div id="px-bulk-${escapeHtml(key)}" class="hidden"><textarea id="px-bulk-val-${escapeHtml(key)}" class="form-input admin-textarea" placeholder="Paste multiple proxies, one per line..." style="min-height:90px;margin-bottom:8px;"></textarea><button class="btn-action btn-cyan" style="padding:8px;font-size:10px;" onclick="addProxyStockBulk('${escapeHtml(key)}')">+ Add All Lines to Stock</button></div></div>${stockList}<button class="btn-action btn-danger" type="button" style="margin-top:8px;padding:9px;" onclick="db.ref('proxyConfig/${escapeHtml(key)}').remove()">Remove Brand</button></div>`;
+      }).join('') || '<div class="empty-state">No Proxy Brands added</div>';
+    }
+
+    function addProxyStockItem(brandKey){
+      const val = $(`px-val-${brandKey}`).value.trim();
+      if(!val){ showToast('Enter a proxy value','error'); return; }
+      db.ref(`proxyConfig/${brandKey}/stock`).push({value:val}).then(()=>{ $(`px-val-${brandKey}`).value=''; showToast('Stock Added','success'); });
+    }
+    function addProxyStockBulk(brandKey){
+      const raw = $(`px-bulk-val-${brandKey}`).value;
+      const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+      if(!lines.length){ showToast('Paste at least one line','error'); return; }
+      const updates = {};
+      lines.forEach(line => { const k = db.ref(`proxyConfig/${brandKey}/stock`).push().key; updates[k] = {value: line}; });
+      db.ref(`proxyConfig/${brandKey}/stock`).update(updates).then(()=>{ $(`px-bulk-val-${brandKey}`).value=''; showToast(`${lines.length} Stock Items Added`,'success'); });
+    }
+
     function renderAdminCoinPayments(data){
       const entries = Object.entries(data || {});
       $('payment-list').innerHTML = entries.map(([key,v]) => `<div class="pay-row"><div class="pay-name">${v.logo?`<img src="${escapeHtml(v.logo)}" style="width:24px;height:24px;border-radius:6px;object-fit:cover;">`:''} ${escapeHtml(key)}</div><div class="pay-controls"><label class="switch"><input type="checkbox" onchange="updateDbField('paymentMethods/${escapeHtml(key)}/status', this.checked)" ${v.status!==false?'checked':''}><span class="slider"></span></label><button class="del-btn" onclick="db.ref('paymentMethods/${escapeHtml(key)}').remove()">DEL</button></div></div>`).join('') || '<div class="empty-state">No methods added</div>';
@@ -2783,6 +3053,11 @@
     function renderAdminVpnPayments(data){
       const entries = Object.entries(data || {});
       $('vpn-payment-list').innerHTML = entries.map(([key,v]) => `<div class="pay-row"><div class="pay-name">${v.logo?`<img src="${escapeHtml(v.logo)}" style="width:24px;height:24px;border-radius:6px;object-fit:cover;">`:''} ${escapeHtml(key)}</div><div class="pay-controls"><label class="switch"><input type="checkbox" onchange="updateDbField('vpnPaymentMethods/${escapeHtml(key)}/status', this.checked)" ${v.status!==false?'checked':''}><span class="slider"></span></label><button class="del-btn" onclick="db.ref('vpnPaymentMethods/${escapeHtml(key)}').remove()">DEL</button></div></div>`).join('') || '<div class="empty-state">No methods added</div>';
+    }
+
+    function renderAdminProxyPayments(data){
+      const entries = Object.entries(data || {});
+      $('proxy-payment-list').innerHTML = entries.map(([key,v]) => `<div class="pay-row"><div class="pay-name">${v.logo?`<img src="${escapeHtml(v.logo)}" style="width:24px;height:24px;border-radius:6px;object-fit:cover;">`:''} ${escapeHtml(key)}</div><div class="pay-controls"><label class="switch"><input type="checkbox" onchange="updateDbField('proxyPaymentMethods/${escapeHtml(key)}/status', this.checked)" ${v.status!==false?'checked':''}><span class="slider"></span></label><button class="del-btn" onclick="db.ref('proxyPaymentMethods/${escapeHtml(key)}').remove()">DEL</button></div></div>`).join('') || '<div class="empty-state">No methods added</div>';
     }
 
     function renderAdminTutorials(data){
@@ -2802,6 +3077,8 @@
         if(dataUrlVarName === 'vpnLogoDataUrl') vpnLogoDataUrl = dataUrl;
         if(dataUrlVarName === 'payLogoDataUrl') payLogoDataUrl = dataUrl;
         if(dataUrlVarName === 'vpnPayLogoDataUrl') vpnPayLogoDataUrl = dataUrl;
+        if(dataUrlVarName === 'proxyLogoDataUrl') proxyLogoDataUrl = dataUrl;
+        if(dataUrlVarName === 'proxyPayLogoDataUrl') proxyPayLogoDataUrl = dataUrl;
         if(dataUrlVarName === 'cLogoDataUrl') cLogoDataUrl = dataUrl;
         if(dataUrlVarName === 'editCLogoDataUrl') editCLogoDataUrl = dataUrl;
         return dataUrl;
@@ -2832,6 +3109,12 @@
       if(!n){ showToast('Enter Brand Name','error'); return; }
       db.ref('vpnConfig/'+key).set({ name:n, logo:vpnLogoDataUrl, status:true, plans: [{name:'',price:0},{name:'',price:0}] }).then(()=>{ $('v-name').value=''; $('v-logo-preview').classList.add('hidden'); vpnLogoDataUrl=''; showToast('VPN Added','success'); });
     }
+
+    function addProxyBrand(){
+      const n = $('px-name').value.trim(), key = safeDbKey(n).toUpperCase();
+      if(!n){ showToast('Enter Brand Name','error'); return; }
+      db.ref('proxyConfig/'+key).set({ name:n, logo:proxyLogoDataUrl, status:true, plans: [{name:'',price:0},{name:'',price:0}] }).then(()=>{ $('px-name').value=''; $('px-logo-preview').classList.add('hidden'); proxyLogoDataUrl=''; showToast('Proxy Brand Added','success'); });
+    }
     
     function addPaymentMethod(){
       const n = $('new-pay').value.trim(), num = $('new-pay-num').value.trim(), key = safeDbKey(n);
@@ -2843,6 +3126,12 @@
       const n = $('new-vpn-pay').value.trim(), num = $('new-vpn-pay-num').value.trim(), key = safeDbKey(n);
       if(!n){ showToast('Enter method name','error'); return; }
       db.ref('vpnPaymentMethods/'+key).set({ status:true, number:num, logo:vpnPayLogoDataUrl }).then(()=>{ $('new-vpn-pay').value=''; $('new-vpn-pay-num').value=''; $('vpn-p-logo-preview').classList.add('hidden'); vpnPayLogoDataUrl=''; showToast('Method Added','success'); });
+    }
+
+    function addProxyPaymentMethod(){
+      const n = $('new-proxy-pay').value.trim(), num = $('new-proxy-pay-num').value.trim(), key = safeDbKey(n);
+      if(!n){ showToast('Enter method name','error'); return; }
+      db.ref('proxyPaymentMethods/'+key).set({ status:true, number:num, logo:proxyPayLogoDataUrl }).then(()=>{ $('new-proxy-pay').value=''; $('new-proxy-pay-num').value=''; $('proxy-p-logo-preview').classList.add('hidden'); proxyPayLogoDataUrl=''; showToast('Method Added','success'); });
     }
 
     /* ===== DRAG-TO-REORDER FOR ADMIN COIN LIST ===== */
@@ -2928,6 +3217,7 @@
       $('help-btn').addEventListener('click', () => openSafeLink(helpLinkValue));
       $('channel-btn').addEventListener('click', () => openSafeLink(channelLinkValue));
       $('open-vpn-btn').addEventListener('click', () => userSwitchTab('vpn-scr'));
+      if($('open-proxy-btn')) $('open-proxy-btn').addEventListener('click', () => userSwitchTab('proxy-scr'));
       $('open-payment-settings-btn').addEventListener('click', () => userSwitchTab('payment-settings-scr'));
       $('open-devinfo-btn').addEventListener('click', () => userSwitchTab('dev-info-scr'));
       $('admin-btn').addEventListener('click', showAdminPanel);
@@ -2938,6 +3228,7 @@
       // Modals
       $('close-order-btn').addEventListener('click', closeOrderModal);
       $('close-vpn-checkout-btn').addEventListener('click', () => $('vpn-checkout-modal').classList.remove('active'));
+      if($('close-proxy-checkout-btn')) $('close-proxy-checkout-btn').addEventListener('click', () => $('proxy-checkout-modal').classList.remove('active'));
       $('confirm-back-btn').addEventListener('click', () => $('confirm-modal').classList.remove('active'));
       $('admin-confirm-cancel').addEventListener('click', () => $('admin-confirm').classList.remove('active'));
       $('admin-confirm-ok').addEventListener('click', () => { if(typeof adminConfirmCallback === 'function') adminConfirmCallback(); $('admin-confirm').classList.remove('active'); });
@@ -2948,11 +3239,13 @@
       // Binding file input trigger buttons
       if($('proof-select-btn')) $('proof-select-btn').addEventListener('click', () => $('proof-file').click());
       if($('vpn-proof-select-btn')) $('vpn-proof-select-btn').addEventListener('click', () => $('vpn-proof-file').click());
+      if($('proxy-proof-select-btn')) $('proxy-proof-select-btn').addEventListener('click', () => $('proxy-proof-file').click());
       if($('broadcast-image-select-btn')) $('broadcast-image-select-btn').addEventListener('click', () => $('broadcast-image-file').click());
       
       // File Inputs
       $('proof-file').addEventListener('change', handleProofFileChange);
       $('vpn-proof-file').addEventListener('change', handleVpnProofFileChange);
+      if($('proxy-proof-file')) $('proxy-proof-file').addEventListener('change', handleProxyProofFileChange);
       $('payment-proof-file').addEventListener('change', handlePaymentProofFileChange);
       
       $('c-logo-file').addEventListener('change', () => handleLogoUpload('c-logo-file', 'c-logo-preview-img', 'cLogoDataUrl'));
@@ -2963,12 +3256,18 @@
 
       $('v-logo-file').addEventListener('change', () => handleLogoUpload('v-logo-file', 'v-logo-preview-img', 'vpnLogoDataUrl'));
       $('v-logo-remove-btn').addEventListener('click', () => { vpnLogoDataUrl=''; $('v-logo-preview').classList.add('hidden'); $('v-logo-file').value=''; });
+
+      if($('px-logo-file')) $('px-logo-file').addEventListener('change', () => handleLogoUpload('px-logo-file', 'px-logo-preview-img', 'proxyLogoDataUrl'));
+      if($('px-logo-remove-btn')) $('px-logo-remove-btn').addEventListener('click', () => { proxyLogoDataUrl=''; $('px-logo-preview').classList.add('hidden'); $('px-logo-file').value=''; });
       
       $('p-logo-file').addEventListener('change', () => handleLogoUpload('p-logo-file', 'p-logo-preview-img', 'payLogoDataUrl'));
       $('p-logo-remove-btn').addEventListener('click', () => { payLogoDataUrl=''; $('p-logo-preview').classList.add('hidden'); $('p-logo-file').value=''; });
 
       $('vpn-p-logo-file').addEventListener('change', () => handleLogoUpload('vpn-p-logo-file', 'vpn-p-logo-preview-img', 'vpnPayLogoDataUrl'));
       $('vpn-p-logo-remove-btn').addEventListener('click', () => { vpnPayLogoDataUrl=''; $('vpn-p-logo-preview').classList.add('hidden'); $('vpn-p-logo-file').value=''; });
+
+      if($('proxy-p-logo-file')) $('proxy-p-logo-file').addEventListener('change', () => handleLogoUpload('proxy-p-logo-file', 'proxy-p-logo-preview-img', 'proxyPayLogoDataUrl'));
+      if($('proxy-p-logo-remove-btn')) $('proxy-p-logo-remove-btn').addEventListener('click', () => { proxyPayLogoDataUrl=''; $('proxy-p-logo-preview').classList.add('hidden'); $('proxy-p-logo-file').value=''; });
       
       $('broadcast-image-file').addEventListener('change', async (e) => { const f=e.target.files[0]; if(f){ broadcastNoticeImageDataUrl = await compressImageFile(f); $('broadcast-image-preview-img').src=broadcastNoticeImageDataUrl; $('broadcast-image-preview').classList.remove('hidden'); renderBroadcastNoticePreview(); } });
       $('broadcast-image-remove-btn').addEventListener('click', resetBroadcastNoticeImage);
@@ -2977,6 +3276,7 @@
       $('c-qty').addEventListener('input', calc);
       $('confirm-order-btn').addEventListener('click', showConfirm);
       $('submit-vpn-order-btn').addEventListener('click', submitVpnOrder);
+      if($('submit-proxy-order-btn')) $('submit-proxy-order-btn').addEventListener('click', submitProxyOrder);
       $('submit-btn').addEventListener('click', submitOrder);
       $('payment-paid-btn').addEventListener('click', confirmMarkPaid);
       $('save-coin-edit-btn').addEventListener('click', saveCoinEdit);
@@ -2988,8 +3288,10 @@
       document.querySelectorAll('[data-settings-back]').forEach(btn => btn.addEventListener('click', openSettingsMain));
       $('add-coin-btn').addEventListener('click', addCoin);
       $('add-vpn-btn').addEventListener('click', addVpnBrand);
+      if($('add-proxy-btn')) $('add-proxy-btn').addEventListener('click', addProxyBrand);
       $('add-payment-btn').addEventListener('click', addPaymentMethod);
       $('add-vpn-payment-btn').addEventListener('click', addVpnPaymentMethod);
+      if($('add-proxy-payment-btn')) $('add-proxy-payment-btn').addEventListener('click', addProxyPaymentMethod);
       $('save-branding-btn').addEventListener('click', () => { db.ref('settings/branding/siteName').set(normalizeBrandName($('site-name').value)); db.ref('settings/links').set({channel:normalizeLink($('link-channel').value),help:normalizeLink($('link-help').value)}); showToast('Saved','success'); });
       $('save-disclaimer-btn').addEventListener('click', () => { db.ref('settings/disclaimer/noticeText').set($('disclaimer-text').value); showToast('Saved','success'); });
       $('disclaimer-text').addEventListener('input', () => { disclaimerNoticeValue = $('disclaimer-text').value; renderDisclaimerNotice(); });

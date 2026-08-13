@@ -124,7 +124,7 @@
     .hist-payout{font-size:14px;font-weight:900;color:var(--sky-dark);}
 
     .nav-dock{position:fixed;bottom:16px;left:14px;right:14px;max-width:560px;margin:auto;height:68px;background:var(--panel2);border:1px solid var(--border-hi);border-radius:22px;display:flex;justify-content:space-around;align-items:center;z-index:1000;box-shadow:var(--shadow-lg);}
-    .nav-tab{border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 12px;border-radius:16px;transition:all .2s ease;color:var(--subtext);}
+    .nav-tab{border:none;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 7px;border-radius:16px;transition:all .2s ease;color:var(--subtext);}
     .nav-icon{font-size:21px;transition:transform .2s ease;}
     .nav-label{font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;}
     .nav-tab.active{color:var(--sky-dark);background:var(--sky-light);}
@@ -627,13 +627,9 @@
         <div class="qa-icon" style="background:var(--sky-dark);color:#fff;">🛰️</div>
         <div><div class="qa-main-text" style="color:var(--sky-dark);font-size:13px;">PROXY SELL</div><div class="qa-sub-text">Fast private proxies</div></div>
       </button>
-      <button class="qa-btn payment-settings-btn" type="button" id="open-payment-settings-btn" style="grid-column:1/-1;">
-        <div class="qa-icon" style="background:var(--emerald);color:#fff;">💾</div>
-        <div><div class="qa-main-text" style="color:var(--emerald);font-size:15px;">SAVE PAYMENT NUMBER</div><div class="qa-sub-text">Auto-fill your number when selling coins</div></div>
-      </button>
-      <button class="qa-btn dev-info-qa-btn" type="button" id="open-devinfo-btn" style="grid-column:1/-1;">
-        <div class="qa-icon" style="background:#6366f1;color:#fff;">👨‍💻</div>
-        <div><div class="qa-main-text" style="color:#6366f1;">DEVELOPER INFO</div><div class="qa-sub-text">Contact & hire the developer</div></div>
+      <button class="qa-btn vpn-premium-btn" type="button" id="open-mail-btn" style="grid-column:1/-1;">
+        <div class="qa-icon" style="background:#f472b6;color:#fff;">📧</div>
+        <div><div class="qa-main-text" style="color:#f472b6;font-size:13px;">BUY MAIL</div><div class="qa-sub-text">Select quantity & buy in bulk</div></div>
       </button>
       <button class="qa-btn qa-admin hidden" type="button" id="admin-btn" style="grid-column:1/-1;"><div class="qa-icon" style="background:var(--sky-light);color:var(--sky-dark);">🛡️</div><div><div class="qa-main-text">Admin Panel</div><div class="qa-sub-text" style="color:var(--sky-dark);">RESTRICTED ACCESS</div></div></button>
     </div>
@@ -643,22 +639,6 @@
       <div id="market-list"></div>
     </div>
 
-    <!-- PAYMENT SETTINGS SCREEN -->
-    <div id="payment-settings-scr" style="display:none;padding-top:6px;">
-      <div class="pay-settings-header">
-        <button class="cd-back-btn" type="button" onclick="userSwitchTab('home-scr')">←</button>
-        <div>
-          <div style="font-size:18px;font-weight:900;color:var(--text);">Payment Settings</div>
-          <div style="font-size:10px;font-weight:700;color:var(--subtext);margin-top:2px;">Save your payment numbers</div>
-        </div>
-      </div>
-      <div class="notice-box" style="margin-bottom:14px;">
-        <div class="notice-title">💡 How it works</div>
-        <div class="notice-text">Save your payment number for each method below. When you sell coins, your saved numbers will auto-fill in the form.</div>
-      </div>
-      <div id="payment-settings-list"></div>
-    </div>
-
     <div id="vpn-scr" style="display:none;padding-top:6px;">
       <div class="sec-title" style="justify-content:space-between;width:100%;"><div style="display:flex;align-items:center;gap:7px;">PREMIUM VPN STORE</div><button type="button" class="settings-back-inline" onclick="userSwitchTab('home-scr')" style="padding:4px 8px;">← Back</button></div>
       <div id="vpn-brand-list"></div>
@@ -666,7 +646,16 @@
 
     <div id="proxy-scr" style="display:none;padding-top:6px;">
       <div class="sec-title" style="justify-content:space-between;width:100%;"><div style="display:flex;align-items:center;gap:7px;">PROXY SELL STORE</div><button type="button" class="settings-back-inline" onclick="userSwitchTab('home-scr')" style="padding:4px 8px;">← Back</button></div>
+      <button class="qa-btn vpn-premium-btn" type="button" id="open-mail-btn" style="margin-bottom:14px;">
+        <div class="qa-icon" style="background:#f472b6;color:#fff;">📧</div>
+        <div><div class="qa-main-text" style="color:#f472b6;font-size:13px;">BUY MAIL</div><div class="qa-sub-text">Select quantity & buy in bulk</div></div>
+      </button>
       <div id="proxy-brand-list"></div>
+    </div>
+
+    <div id="mail-scr" style="display:none;padding-top:6px;">
+      <div class="sec-title" style="justify-content:space-between;width:100%;"><div style="display:flex;align-items:center;gap:7px;">BUY MAIL STORE</div><button type="button" class="settings-back-inline" onclick="userSwitchTab('proxy-scr')" style="padding:4px 8px;">← Back</button></div>
+      <div id="mail-brand-list"></div>
     </div>
 
     <div id="history-scr" style="display:none;padding-top:6px;">
@@ -749,6 +738,7 @@
       <button class="nav-tab" id="tab-referral" type="button" data-screen="referral-scr"><span class="nav-icon">🎁</span><span class="nav-label">Refer</span></button>
       <button class="nav-tab" id="tab-tutorial" type="button" data-screen="tutorial-scr"><span class="nav-icon">▶️</span><span class="nav-label">Tutorial</span></button>
       <button class="nav-tab" id="tab-leaderboard" type="button" data-screen="leaderboard-scr"><span class="nav-icon">🏆</span><span class="nav-label">Leaders</span></button>
+      <button class="nav-tab" id="tab-devinfo" type="button" data-screen="dev-info-scr"><span class="nav-icon">👨‍💻</span><span class="nav-label">Dev Info</span></button>
     </nav>
   </div>
 
@@ -871,6 +861,60 @@
     </div>
   </div>
 
+  <div id="mail-checkout-modal" class="modal-mask z-[2500]">
+    <div class="bottom-sheet">
+      <div class="sheet-handle"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div class="sheet-title" id="mail-checkout-title">Buy Mail</div>
+        <button class="x-btn" type="button" id="close-mail-checkout-btn">✕</button>
+      </div>
+
+      <!-- Quantity Step -->
+      <div id="mail-step-qty">
+        <div class="notice-box" style="margin-bottom:14px;">
+          <div class="notice-title">📧 <span id="mail-qty-brand-name">Mail Brand</span></div>
+          <div class="notice-text">Price per piece: <b id="mail-qty-unit-price">0.00৳</b> &nbsp;|&nbsp; In stock: <b id="mail-qty-stock-count">0</b></div>
+        </div>
+        <div class="sec-title" style="margin-bottom:10px;">SELECT QUANTITY</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <button class="btn-action btn-blue" type="button" id="mail-qty-minus-btn" style="width:44px;padding:12px 0;font-size:16px;flex-shrink:0;">−</button>
+          <input type="number" id="mail-qty-input" class="form-input" style="text-align:center;font-weight:900;margin:0;" min="1" value="1">
+          <button class="btn-action btn-cyan" type="button" id="mail-qty-plus-btn" style="width:44px;padding:12px 0;font-size:16px;flex-shrink:0;">+</button>
+        </div>
+        <div style="margin-bottom:16px;text-align:center;">
+          <b style="font-size:12px;color:var(--subtext);display:block;margin-bottom:4px;">Total Payable</b>
+          <span id="mail-qty-total-amount" style="font-size:24px;font-weight:900;color:#f472b6;">0.00 ৳</span>
+        </div>
+        <button class="btn-primary" type="button" id="mail-qty-continue-btn">CONTINUE →</button>
+      </div>
+
+      <!-- Payment Step -->
+      <div id="mail-step-payment" class="hidden">
+        <div style="margin-bottom:16px;text-align:center;">
+          <b style="font-size:12px;color:var(--subtext);display:block;margin-bottom:4px;">Amount Payable</b>
+          <span id="mail-payable-amount" style="font-size:24px;font-weight:900;color:#f472b6;">0.00 ৳</span>
+        </div>
+        <div class="sec-title" style="margin-bottom:10px;">1. SELECT PAYMENT METHOD</div>
+        <div class="vpn-pay-grid" id="mail-pay-methods-grid"></div>
+        <div id="mail-pay-details" class="hidden">
+           <div class="transfer-id-box" style="margin-bottom:12px;"><small>SEND MONEY TO THIS NUMBER</small><div class="tid-value" id="mail-pay-target">—</div><button class="copy-btn" type="button" onclick="copyTextValue(document.getElementById('mail-pay-target').textContent, 'Payment Number')">⧉ COPY NUMBER</button></div>
+           <input type="text" id="mail-pay-trx" class="form-input" placeholder="Sender Number / Transaction ID" style="text-align:center;font-weight:900;">
+           <div class="proof-upload" style="margin-bottom:14px;">
+              <input type="file" id="mail-proof-file" accept="image/*" class="hidden">
+              <div class="proof-head"><span>📸 Proof / Screenshot</span><small id="mail-proof-required-badge">Required</small></div>
+              <button class="proof-select-btn" type="button" id="mail-proof-select-btn">+ Upload Payment Screenshot</button>
+              <div class="proof-preview hidden" id="mail-proof-preview">
+                <img id="mail-proof-preview-img" alt="Proof Screenshot Preview">
+                <div class="proof-preview-meta"><b id="mail-proof-file-name">Screenshot selected</b><small id="mail-proof-file-size">Ready to submit</small></div>
+                <button class="proof-remove-btn" type="button" id="mail-proof-remove-btn">Remove</button>
+              </div>
+           </div>
+           <button class="btn-primary" type="button" id="submit-mail-order-btn">CONFIRM MAIL ORDER →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="confirm-modal" class="confirm-mask z-[3000]">
     <div class="confirm-box">
       <div class="confirm-icon">🔐</div>
@@ -973,6 +1017,11 @@
             <button class="settings-module-card" type="button" data-settings-module="proxy-payment-methods">
               <div class="settings-module-icon" style="background:var(--success-bg);color:var(--success);">💳</div>
               <div><div class="settings-module-title">Proxy Payment Methods</div><div class="settings-module-desc">Manage payment methods for Proxy Sell.</div></div>
+              <div class="settings-module-arrow">›</div>
+            </button>
+            <button class="settings-module-card" type="button" data-settings-module="mail-management">
+              <div class="settings-module-icon" style="background:rgba(244,114,182,.12);color:#f472b6;">📧</div>
+              <div><div class="settings-module-title">Buy Mail Management</div><div class="settings-module-desc">Add mail brands, set price per piece, manage stock.</div></div>
               <div class="settings-module-arrow">›</div>
             </button>
             <button class="settings-module-card" type="button" data-settings-module="order-verification">
@@ -1220,6 +1269,31 @@
           </div>
         </div>
 
+        <div id="settings-mail-management" class="settings-page settings-module-page hidden" data-settings-page="mail-management">
+          <div class="settings-page-head"><div class="settings-breadcrumb"><span>Settings</span><span>›</span><span>Buy Mail Management</span></div><div class="settings-page-title-row"><div class="settings-page-title">Buy Mail Management</div><button class="settings-back-inline" type="button" data-settings-back>← Back</button></div></div>
+          <div class="settings-group">
+            <div class="settings-group-title"><div class="stitle-bar" style="background:#f472b6;"></div>📧 MAIL BRANDS & STOCK</div>
+            <div class="notice-box"><div class="notice-title">💡 How this works</div><div class="notice-text">Set a price per piece and a minimum order quantity. Users pick how many pieces to buy, and on approval you deliver exactly that many automatically from stock. Payment methods are shared with Proxy Sell.</div></div>
+            <div class="add-form">
+               <input type="text" id="ml-name" class="form-input" placeholder="Mail Brand Name (e.g. Outlook Mail)">
+               <input type="number" id="ml-price" class="form-input" placeholder="Price Per Piece (৳)" step="0.01">
+               <input type="number" id="ml-minqty" class="form-input" placeholder="Minimum Order Quantity (e.g. 1)">
+               <div class="proof-upload" style="margin-bottom:12px;">
+                 <input type="file" id="ml-logo-file" accept="image/*" class="hidden">
+                 <div class="proof-head"><span>📸 Mail Logo Image</span><small>Gallery</small></div>
+                 <button class="proof-select-btn" type="button" onclick="document.getElementById('ml-logo-file').click()">+ Select Logo</button>
+                 <div class="proof-preview hidden" id="ml-logo-preview">
+                   <img id="ml-logo-preview-img" alt="Mail Logo">
+                   <div class="proof-preview-meta"><b id="ml-logo-file-name">Selected</b></div>
+                   <button class="proof-remove-btn" type="button" id="ml-logo-remove-btn">Remove</button>
+                 </div>
+               </div>
+               <button class="btn-action btn-cyan" type="button" id="add-mail-btn">+ Add Mail Brand</button>
+            </div>
+            <div id="adm-mail-list"></div>
+          </div>
+        </div>
+
         <div id="settings-tutorial-management" class="settings-page settings-module-page hidden" data-settings-page="tutorial-management">
           <div class="settings-page-head"><div class="settings-breadcrumb"><span>Settings</span><span>›</span><span>Tutorial Management</span></div><div class="settings-page-title-row"><div class="settings-page-title">Tutorial Management</div><button class="settings-back-inline" type="button" data-settings-back>← Back</button></div></div>
           <div class="settings-group"><div class="settings-group-title"><div class="stitle-bar" style="background:var(--sky-dark);"></div>🎬 TUTORIAL MANAGEMENT</div><div class="add-form"><input type="url" id="tutorial-url" class="form-input" placeholder="YouTube Video Link (watch, youtu.be, embed)"><input type="text" id="tutorial-title" class="form-input" placeholder="Video Title (Optional)"><button class="btn-action btn-cyan" type="button" id="add-tutorial-btn">+ Add Tutorial Video</button></div><div id="tutorial-admin-list"></div></div>
@@ -1447,7 +1521,7 @@
     let currentSellPayMethod = '', currentSellPayNumber = '';
     
     // Config Caches
-    let marketCache = {}, vpnConfigCache = {}, proxyConfigCache = {}, paymentMethodsCache = {}, vpnPaymentMethodsCache = {}, proxyPaymentMethodsCache = {}, tutorialCache = {}, userRegistryCache = {}, globalOrders = {};
+    let marketCache = {}, vpnConfigCache = {}, proxyConfigCache = {}, mailConfigCache = {}, paymentMethodsCache = {}, vpnPaymentMethodsCache = {}, proxyPaymentMethodsCache = {}, tutorialCache = {}, userRegistryCache = {}, globalOrders = {};
     // Referral / Withdraw / Force-Join Caches
     let referralSettingsCache = {}, forceJoinChannelsCache = {}, myWithdrawalsCache = {}, withdrawalsCache = {};
     let selectedWithdrawMethod = '', selectedWithdrawNumber = '';
@@ -1458,14 +1532,16 @@
     const ACTIVE_USER_WINDOW_MS = 10 * 60 * 1000;
 
     // Logo Caches
-    let cLogoDataUrl = '', editCLogoDataUrl = '', vpnLogoDataUrl = '', payLogoDataUrl = '', vpnPayLogoDataUrl = '', proxyLogoDataUrl = '', proxyPayLogoDataUrl = '';
+    let cLogoDataUrl = '', editCLogoDataUrl = '', vpnLogoDataUrl = '', payLogoDataUrl = '', vpnPayLogoDataUrl = '', proxyLogoDataUrl = '', proxyPayLogoDataUrl = '', mailLogoDataUrl = '';
     let editCoinTargetKey = '';
 
     // VPN States
     let selVpnBrand = '', selVpnPlanName = '', selVpnPlanPrice = 0, selVpnPayMethod = '', selVpnPayNumberTarget = '';
+    let selMailBrand = '', selMailQty = 1, selMailUnitPrice = 0, selMailPayMethod = '', selMailPayNumberTarget = '';
     let selProxyBrand = '', selProxyPlanName = '', selProxyPlanPrice = 0, selProxyPayMethod = '', selProxyPayNumberTarget = '';
     let vpnProofFileName = '', vpnProofImageDataUrl = '', vpnProofProcessing = false;
     let proxyProofFileName = '', proxyProofImageDataUrl = '', proxyProofProcessing = false;
+    let mailProofFileName = '', mailProofImageDataUrl = '', mailProofProcessing = false;
     let deliveryTargetOrderId = '', deliveryTargetVpnBrand = '', deliveryTargetType = 'vpn';
 
     window.addEventListener('error', (event) => { setTimeout(finishLoading, 0); });
@@ -1698,20 +1774,23 @@
       if(order.order_type === 'proxy'){
         return `🆕 <b>NEW PROXY ORDER</b>\n\n👤 <b>User:</b> ${tgEscape(orderUserLabel(order))}\n🆔 <b>User ID:</b> ${tgEscape(order.userId || order.user_id || '—')}\n🛰️ <b>Proxy:</b> ${tgEscape(order.proxy_brand || '—')}\n📦 <b>Plan:</b> ${tgEscape(order.proxy_plan || '—')}\n💰 <b>Payout:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>Method:</b> ${tgEscape(order.method || '—')}\n📱 <b>Payment:</b> ${tgEscape(getOrderPaymentNumber(order))}\n📸 <b>Proof:</b> ${order.proof_uploaded ? 'Uploaded' : 'Not uploaded'}\n\n🆔 <b>Order ID:</b> #${tgEscape(orderShortId(order))}\n⏳ <b>Status:</b> Pending`;
       }
+      if(order.order_type === 'mail'){
+        return `🆕 <b>NEW MAIL ORDER</b>\n\n👤 <b>User:</b> ${tgEscape(orderUserLabel(order))}\n🆔 <b>User ID:</b> ${tgEscape(order.userId || order.user_id || '—')}\n📧 <b>Mail:</b> ${tgEscape(order.mail_brand || '—')}\n📦 <b>Quantity:</b> ${Number(order.mail_qty || 0)} pcs\n💰 <b>Payout:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>Method:</b> ${tgEscape(order.method || '—')}\n📱 <b>Payment:</b> ${tgEscape(getOrderPaymentNumber(order))}\n📸 <b>Proof:</b> ${order.proof_uploaded ? 'Uploaded' : 'Not uploaded'}\n\n🆔 <b>Order ID:</b> #${tgEscape(orderShortId(order))}\n⏳ <b>Status:</b> Pending`;
+      }
       return `🆕 <b>NEW COIN ORDER</b>\n\n👤 <b>User:</b> ${tgEscape(orderUserLabel(order))}\n🆔 <b>User ID:</b> ${tgEscape(order.userId || order.user_id || '—')}\n🪙 <b>Coin:</b> ${tgEscape(order.coin || '—')}\n📦 <b>Amount:</b> ${Number(order.amt || 0).toLocaleString()}\n💰 <b>Payout:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>Method:</b> ${tgEscape(order.method || '—')}\n📱 <b>Payment:</b> ${tgEscape(getOrderPaymentNumber(order))}\n📨 <b>Sender:</b> ${tgEscape(order.sender || '—')}\n🎯 <b>Target ID:</b> ${tgEscape(order.targetId || order.target_id || '—')}\n📸 <b>Proof:</b> ${order.proof_uploaded ? 'Uploaded' : 'Not uploaded'}\n\n🆔 <b>Order ID:</b> #${tgEscape(orderShortId(order))}\n⏳ <b>Status:</b> Pending`;
     }
     
     function buildUserOrderSubmittedMessage(order){
-      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}\n📦 <b>Plan:</b> ${tgEscape(order.vpn_plan || '—')}` : order.order_type === 'proxy' ? `🛰️ <b>Proxy:</b> ${tgEscape(order.proxy_brand || '—')}\n📦 <b>Plan:</b> ${tgEscape(order.proxy_plan || '—')}` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
+      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}\n📦 <b>Plan:</b> ${tgEscape(order.vpn_plan || '—')}` : order.order_type === 'proxy' ? `🛰️ <b>Proxy:</b> ${tgEscape(order.proxy_brand || '—')}\n📦 <b>Plan:</b> ${tgEscape(order.proxy_plan || '—')}` : order.order_type === 'mail' ? `📧 <b>Mail:</b> ${tgEscape(order.mail_brand || '—')}\n📦 <b>Quantity:</b> ${Number(order.mail_qty || 0)} pcs` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
       return `📩 <b>অর্ডার গ্রহণ করা হয়েছে</b>\n\nআপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে। আমাদের টিম অর্ডারটি যাচাই করছে।\n\n🆔 <b>অর্ডার আইডি:</b> #${tgEscape(orderShortId(order))}\n${details}\n💰 <b>পেমেন্ট:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>মাধ্যম:</b> ${tgEscape(order.method || '—')}\n📱 <b>পেমেন্ট নম্বর:</b> ${tgEscape(getOrderPaymentNumber(order))}\n\n<b>আমাদের সাথে নিরাপদ লেনদেনের জন্য ধন্যবাদ।</b>`;
     }
     
     function buildOrderStatusMessage(order, orderStatus){
       const status = String(orderStatus || '').toLowerCase();
-      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}` : order.order_type === 'proxy' ? `🛰️ <b>Proxy:</b> ${tgEscape(order.proxy_brand || '—')}` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
+      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}` : order.order_type === 'proxy' ? `🛰️ <b>Proxy:</b> ${tgEscape(order.proxy_brand || '—')}` : order.order_type === 'mail' ? `📧 <b>Mail:</b> ${tgEscape(order.mail_brand || '—')} (${Number(order.mail_qty||0)} pcs)` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
 
       if(status === 'approved' || status === 'completed'){
-        let extra = (order.order_type === 'vpn' || order.order_type === 'proxy') ? `\n🔐 <b>Credentials:</b> Check App History` : `\n💰 <b>পেমেন্ট:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>মাধ্যম:</b> ${tgEscape(order.method || '—')}\n📱 <b>পেমেন্ট নম্বর:</b> ${tgEscape(getOrderPaymentNumber(order))}`;
+        let extra = (order.order_type === 'vpn' || order.order_type === 'proxy' || order.order_type === 'mail') ? `\n🔐 <b>Credentials:</b> Check App History` : `\n💰 <b>পেমেন্ট:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>মাধ্যম:</b> ${tgEscape(order.method || '—')}\n📱 <b>পেমেন্ট নম্বর:</b> ${tgEscape(getOrderPaymentNumber(order))}`;
         return `✅ <b>অর্ডার অনুমোদিত হয়েছে</b>\n\nআপনার অর্ডারটি যাচাই করে অনুমোদন করা হয়েছে।\n\n🆔 <b>অর্ডার আইডি:</b> #${tgEscape(orderShortId(order))}\n${details}${extra}\n\n<b>আমাদের সাথে নিরাপদ লেনদেনের জন্য ধন্যবাদ।</b>`;
       }
 
@@ -1723,7 +1802,7 @@
     }
 
     function buildPaymentPaidMessage(order){
-      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}` : order.order_type === 'proxy' ? `🛰️ <b>Proxy:</b> ${tgEscape(order.proxy_brand || '—')}` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
+      let details = order.order_type === 'vpn' ? `🌐 <b>VPN:</b> ${tgEscape(order.vpn_brand || '—')}` : order.order_type === 'proxy' ? `🛰️ <b>Proxy:</b> ${tgEscape(order.proxy_brand || '—')}` : order.order_type === 'mail' ? `📧 <b>Mail:</b> ${tgEscape(order.mail_brand || '—')} (${Number(order.mail_qty||0)} pcs)` : `🪙 <b>কয়েন:</b> ${tgEscape(order.coin || '—')}\n📦 <b>পরিমাণ:</b> ${Number(order.amt || 0).toLocaleString()}`;
       return `💸 <b>পেমেন্ট সম্পন্ন হয়েছে</b>\n\nআপনার অর্ডারের পেমেন্ট সফলভাবে সম্পন্ন করা হয়েছে। অনুগ্রহ করে আপনার পেমেন্ট অ্যাকাউন্ট চেক করুন।\n\n🆔 <b>অর্ডার আইডি:</b> #${tgEscape(orderShortId(order))}\n${details}\n💰 <b>পেমেন্ট:</b> ${Number(order.payable || 0).toFixed(2)}৳\n💳 <b>মাধ্যম:</b> ${tgEscape(order.method || '—')}\n📱 <b>পেমেন্ট নম্বর:</b> ${tgEscape(getOrderPaymentNumber(order))}\n🔖 <b>রেফারেন্স:</b> ${tgEscape(order.payment_reference_id || '—')}\n\n<b>আমাদের সাথে নিরাপদ লেনদেনের জন্য ধন্যবাদ।</b>`;
     }
 
@@ -1785,6 +1864,7 @@
       db.ref('marketConfig').on('value', snap => { marketCache = snap.val() || {}; renderMarket(marketCache); finishLoading(); });
       db.ref('vpnConfig').on('value', snap => { vpnConfigCache = snap.val() || {}; renderVpns(vpnConfigCache); });
       db.ref('proxyConfig').on('value', snap => { proxyConfigCache = snap.val() || {}; renderProxies(proxyConfigCache); });
+      db.ref('mailConfig').on('value', snap => { mailConfigCache = snap.val() || {}; renderMails(mailConfigCache); });
       db.ref('paymentMethods').on('value', snap => { paymentMethodsCache = snap.val() || {}; renderUserCoinPayments(paymentMethodsCache); });
       db.ref('vpnPaymentMethods').on('value', snap => { vpnPaymentMethodsCache = snap.val() || {}; renderUserVpnPayments(vpnPaymentMethodsCache); });
       db.ref('proxyPaymentMethods').on('value', snap => { proxyPaymentMethodsCache = snap.val() || {}; renderUserProxyPayments(proxyPaymentMethodsCache); });
@@ -2125,6 +2205,17 @@
       }).join('');
     }
 
+    function renderMails(data){
+      const entries = Object.entries(data || {});
+      if(!entries.length){ $('mail-brand-list').innerHTML = '<div class="empty-state">No mail brands available</div>'; return; }
+      $('mail-brand-list').innerHTML = entries.map(([key,v],idx) => {
+        const on = v.status !== false;
+        const logo = v.logo ? `<img src="${escapeHtml(v.logo)}">` : '<span style="font-size:24px;">📧</span>';
+        const stockCount = Object.keys(v.stock||{}).length;
+        return `<div class="coin-card ${on?'online':''}" onclick="${on ? `openMailModal('${escapeHtml(key)}')` : ''}" style="animation-delay:${idx*.06}s;"><div class="coin-card-top"><div class="coin-logo-wrap">${logo}</div><div><div class="coin-name-txt">${escapeHtml(v.name || key)}</div><div class="coin-label-txt">${money(v.pricePerUnit||0)} / PIECE · ${stockCount} IN STOCK</div></div><div class="status-pill ${on?'on':'off'}"><div class="s-dot ${on?'on':'off'}"></div>${on?'ONLINE':'OFFLINE'}</div></div></div>`;
+      }).join('');
+    }
+
     function renderUserCoinPayments(data){
       const entries = Object.entries(data || {}).filter(([,v]) => v && v.status !== false);
       // Populate hidden select (keeps existing submit logic working)
@@ -2271,6 +2362,13 @@
             return `<div class="vpn-pay-card" data-pay-key="${escapeHtml(key)}" data-pay-num="${escapeHtml(v.number || '')}" onclick="selectProxyPayMethod('${escapeHtml(key)}', '${escapeHtml(v.number || '')}')">${logoHtml}<b>${escapeHtml(key)}</b></div>`;
          }).join('');
       }
+      // Buy Mail shares payment methods with Proxy Sell
+      if($('mail-pay-methods-grid')) {
+         $('mail-pay-methods-grid').innerHTML = entries.map(([key,v]) => {
+            const logoHtml = v.logo ? `<img src="${escapeHtml(v.logo)}">` : `<div style="width:40px;height:40px;border-radius:10px;background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:16px;">💳</div>`;
+            return `<div class="vpn-pay-card" data-pay-key="${escapeHtml(key)}" data-pay-num="${escapeHtml(v.number || '')}" onclick="selectMailPayMethod('${escapeHtml(key)}', '${escapeHtml(v.number || '')}')">${logoHtml}<b>${escapeHtml(key)}</b></div>`;
+         }).join('');
+      }
     }
 
     function renderUserHistory(data){
@@ -2279,9 +2377,9 @@
       $('suc-count').textContent = approved;
       if(!arr.length){ $('history-list').innerHTML = '<div class="empty-state">No orders yet</div>'; return; }
       $('history-list').innerHTML = arr.map((o,i) => {
-        const info = getUserStatusInfo(o), isVpn = o.order_type === 'vpn', isProxy = o.order_type === 'proxy', os = getOrderStatus(o);
-        const title = isVpn ? `${escapeHtml(o.vpn_brand)} - ${escapeHtml(o.vpn_plan)}` : isProxy ? `${escapeHtml(o.proxy_brand)} - ${escapeHtml(o.proxy_plan)}` : escapeHtml(o.coin);
-        const badge = isVpn ? `<span class="hist-type-badge">VPN</span>` : isProxy ? `<span class="hist-type-badge" style="background:var(--purple);">PROXY</span>` : `<span class="hist-type-badge" style="background:var(--sky-dark);">COIN</span>`;
+        const info = getUserStatusInfo(o), isVpn = o.order_type === 'vpn', isProxy = o.order_type === 'proxy', isMail = o.order_type === 'mail', os = getOrderStatus(o);
+        const title = isVpn ? `${escapeHtml(o.vpn_brand)} - ${escapeHtml(o.vpn_plan)}` : isProxy ? `${escapeHtml(o.proxy_brand)} - ${escapeHtml(o.proxy_plan)}` : isMail ? `${escapeHtml(o.mail_brand)} - ${Number(o.mail_qty||0)} pcs` : escapeHtml(o.coin);
+        const badge = isVpn ? `<span class="hist-type-badge">VPN</span>` : isProxy ? `<span class="hist-type-badge" style="background:var(--purple);">PROXY</span>` : isMail ? `<span class="hist-type-badge" style="background:#f472b6;">MAIL</span>` : `<span class="hist-type-badge" style="background:var(--sky-dark);">COIN</span>`;
         let detailsHtml = '';
         if(isVpn){
            detailsHtml = `<div class="hist-info-cell"><div class="hic-label">PAYMENT</div><div class="hic-value">${escapeHtml(o.method)} (${escapeHtml(o.number)})</div></div><div class="hist-info-cell"><div class="hic-label">ORDER STATUS</div><div class="hic-value">${escapeHtml(info.label)}</div></div>`;
@@ -2298,6 +2396,16 @@
              detailsHtml += `<div style="grid-column:1/-1;background:rgba(56,189,248,.1);border:1px dashed var(--sky-dark);border-radius:10px;padding:10px;margin-top:4px;">
                <div style="font-size:9px;font-weight:900;color:var(--sky-dark);margin-bottom:6px;text-transform:uppercase;">🛰️ Your Proxy</div>
                <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);padding:8px 10px;border-radius:8px;"><div><span style="font-size:8px;color:var(--subtext);display:block;">Proxy</span><b style="font-size:11px;">${escapeHtml(o.delivered_proxy)}</b></div><button class="info-copy-btn" onclick="copyTextValue('${escapeHtml(o.delivered_proxy)}', 'Proxy')" style="margin:0;">Copy</button></div>
+             </div>`;
+           }
+        }else if(isMail){
+           detailsHtml = `<div class="hist-info-cell"><div class="hic-label">PAYMENT</div><div class="hic-value">${escapeHtml(o.method)} (${escapeHtml(o.number)})</div></div><div class="hist-info-cell"><div class="hic-label">ORDER STATUS</div><div class="hic-value">${escapeHtml(info.label)}</div></div>`;
+           if(os === 'approved' && o.delivered_mail){
+             const mailLines = String(o.delivered_mail).split('\n').filter(Boolean);
+             const mailRows = mailLines.map(line => `<div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);padding:8px 10px;border-radius:8px;margin-bottom:6px;"><b style="font-size:11px;word-break:break-all;">${escapeHtml(line)}</b><button class="info-copy-btn" onclick="copyTextValue('${escapeHtml(line)}', 'Mail')" style="margin:0;flex-shrink:0;margin-left:8px;">Copy</button></div>`).join('');
+             detailsHtml += `<div style="grid-column:1/-1;background:rgba(244,114,182,.1);border:1px dashed #f472b6;border-radius:10px;padding:10px;margin-top:4px;">
+               <div style="font-size:9px;font-weight:900;color:#f472b6;margin-bottom:6px;text-transform:uppercase;">📧 Your Mail (${mailLines.length} pcs)</div>
+               ${mailRows}
              </div>`;
            }
         }else{
@@ -2566,8 +2674,104 @@
       }).catch(err => { showToast('Submit failed','error'); }).finally(() => { submitting = false; btn.textContent = 'CONFIRM PROXY ORDER →'; btn.disabled = false; });
     }
 
+    function openMailModal(key){
+      if(guardBannedUser()) return;
+      const ml = mailConfigCache[key]; if(!ml) return;
+      selMailBrand = key; selMailUnitPrice = Number(ml.pricePerUnit || 0); selMailPayMethod = ''; selMailPayNumberTarget = '';
+      const stockCount = Object.keys(ml.stock || {}).length;
+      const minQty = Math.max(1, Number(ml.minQty || 1));
+      selMailQty = minQty;
+      $('mail-checkout-title').textContent = ml.name || key;
+      $('mail-qty-brand-name').textContent = ml.name || key;
+      $('mail-qty-unit-price').textContent = money(selMailUnitPrice);
+      $('mail-qty-stock-count').textContent = stockCount;
+      $('mail-qty-input').value = stockCount ? minQty : 0;
+      $('mail-qty-input').min = minQty;
+      $('mail-qty-input').max = stockCount || minQty;
+      updateMailQtyTotal();
+      $('mail-step-qty').classList.remove('hidden'); $('mail-step-payment').classList.add('hidden');
+      $('mail-checkout-modal').classList.add('active'); try{ tg.HapticFeedback.impactOccurred('light'); }catch(e){}
+    }
+    function updateMailQtyTotal(){
+      const ml = mailConfigCache[selMailBrand] || {};
+      const stockCount = Object.keys(ml.stock || {}).length;
+      const minQty = Math.max(1, Number(ml.minQty || 1));
+      let qty = Math.round(Number($('mail-qty-input').value || minQty));
+      if(!stockCount){ qty = 0; }
+      else{
+        if(qty < minQty) qty = minQty;
+        if(qty > stockCount) qty = stockCount;
+      }
+      $('mail-qty-input').value = qty;
+      selMailQty = qty;
+      $('mail-qty-total-amount').textContent = money(qty * selMailUnitPrice);
+    }
+    function stepMailQty(delta){
+      const cur = Number($('mail-qty-input').value || 1);
+      $('mail-qty-input').value = cur + delta;
+      updateMailQtyTotal();
+    }
+    function proceedMailToPayment(){
+      const ml = mailConfigCache[selMailBrand] || {};
+      const stockCount = Object.keys(ml.stock || {}).length;
+      if(!stockCount){ showToast('Out of stock right now','error'); return; }
+      if(selMailQty < 1){ showToast('Enter a valid quantity','error'); return; }
+      $('mail-payable-amount').textContent = money(selMailQty * selMailUnitPrice);
+      $('mail-step-qty').classList.add('hidden'); $('mail-step-payment').classList.remove('hidden');
+      document.querySelectorAll('#mail-pay-methods-grid .vpn-pay-card').forEach(c => c.classList.remove('active'));
+      $('mail-pay-details').classList.add('hidden');
+      resetMailProofInput();
+    }
+    function selectMailPayMethod(key, targetNum){
+      selMailPayMethod = key; selMailPayNumberTarget = targetNum;
+      document.querySelectorAll('#mail-pay-methods-grid .vpn-pay-card').forEach(c => {
+         if(c.dataset.payKey === key) c.classList.add('active'); else c.classList.remove('active');
+      });
+      $('mail-pay-target').textContent = targetNum || 'N/A';
+      $('mail-pay-details').classList.remove('hidden');
+      try{ tg.HapticFeedback.impactOccurred('light'); }catch(e){}
+    }
+    function resetMailProofInput(){
+      mailProofFileName = ''; mailProofImageDataUrl = ''; mailProofProcessing = false;
+      if($('mail-proof-file')) $('mail-proof-file').value = '';
+      if($('mail-proof-preview')) $('mail-proof-preview').classList.add('hidden');
+      if($('mail-proof-preview-img')) $('mail-proof-preview-img').removeAttribute('src');
+      if($('mail-proof-select-btn')) $('mail-proof-select-btn').textContent = '+ Upload Payment Screenshot';
+    }
+    async function handleMailProofFileChange(e){
+      const file = e.target.files && e.target.files[0]; if(!file) return;
+      if(!/^image\//i.test(file.type || '')){ resetMailProofInput(); showToast('Only image upload','error'); return; }
+      try{
+        mailProofProcessing = true; mailProofFileName = file.name || 'mail_proof.jpg'; $('mail-proof-select-btn').textContent = 'Processing...';
+        mailProofImageDataUrl = await compressImageFile(file);
+        $('mail-proof-preview-img').src = mailProofImageDataUrl; $('mail-proof-file-name').textContent = mailProofFileName; $('mail-proof-preview').classList.remove('hidden'); $('mail-proof-select-btn').textContent = 'Change Screenshot'; showToast('Screenshot ready','success');
+      }catch(err){ resetMailProofInput(); showToast('Process failed','error'); }finally{ mailProofProcessing = false; }
+    }
+    function submitMailOrder(){
+      if(submitting || !requireFirebase() || guardBannedUser()) return;
+      const numOrTrx = $('mail-pay-trx').value.trim();
+      if(!selMailBrand || selMailQty < 1 || !selMailPayMethod){ showToast('Fill all fields correctly','error'); return; }
+      if(!numOrTrx){ showToast('Enter transaction ID','error'); return; }
+      if(requireProofTrxId){
+        if(!mailProofImageDataUrl){ showToast('Upload payment proof screenshot','error'); return; }
+      }
+      submitting = true; const btn = $('submit-mail-order-btn'); btn.textContent = '⏳ Submitting...'; btn.disabled = true;
+      const orderRef = db.ref('orders').push(); const orderId = orderRef.key;
+      const orderData = {
+        id:orderId, user_id:currentUserId, userId:currentUserId, telegram_chat_id:currentUserId, userKey:userRefKey, user:userDisplayName, username:userUsername, order_type:'mail',
+        mail_brand:selMailBrand, mail_qty:selMailQty, payable:parseFloat((selMailQty*selMailUnitPrice).toFixed(2)), method:selMailPayMethod, number:numOrTrx, targetId:selMailPayNumberTarget,
+        proof_image_url:mailProofImageDataUrl, proof_file_name:mailProofFileName, proof_uploaded:!!mailProofImageDataUrl, status:'pending', order_status:'pending', payment_status:'pending', timestamp:firebase.database.ServerValue.TIMESTAMP, created_at:firebase.database.ServerValue.TIMESTAMP
+      };
+      orderRef.set(orderData).then(() => {
+        if(mailProofImageDataUrl) sendTelegramPhoto(TELEGRAM_ADMIN_CHAT_ID, mailProofImageDataUrl, buildNewOrderMessage(orderData));
+        else sendTelegramMessage(TELEGRAM_ADMIN_CHAT_ID, buildNewOrderMessage(orderData));
+        sendUserTelegramMessage(orderData, buildUserOrderSubmittedMessage(orderData));
+        $('mail-checkout-modal').classList.remove('active'); showToast('✓ Mail Order Submitted!','success'); userSwitchTab('history-scr');
+      }).catch(err => { showToast('Submit failed','error'); }).finally(() => { submitting = false; btn.textContent = 'CONFIRM MAIL ORDER →'; btn.disabled = false; });
+    }
+
     function userSwitchTab(screenId){
-      ['home-scr','vpn-scr','proxy-scr','history-scr','referral-scr','tutorial-scr','leaderboard-scr','payment-settings-scr','dev-info-scr'].forEach(s => {
+      ['home-scr','vpn-scr','proxy-scr','mail-scr','history-scr','referral-scr','tutorial-scr','leaderboard-scr','payment-settings-scr','dev-info-scr'].forEach(s => {
         const el = $(s); if(!el) return;
         const show = s === screenId;
         el.style.display = show ? 'block' : 'none';
@@ -2584,6 +2788,7 @@
       // Refresh referral card + proxy brand list on tab open
       if(screenId === 'referral-scr') renderReferralCard();
       if(screenId === 'proxy-scr') renderProxies(proxyConfigCache);
+      if(screenId === 'mail-scr') renderMails(mailConfigCache);
       try{ tg.HapticFeedback.impactOccurred('light'); }catch(e){}
     }
     function openSafeLink(url){ const s = normalizeLink(url); if(!s){ showToast('Link not set.','error'); return; } window.open(s,'_blank','noopener,noreferrer'); }
@@ -2647,6 +2852,7 @@
       db.ref('marketConfig').on('value', snap => { marketCache = snap.val() || {}; renderAdminCoins(marketCache); });
       db.ref('vpnConfig').on('value', snap => { vpnConfigCache = snap.val() || {}; renderAdminVpns(vpnConfigCache); });
       db.ref('proxyConfig').on('value', snap => { proxyConfigCache = snap.val() || {}; renderAdminProxies(proxyConfigCache); });
+      db.ref('mailConfig').on('value', snap => { mailConfigCache = snap.val() || {}; renderAdminMails(mailConfigCache); });
       db.ref('paymentMethods').on('value', snap => { paymentMethodsCache = snap.val() || {}; renderAdminCoinPayments(paymentMethodsCache); });
       db.ref('vpnPaymentMethods').on('value', snap => { vpnPaymentMethodsCache = snap.val() || {}; renderAdminVpnPayments(vpnPaymentMethodsCache); });
       db.ref('proxyPaymentMethods').on('value', snap => { proxyPaymentMethodsCache = snap.val() || {}; renderAdminProxyPayments(proxyPaymentMethodsCache); });
@@ -2779,7 +2985,7 @@
       
       if(!arr.length){ $('order-list').innerHTML = `<div class="empty-state">No orders here</div>`; return; }
       $('order-list').innerHTML = arr.map((o,i) => {
-        const os = getOrderStatus(o), ps = getPaymentStatus(o), isVpn = o.order_type === 'vpn', isProxy = o.order_type === 'proxy';
+        const os = getOrderStatus(o), ps = getPaymentStatus(o), isVpn = o.order_type === 'vpn', isProxy = o.order_type === 'proxy', isMail = o.order_type === 'mail';
         const displayName = o.username && o.username !== 'no_username' ? '@' + o.username : (o.user || '—');
         const cardClass = currentAdminTab === 'payment' ? (ps === 'paid' ? 'paid' : 'payment') : os;
         
@@ -2787,6 +2993,7 @@
         if(os === 'pending'){
            if(isVpn){ actionBtns = `<button class="btn-accept" type="button" onclick="openStockDeliveryModal('${escapeHtml(o.id)}', '${escapeHtml(o.vpn_brand)}', 'vpn')">📦 Deliver Account</button><button class="btn-reject" type="button" onclick="updateOrderStatus('${escapeHtml(o.id)}','rejected')">✗ Reject</button>`; }
            else if(isProxy){ actionBtns = `<button class="btn-accept" type="button" onclick="openStockDeliveryModal('${escapeHtml(o.id)}', '${escapeHtml(o.proxy_brand)}', 'proxy')">📦 Deliver Proxy</button><button class="btn-reject" type="button" onclick="updateOrderStatus('${escapeHtml(o.id)}','rejected')">✗ Reject</button>`; }
+           else if(isMail){ actionBtns = `<button class="btn-accept" type="button" onclick="deliverMailOrder('${escapeHtml(o.id)}')">📧 Deliver Mail (${Number(o.mail_qty||0)})</button><button class="btn-reject" type="button" onclick="updateOrderStatus('${escapeHtml(o.id)}','rejected')">✗ Reject</button>`; }
            else{ actionBtns = `<button class="btn-accept" type="button" onclick="updateOrderStatus('${escapeHtml(o.id)}','approved')">✓ Approve</button><button class="btn-reject" type="button" onclick="updateOrderStatus('${escapeHtml(o.id)}','rejected')">✗ Reject</button>`; }
         }
         if(currentAdminTab === 'payment' && os === 'approved' && ps === 'pending'){
@@ -2804,6 +3011,11 @@
             gridHtml += `<div class="info-cell"><small>TARGET ID</small><b>${escapeHtml(o.targetId || '—')}</b></div>`;
         } else if(isProxy){
             gridHtml += `<div class="info-cell"><small>PROXY / PLAN</small><b>${escapeHtml(o.proxy_brand)} - ${escapeHtml(o.proxy_plan)}</b></div>`;
+            gridHtml += `<div class="info-cell"><small>METHOD</small><b>${escapeHtml(o.method)}</b></div>`;
+            gridHtml += `<div class="info-cell"><small>PAYMENT NUMBER</small><b style="cursor:pointer; color:var(--sky-dark); display:inline-flex; align-items:center; gap:4px;" onclick="copyTextValue('${escapeHtml(o.number)}', 'Payment Number')" title="Click to Copy">${escapeHtml(o.number)} <span>⧉</span></b></div>`;
+            gridHtml += `<div class="info-cell"><small>TARGET ID</small><b>${escapeHtml(o.targetId || '—')}</b></div>`;
+        } else if(isMail){
+            gridHtml += `<div class="info-cell"><small>MAIL / QTY</small><b>${escapeHtml(o.mail_brand)} - ${Number(o.mail_qty||0)} pcs</b></div>`;
             gridHtml += `<div class="info-cell"><small>METHOD</small><b>${escapeHtml(o.method)}</b></div>`;
             gridHtml += `<div class="info-cell"><small>PAYMENT NUMBER</small><b style="cursor:pointer; color:var(--sky-dark); display:inline-flex; align-items:center; gap:4px;" onclick="copyTextValue('${escapeHtml(o.number)}', 'Payment Number')" title="Click to Copy">${escapeHtml(o.number)} <span>⧉</span></b></div>`;
             gridHtml += `<div class="info-cell"><small>TARGET ID</small><b>${escapeHtml(o.targetId || '—')}</b></div>`;
@@ -3045,6 +3257,57 @@
       db.ref(`proxyConfig/${brandKey}/stock`).update(updates).then(()=>{ $(`px-bulk-val-${brandKey}`).value=''; showToast(`${lines.length} Stock Items Added`,'success'); });
     }
 
+    function renderAdminMails(data){
+      const entries = Object.entries(data || {});
+      $('adm-mail-list').innerHTML = entries.map(([key,v]) => {
+         const stockCount = Object.keys(v.stock||{}).length;
+         const stockList = Object.keys(v.stock||{}).map(sk => `<div class="user-row" style="padding:6px 10px;"><div style="font-size:10px;"><b>${escapeHtml(v.stock[sk].value)}</b></div><button class="del-btn" onclick="db.ref('mailConfig/${escapeHtml(key)}/stock/${escapeHtml(sk)}').remove()">DEL</button></div>`).join('');
+
+         return `<div class="coin-box ${v.status===false?'offline':''}"><div class="coin-box-header"><div class="coin-name-row">${v.logo ? `<img src="${escapeHtml(v.logo)}" class="coin-logo-sm">` : '<span>📧</span>'}<span class="coin-key">${escapeHtml(v.name||key)}</span></div><label class="switch"><input type="checkbox" onchange="updateDbField('mailConfig/${escapeHtml(key)}/status', this.checked)" ${v.status!==false?'checked':''}><span class="slider"></span></label></div><div class="form-row2" style="margin-bottom:8px;"><input type="number" class="form-input" placeholder="Price Per Piece" value="${v.pricePerUnit||''}" step="0.01" onchange="updateDbField('mailConfig/${escapeHtml(key)}/pricePerUnit', Number(this.value))"><input type="number" class="form-input" placeholder="Min Qty" value="${v.minQty||1}" onchange="updateDbField('mailConfig/${escapeHtml(key)}/minQty', Number(this.value))"></div><div style="font-size:10px;font-weight:900;color:var(--sky-dark);margin-bottom:6px;">STOCK: ${stockCount} PIECE(S) AVAILABLE</div><div class="add-form" style="margin-top:12px;margin-bottom:8px;"><div style="font-size:10px;font-weight:900;color:var(--purple);margin-bottom:6px;">ADD STOCK</div><div style="display:flex;gap:6px;margin-bottom:8px;"><button type="button" class="btn-action btn-blue" style="padding:7px;font-size:9px;margin:0;" onclick="document.getElementById('ml-single-${escapeHtml(key)}').classList.remove('hidden');document.getElementById('ml-bulk-${escapeHtml(key)}').classList.add('hidden');">Single Field</button><button type="button" class="btn-action btn-cyan" style="padding:7px;font-size:9px;margin:0;" onclick="document.getElementById('ml-single-${escapeHtml(key)}').classList.add('hidden');document.getElementById('ml-bulk-${escapeHtml(key)}').classList.remove('hidden');">Bulk Box</button></div><div id="ml-single-${escapeHtml(key)}"><input type="text" id="ml-val-${escapeHtml(key)}" class="form-input" placeholder="Mail (email:pass)" style="margin-bottom:8px;"><button class="btn-action btn-cyan" style="padding:8px;font-size:10px;" onclick="addMailStockItem('${escapeHtml(key)}')">+ Add One to Stock</button></div><div id="ml-bulk-${escapeHtml(key)}" class="hidden"><textarea id="ml-bulk-val-${escapeHtml(key)}" class="form-input admin-textarea" placeholder="Paste multiple mails, one per line..." style="min-height:90px;margin-bottom:8px;"></textarea><button class="btn-action btn-cyan" style="padding:8px;font-size:10px;" onclick="addMailStockBulk('${escapeHtml(key)}')">+ Add All Lines to Stock</button></div></div>${stockList}<button class="btn-action btn-danger" type="button" style="margin-top:8px;padding:9px;" onclick="db.ref('mailConfig/${escapeHtml(key)}').remove()">Remove Brand</button></div>`;
+      }).join('') || '<div class="empty-state">No Mail Brands added</div>';
+    }
+
+    function addMailStockItem(brandKey){
+      const val = $(`ml-val-${brandKey}`).value.trim();
+      if(!val){ showToast('Enter a mail value','error'); return; }
+      db.ref(`mailConfig/${brandKey}/stock`).push({value:val}).then(()=>{ $(`ml-val-${brandKey}`).value=''; showToast('Stock Added','success'); });
+    }
+    function addMailStockBulk(brandKey){
+      const raw = $(`ml-bulk-val-${brandKey}`).value;
+      const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+      if(!lines.length){ showToast('Paste at least one line','error'); return; }
+      const updates = {};
+      lines.forEach(line => { const k = db.ref(`mailConfig/${brandKey}/stock`).push().key; updates[k] = {value: line}; });
+      db.ref(`mailConfig/${brandKey}/stock`).update(updates).then(()=>{ $(`ml-bulk-val-${brandKey}`).value=''; showToast(`${lines.length} Stock Items Added`,'success'); });
+    }
+
+    function deliverMailOrder(orderId){
+      const order = globalOrders[orderId]; if(!order) return;
+      const brandKey = order.mail_brand, qty = Number(order.mail_qty || 0);
+      const ml = mailConfigCache[brandKey] || {};
+      const stockKeys = Object.keys(ml.stock || {});
+      if(stockKeys.length < qty){ showToast(`Not enough stock (have ${stockKeys.length}, need ${qty})`,'error'); return; }
+      adminConfirm('Deliver Mail?', `This will pull ${qty} piece(s) from stock and mark the order approved.`, '📧', () => {
+        const takeKeys = stockKeys.slice(0, qty);
+        const deliveredValues = takeKeys.map(k => ml.stock[k].value);
+        const patch = { order_status:'approved', status:'completed', payment_status:'pending', approved_at:firebase.database.ServerValue.TIMESTAMP, delivered_mail: deliveredValues.join('\n') };
+        Object.assign(order, patch);
+        db.ref('orders/'+orderId).update(patch).then(() => {
+          const removeUpdates = {}; takeKeys.forEach(k => { removeUpdates[k] = null; });
+          db.ref(`mailConfig/${brandKey}/stock`).update(removeUpdates);
+          sendUserTelegramMessage(order, buildOrderStatusMessage(order, 'approved'));
+          renderAdminOrders(); showToast('Mail Delivered!','success'); adminSwitchTab('approved');
+        });
+      });
+    }
+
+    function addMailBrand(){
+      const n = $('ml-name').value.trim(), key = safeDbKey(n).toUpperCase();
+      if(!n){ showToast('Enter Brand Name','error'); return; }
+      const price = Number($('ml-price').value || 0), minQty = Math.max(1, Number($('ml-minqty').value || 1));
+      db.ref('mailConfig/'+key).set({ name:n, logo:mailLogoDataUrl, status:true, pricePerUnit:price, minQty }).then(() => { $('ml-name').value=''; $('ml-price').value=''; $('ml-minqty').value=''; $('ml-logo-preview').classList.add('hidden'); mailLogoDataUrl=''; showToast('Mail Brand Added','success'); });
+    }
+
     function renderAdminCoinPayments(data){
       const entries = Object.entries(data || {});
       $('payment-list').innerHTML = entries.map(([key,v]) => `<div class="pay-row"><div class="pay-name">${v.logo?`<img src="${escapeHtml(v.logo)}" style="width:24px;height:24px;border-radius:6px;object-fit:cover;">`:''} ${escapeHtml(key)}</div><div class="pay-controls"><label class="switch"><input type="checkbox" onchange="updateDbField('paymentMethods/${escapeHtml(key)}/status', this.checked)" ${v.status!==false?'checked':''}><span class="slider"></span></label><button class="del-btn" onclick="db.ref('paymentMethods/${escapeHtml(key)}').remove()">DEL</button></div></div>`).join('') || '<div class="empty-state">No methods added</div>';
@@ -3079,6 +3342,7 @@
         if(dataUrlVarName === 'vpnPayLogoDataUrl') vpnPayLogoDataUrl = dataUrl;
         if(dataUrlVarName === 'proxyLogoDataUrl') proxyLogoDataUrl = dataUrl;
         if(dataUrlVarName === 'proxyPayLogoDataUrl') proxyPayLogoDataUrl = dataUrl;
+        if(dataUrlVarName === 'mailLogoDataUrl') mailLogoDataUrl = dataUrl;
         if(dataUrlVarName === 'cLogoDataUrl') cLogoDataUrl = dataUrl;
         if(dataUrlVarName === 'editCLogoDataUrl') editCLogoDataUrl = dataUrl;
         return dataUrl;
@@ -3218,8 +3482,8 @@
       $('channel-btn').addEventListener('click', () => openSafeLink(channelLinkValue));
       $('open-vpn-btn').addEventListener('click', () => userSwitchTab('vpn-scr'));
       if($('open-proxy-btn')) $('open-proxy-btn').addEventListener('click', () => userSwitchTab('proxy-scr'));
+      if($('open-mail-btn')) $('open-mail-btn').addEventListener('click', () => userSwitchTab('mail-scr'));
       $('open-payment-settings-btn').addEventListener('click', () => userSwitchTab('payment-settings-scr'));
-      $('open-devinfo-btn').addEventListener('click', () => userSwitchTab('dev-info-scr'));
       $('admin-btn').addEventListener('click', showAdminPanel);
       $('return-user-btn').addEventListener('click', showUserPanel);
       $('admin-back-btn').addEventListener('click', showUserPanel);
@@ -3229,6 +3493,7 @@
       $('close-order-btn').addEventListener('click', closeOrderModal);
       $('close-vpn-checkout-btn').addEventListener('click', () => $('vpn-checkout-modal').classList.remove('active'));
       if($('close-proxy-checkout-btn')) $('close-proxy-checkout-btn').addEventListener('click', () => $('proxy-checkout-modal').classList.remove('active'));
+      if($('close-mail-checkout-btn')) $('close-mail-checkout-btn').addEventListener('click', () => $('mail-checkout-modal').classList.remove('active'));
       $('confirm-back-btn').addEventListener('click', () => $('confirm-modal').classList.remove('active'));
       $('admin-confirm-cancel').addEventListener('click', () => $('admin-confirm').classList.remove('active'));
       $('admin-confirm-ok').addEventListener('click', () => { if(typeof adminConfirmCallback === 'function') adminConfirmCallback(); $('admin-confirm').classList.remove('active'); });
@@ -3240,12 +3505,14 @@
       if($('proof-select-btn')) $('proof-select-btn').addEventListener('click', () => $('proof-file').click());
       if($('vpn-proof-select-btn')) $('vpn-proof-select-btn').addEventListener('click', () => $('vpn-proof-file').click());
       if($('proxy-proof-select-btn')) $('proxy-proof-select-btn').addEventListener('click', () => $('proxy-proof-file').click());
+      if($('mail-proof-select-btn')) $('mail-proof-select-btn').addEventListener('click', () => $('mail-proof-file').click());
       if($('broadcast-image-select-btn')) $('broadcast-image-select-btn').addEventListener('click', () => $('broadcast-image-file').click());
       
       // File Inputs
       $('proof-file').addEventListener('change', handleProofFileChange);
       $('vpn-proof-file').addEventListener('change', handleVpnProofFileChange);
       if($('proxy-proof-file')) $('proxy-proof-file').addEventListener('change', handleProxyProofFileChange);
+      if($('mail-proof-file')) $('mail-proof-file').addEventListener('change', handleMailProofFileChange);
       $('payment-proof-file').addEventListener('change', handlePaymentProofFileChange);
       
       $('c-logo-file').addEventListener('change', () => handleLogoUpload('c-logo-file', 'c-logo-preview-img', 'cLogoDataUrl'));
@@ -3259,6 +3526,9 @@
 
       if($('px-logo-file')) $('px-logo-file').addEventListener('change', () => handleLogoUpload('px-logo-file', 'px-logo-preview-img', 'proxyLogoDataUrl'));
       if($('px-logo-remove-btn')) $('px-logo-remove-btn').addEventListener('click', () => { proxyLogoDataUrl=''; $('px-logo-preview').classList.add('hidden'); $('px-logo-file').value=''; });
+
+      if($('ml-logo-file')) $('ml-logo-file').addEventListener('change', () => handleLogoUpload('ml-logo-file', 'ml-logo-preview-img', 'mailLogoDataUrl'));
+      if($('ml-logo-remove-btn')) $('ml-logo-remove-btn').addEventListener('click', () => { mailLogoDataUrl=''; $('ml-logo-preview').classList.add('hidden'); $('ml-logo-file').value=''; });
       
       $('p-logo-file').addEventListener('change', () => handleLogoUpload('p-logo-file', 'p-logo-preview-img', 'payLogoDataUrl'));
       $('p-logo-remove-btn').addEventListener('click', () => { payLogoDataUrl=''; $('p-logo-preview').classList.add('hidden'); $('p-logo-file').value=''; });
@@ -3277,6 +3547,13 @@
       $('confirm-order-btn').addEventListener('click', showConfirm);
       $('submit-vpn-order-btn').addEventListener('click', submitVpnOrder);
       if($('submit-proxy-order-btn')) $('submit-proxy-order-btn').addEventListener('click', submitProxyOrder);
+      if($('mail-qty-plus-btn')) $('mail-qty-plus-btn').addEventListener('click', () => stepMailQty(1));
+      if($('mail-qty-minus-btn')) $('mail-qty-minus-btn').addEventListener('click', () => stepMailQty(-1));
+      if($('mail-qty-input')) $('mail-qty-input').addEventListener('input', updateMailQtyTotal);
+      if($('mail-qty-continue-btn')) $('mail-qty-continue-btn').addEventListener('click', proceedMailToPayment);
+      if($('submit-mail-order-btn')) $('submit-mail-order-btn').addEventListener('click', submitMailOrder);
+      if($('proxy-proof-remove-btn')) $('proxy-proof-remove-btn').addEventListener('click', resetProxyProofInput);
+      if($('mail-proof-remove-btn')) $('mail-proof-remove-btn').addEventListener('click', resetMailProofInput);
       $('submit-btn').addEventListener('click', submitOrder);
       $('payment-paid-btn').addEventListener('click', confirmMarkPaid);
       $('save-coin-edit-btn').addEventListener('click', saveCoinEdit);
@@ -3289,6 +3566,7 @@
       $('add-coin-btn').addEventListener('click', addCoin);
       $('add-vpn-btn').addEventListener('click', addVpnBrand);
       if($('add-proxy-btn')) $('add-proxy-btn').addEventListener('click', addProxyBrand);
+      if($('add-mail-btn')) $('add-mail-btn').addEventListener('click', addMailBrand);
       $('add-payment-btn').addEventListener('click', addPaymentMethod);
       $('add-vpn-payment-btn').addEventListener('click', addVpnPaymentMethod);
       if($('add-proxy-payment-btn')) $('add-proxy-payment-btn').addEventListener('click', addProxyPaymentMethod);

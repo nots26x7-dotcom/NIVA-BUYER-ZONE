@@ -601,11 +601,11 @@
       <button class="qa-btn" type="button" id="channel-btn"><div class="qa-icon" style="background:rgba(124,58,237,.15);color:#a78bfa;">📢</div><div><div class="qa-main-text">Channel</div><div class="qa-sub-text">News & Updates</div></div></button>
       <button class="qa-btn vpn-premium-btn" type="button" id="open-vpn-btn">
         <div class="qa-icon" style="background:var(--purple);color:#fff;">🌐</div>
-        <div><div class="qa-main-text" style="color:var(--purple);font-size:13px;">PREMIUM VPN</div><div class="qa-sub-text">Secure connections</div></div>
+        <div><div class="qa-main-text" style="color:var(--purple);font-size:13px;">BUY VPN</div><div class="qa-sub-text">Secure connections</div></div>
       </button>
       <button class="qa-btn vpn-premium-btn" type="button" id="open-proxy-btn">
         <div class="qa-icon" style="background:var(--sky-dark);color:#fff;">🛰️</div>
-        <div><div class="qa-main-text" style="color:var(--sky-dark);font-size:13px;">PROXY SELL</div><div class="qa-sub-text">Fast private proxies</div></div>
+        <div><div class="qa-main-text" style="color:var(--sky-dark);font-size:13px;">BUY PROXY</div><div class="qa-sub-text">Fast private proxies</div></div>
       </button>
       <button class="qa-btn vpn-premium-btn" type="button" id="open-mail-btn" style="grid-column:1/-1;">
         <div class="qa-icon" style="background:#f472b6;color:#fff;">📧</div>
@@ -620,21 +620,17 @@
     </div>
 
     <div id="vpn-scr" style="display:none;padding-top:6px;">
-      <div class="sec-title" style="justify-content:space-between;width:100%;"><div style="display:flex;align-items:center;gap:7px;">PREMIUM VPN STORE</div><button type="button" class="settings-back-inline" onclick="userSwitchTab('home-scr')" style="padding:4px 8px;">← Back</button></div>
+      <div class="sec-title" style="justify-content:space-between;width:100%;"><div style="display:flex;align-items:center;gap:7px;">BUY VPN STORE</div><button type="button" class="settings-back-inline" onclick="userSwitchTab('home-scr')" style="padding:4px 8px;">← Back</button></div>
       <div id="vpn-brand-list"></div>
     </div>
 
     <div id="proxy-scr" style="display:none;padding-top:6px;">
-      <div class="sec-title" style="justify-content:space-between;width:100%;"><div style="display:flex;align-items:center;gap:7px;">PROXY SELL STORE</div><button type="button" class="settings-back-inline" onclick="userSwitchTab('home-scr')" style="padding:4px 8px;">← Back</button></div>
-      <button class="qa-btn vpn-premium-btn" type="button" id="open-mail-btn-from-proxy" style="margin-bottom:14px;">
-        <div class="qa-icon" style="background:#f472b6;color:#fff;">📧</div>
-        <div><div class="qa-main-text" style="color:#f472b6;font-size:13px;">BUY MAIL</div><div class="qa-sub-text">Select quantity & buy in bulk</div></div>
-      </button>
+      <div class="sec-title" style="justify-content:space-between;width:100%;"><div style="display:flex;align-items:center;gap:7px;">BUY PROXY STORE</div><button type="button" class="settings-back-inline" onclick="userSwitchTab('home-scr')" style="padding:4px 8px;">← Back</button></div>
       <div id="proxy-brand-list"></div>
     </div>
 
     <div id="mail-scr" style="display:none;padding-top:6px;">
-      <div class="sec-title" style="justify-content:space-between;width:100%;"><div style="display:flex;align-items:center;gap:7px;">BUY MAIL STORE</div><button type="button" class="settings-back-inline" onclick="userSwitchTab('proxy-scr')" style="padding:4px 8px;">← Back</button></div>
+      <div class="sec-title" style="justify-content:space-between;width:100%;"><div style="display:flex;align-items:center;gap:7px;">BUY MAIL STORE</div><button type="button" class="settings-back-inline" onclick="userSwitchTab('home-scr')" style="padding:4px 8px;">← Back</button></div>
       <div id="mail-brand-list"></div>
     </div>
 
@@ -1515,6 +1511,7 @@
     const userRefKey = currentUserId ? `tg_${currentUserId}` : safeDbKey(userUsername || userDisplayName || 'guest');
 
     let db = null, firebaseReady = false, appLoaded = false;
+    let marketDataLoaded = false, forceJoinGateResolved = false;
     let selC = '', selR = 0, currentTID = '', finalP = 0;
     let selPricingTiers = [], selMinSubmitLimit = DEFAULT_MIN_SUBMIT_LIMIT, selInputType = 'username';
     let channelLinkValue = '', helpLinkValue = '', disclaimerNoticeValue = DEFAULT_DISCLAIMER_NOTICE, submitting = false;
@@ -1813,6 +1810,12 @@
       $('loading').style.opacity = '0';
       setTimeout(() => { $('loading').style.display = 'none'; }, 420);
     }
+    // The loading screen stays up until BOTH the market data and the force-join
+    // membership check have resolved — this stops users from ever glimpsing the
+    // home screen before a required-channel gate pops in on top of it.
+    function maybeFinishLoading(){
+      if(marketDataLoaded && forceJoinGateResolved) finishLoading();
+    }
     function initFirebase(){
       if(!firebaseConfig.apiKey || firebaseConfig.apiKey === 'API_KEY'){
         firebaseReady = false; renderNoFirebaseState(); finishLoading(); return;
@@ -1855,6 +1858,10 @@
     function startUserListeners(){
       if(!firebaseReady) return;
       registerCurrentUser();
+      // Force-join gate is registered FIRST and checked as early as possible so the
+      // "join our channel" screen (if needed) appears the instant loading finishes —
+      // never after the home screen has already flashed on screen.
+      db.ref('settings/forceJoinChannels').on('value', snap => { forceJoinChannelsCache = snap.val() || {}; checkForceJoinStatus(); });
       if(currentUserId){ db.ref('users/' + userRefKey).on('value', snap => { userRegistryCache = {...userRegistryCache, [userRefKey]: snap.val()||{}}; if(guardBannedUser()){} renderReferralCard(); }); }
       db.ref('settings/branding').on('value', snap => {
         const b = snap.val() || {}; const name = normalizeBrandName(b.siteName || APP_DEFAULT_NAME);
@@ -1863,7 +1870,7 @@
       db.ref('settings/links').on('value', snap => { const l = snap.val() || {}; channelLinkValue = normalizeLink(l.channel); helpLinkValue = normalizeLink(l.help); });
       db.ref('settings/disclaimer').on('value', snap => { disclaimerNoticeValue = normalizeDisclaimerNotice(typeof snap.val() === 'string' ? snap.val() : snap.val()?.noticeText); renderDisclaimerNotice(); });
       db.ref('settings/requireProofTrxId').on('value', snap => { requireProofTrxId = snap.val() !== false; applyProofRequirementUI(); });
-      db.ref('marketConfig').on('value', snap => { marketCache = snap.val() || {}; renderMarket(marketCache); finishLoading(); });
+      db.ref('marketConfig').on('value', snap => { marketCache = snap.val() || {}; renderMarket(marketCache); marketDataLoaded = true; maybeFinishLoading(); });
       db.ref('vpnConfig').on('value', snap => { vpnConfigCache = snap.val() || {}; renderVpns(vpnConfigCache); });
       db.ref('proxyConfig').on('value', snap => { proxyConfigCache = snap.val() || {}; renderProxies(proxyConfigCache); });
       db.ref('mailConfig').on('value', snap => { mailConfigCache = snap.val() || {}; renderMails(mailConfigCache); });
@@ -1873,11 +1880,12 @@
       db.ref('orders').orderByChild('userKey').equalTo(userRefKey).on('value', snap => renderUserHistory(snap.val() || {}));
       db.ref('tutorialVideos').on('value', snap => { tutorialCache = snap.val() || {}; renderTutorialVideos(tutorialCache); });
       db.ref('settings/referral').on('value', snap => { referralSettingsCache = snap.val() || {}; renderReferralCard(); });
-      db.ref('settings/forceJoinChannels').on('value', snap => { forceJoinChannelsCache = snap.val() || {}; checkForceJoinStatus(); });
       if(currentUserId){ db.ref('withdrawals').orderByChild('userKey').equalTo(userRefKey).on('value', snap => { myWithdrawalsCache = snap.val() || {}; renderMyWithdrawals(); }); }
       processReferralIfNeeded();
       startLeaderboardListener();
-      setTimeout(finishLoading, 3500);
+      // Hard safety net: never leave the user stuck on the loading screen if a
+      // listener stalls (e.g. slow network on the Telegram membership check).
+      setTimeout(finishLoading, 5000);
     }
 
     // ================= LEADERBOARD SYSTEM =================
@@ -2002,6 +2010,8 @@
       $('wd-min-val').textContent = money(minW);
       $('wd-amount-input').value = '';
       selectedWithdrawMethod = ''; selectedWithdrawNumber = '';
+      if($('wd-pay-manual-box')) $('wd-pay-manual-box').classList.add('hidden');
+      if($('wd-pay-manual-num')) $('wd-pay-manual-num').value = '';
       renderWithdrawPayOptions();
       renderMyWithdrawals();
       $('withdraw-modal').classList.add('active');
@@ -2010,28 +2020,39 @@
 
     function renderWithdrawPayOptions(){
       const container = $('wd-pay-options'); if(!container) return;
-      const saved = getUserSavedPayments();
-      const methods = Object.entries(paymentMethodsCache || {}).filter(([key,v]) => v && v.status !== false && saved[key]);
+      const methods = Object.entries(paymentMethodsCache || {}).filter(([,v]) => v && v.status !== false);
       if(!methods.length){
-        container.innerHTML = '<div class="pay-settings-empty">⚠️ No saved payment number found.<br>Go to "Save Payment Number" and save one first.</div>';
+        container.innerHTML = '<div class="pay-settings-empty">⚠️ No payment methods available.<br>Admin hasn\'t added any payment methods yet.</div>';
         return;
       }
       container.innerHTML = methods.map(([key,v]) => {
-        const num = saved[key];
         const logoHtml = v.logo ? `<img src="${escapeHtml(v.logo)}" alt="${escapeHtml(key)}">` : '💳';
-        return `<div class="sell-pay-card" id="wd-pay-card-${escapeHtml(key)}" onclick="selectWithdrawPayMethod('${escapeHtml(key)}','${escapeHtml(num)}')">
-          <div class="sell-pay-check" id="wd-pay-check-${escapeHtml(key)}"></div>
+        const active = selectedWithdrawMethod === key;
+        return `<div class="sell-pay-card${active ? ' active' : ''}" id="wd-pay-card-${escapeHtml(key)}" onclick="selectWithdrawPayMethod('${escapeHtml(key)}')">
+          <div class="sell-pay-check" id="wd-pay-check-${escapeHtml(key)}">${active ? '✓' : ''}</div>
           <div class="sell-pay-icon">${logoHtml}</div>
-          <div style="flex:1;min-width:0;"><div class="sell-pay-name">${escapeHtml(key)}</div><div class="sell-pay-num">${escapeHtml(num)}</div></div>
+          <div style="flex:1;min-width:0;"><div class="sell-pay-name">${escapeHtml(key)}</div></div>
         </div>`;
       }).join('');
     }
-    function selectWithdrawPayMethod(method, number){
-      selectedWithdrawMethod = method; selectedWithdrawNumber = number;
+    function selectWithdrawPayMethod(method){
+      const switchedMethod = selectedWithdrawMethod !== method;
+      selectedWithdrawMethod = method;
       document.querySelectorAll('#wd-pay-options .sell-pay-card').forEach(c => c.classList.remove('active'));
       document.querySelectorAll('#wd-pay-options .sell-pay-check').forEach(c => { c.innerHTML = ''; });
       const card = $('wd-pay-card-' + method), check = $('wd-pay-check-' + method);
       if(card) card.classList.add('active'); if(check) check.innerHTML = '✓';
+      // Reveal the manual number entry box for this method
+      if($('wd-pay-manual-method-name')) $('wd-pay-manual-method-name').textContent = method.toUpperCase();
+      if($('wd-pay-manual-box')) $('wd-pay-manual-box').classList.remove('hidden');
+      if(switchedMethod){
+        selectedWithdrawNumber = '';
+        if($('wd-pay-manual-num')) $('wd-pay-manual-num').value = '';
+      }
+      try{ tg.HapticFeedback.impactOccurred('light'); }catch(e){}
+    }
+    function updateWithdrawPayNumber(){
+      selectedWithdrawNumber = $('wd-pay-manual-num') ? $('wd-pay-manual-num').value.trim() : '';
     }
 
     function submitWithdrawRequest(){
@@ -2040,7 +2061,7 @@
       const balance = Number(me.referralBalance || 0);
       const minW = Number((referralSettingsCache||{}).minWithdraw || 0);
       const amount = Number($('wd-amount-input').value || 0);
-      if(!selectedWithdrawMethod || !selectedWithdrawNumber){ showToast('Select a payment method','error'); return; }
+      if(!selectedWithdrawMethod || !selectedWithdrawNumber){ showToast('Select a payment method and enter your number','error'); return; }
       if(!amount || amount <= 0){ showToast('Enter a valid amount','error'); return; }
       if(minW > 0 && amount < minW){ showToast(`Minimum withdraw is ${money(minW)}`,'error'); return; }
       if(amount > balance){ showToast('Insufficient referral balance','error'); return; }
@@ -2111,14 +2132,15 @@
     }
     async function checkForceJoinStatus(){
       const overlay = $('force-join-scr');
-      if(isAdmin){ if(overlay) overlay.style.display = 'none'; return true; } // admins are never gated out
+      const resolveGate = (result) => { forceJoinGateResolved = true; maybeFinishLoading(); return result; };
+      if(isAdmin){ if(overlay) overlay.style.display = 'none'; return resolveGate(true); } // admins are never gated out
       const channels = Object.entries(forceJoinChannelsCache || {}).filter(([,v]) => v && v.status !== false && v.chatId);
-      if(!channels.length || !currentUserId){ if(overlay) overlay.style.display = 'none'; return true; }
+      if(!channels.length || !currentUserId){ if(overlay) overlay.style.display = 'none'; return resolveGate(true); }
       const results = await Promise.all(channels.map(async ([key,v]) => ({ key, v, joined: await checkChannelMembership(v.chatId, currentUserId) })));
       const notJoined = results.filter(r => !r.joined);
       renderForceJoinScreen(notJoined.map(r => ({ key:r.key, ...r.v })));
       if(overlay) overlay.style.display = notJoined.length ? 'flex' : 'none';
-      return !notJoined.length;
+      return resolveGate(!notJoined.length);
     }
     async function handleForceJoinVerify(){
       const btn = $('force-join-verify-btn');
@@ -2193,7 +2215,7 @@
       $('vpn-brand-list').innerHTML = entries.map(([key,v],idx) => {
         const on = v.status !== false;
         const logo = v.logo ? `<img src="${escapeHtml(v.logo)}">` : '<span style="font-size:24px;">🌐</span>';
-        return `<div class="coin-card ${on?'online':''}" onclick="${on ? `openVpnModal('${escapeHtml(key)}')` : ''}" style="animation-delay:${idx*.06}s;"><div class="coin-card-top"><div class="coin-logo-wrap">${logo}</div><div><div class="coin-name-txt">${escapeHtml(v.name || key)}</div><div class="coin-label-txt">PREMIUM VPN</div></div><div class="status-pill ${on?'on':'off'}"><div class="s-dot ${on?'on':'off'}"></div>${on?'ONLINE':'OFFLINE'}</div></div></div>`;
+        return `<div class="coin-card ${on?'online':''}" onclick="${on ? `openVpnModal('${escapeHtml(key)}')` : ''}" style="animation-delay:${idx*.06}s;"><div class="coin-card-top"><div class="coin-logo-wrap">${logo}</div><div><div class="coin-name-txt">${escapeHtml(v.name || key)}</div><div class="coin-label-txt">BUY VPN</div></div><div class="status-pill ${on?'on':'off'}"><div class="s-dot ${on?'on':'off'}"></div>${on?'ONLINE':'OFFLINE'}</div></div></div>`;
       }).join('');
     }
 
@@ -2203,7 +2225,7 @@
       $('proxy-brand-list').innerHTML = entries.map(([key,v],idx) => {
         const on = v.status !== false;
         const logo = v.logo ? `<img src="${escapeHtml(v.logo)}">` : '<span style="font-size:24px;">🛰️</span>';
-        return `<div class="coin-card ${on?'online':''}" onclick="${on ? `openProxyModal('${escapeHtml(key)}')` : ''}" style="animation-delay:${idx*.06}s;"><div class="coin-card-top"><div class="coin-logo-wrap">${logo}</div><div><div class="coin-name-txt">${escapeHtml(v.name || key)}</div><div class="coin-label-txt">PROXY SELL</div></div><div class="status-pill ${on?'on':'off'}"><div class="s-dot ${on?'on':'off'}"></div>${on?'ONLINE':'OFFLINE'}</div></div></div>`;
+        return `<div class="coin-card ${on?'online':''}" onclick="${on ? `openProxyModal('${escapeHtml(key)}')` : ''}" style="animation-delay:${idx*.06}s;"><div class="coin-card-top"><div class="coin-logo-wrap">${logo}</div><div><div class="coin-name-txt">${escapeHtml(v.name || key)}</div><div class="coin-label-txt">BUY PROXY</div></div><div class="status-pill ${on?'on':'off'}"><div class="s-dot ${on?'on':'off'}"></div>${on?'ONLINE':'OFFLINE'}</div></div></div>`;
       }).join('');
     }
 
@@ -2717,7 +2739,7 @@
     }
 
     function userSwitchTab(screenId){
-      ['home-scr','vpn-scr','proxy-scr','mail-scr','history-scr','referral-scr','tutorial-scr','leaderboard-scr','payment-settings-scr','dev-info-scr'].forEach(s => {
+      ['home-scr','vpn-scr','proxy-scr','mail-scr','history-scr','referral-scr','tutorial-scr','leaderboard-scr','dev-info-scr'].forEach(s => {
         const el = $(s); if(!el) return;
         const show = s === screenId;
         el.style.display = show ? 'block' : 'none';
@@ -2725,8 +2747,6 @@
         if(show) el.classList.add('no-replay-anim');
       });
       document.querySelectorAll('#user-nav .nav-tab').forEach(tab => tab.classList.toggle('active', tab.dataset.screen === screenId));
-      // Render payment settings page when switching to it
-      if(screenId === 'payment-settings-scr') renderPaymentSettingsPage();
       // Render leaderboard only when it's actually opened (lazy render = zero lag on other tabs)
       if(screenId === 'leaderboard-scr') renderLeaderboard();
       // Refresh sell form cards when returning home (in case settings changed)
@@ -3429,8 +3449,6 @@
       $('open-vpn-btn').addEventListener('click', () => userSwitchTab('vpn-scr'));
       if($('open-proxy-btn')) $('open-proxy-btn').addEventListener('click', () => userSwitchTab('proxy-scr'));
       if($('open-mail-btn')) $('open-mail-btn').addEventListener('click', () => userSwitchTab('mail-scr'));
-      if($('open-mail-btn-from-proxy')) $('open-mail-btn-from-proxy').addEventListener('click', () => userSwitchTab('mail-scr'));
-      if($('open-payment-settings-btn')) $('open-payment-settings-btn').addEventListener('click', () => userSwitchTab('payment-settings-scr'));
       $('admin-btn').addEventListener('click', showAdminPanel);
       $('return-user-btn').addEventListener('click', showUserPanel);
       $('admin-back-btn').addEventListener('click', showUserPanel);
@@ -3491,6 +3509,7 @@
       
       // Inputs & Buttons
       $('c-qty').addEventListener('input', calc);
+      if($('sell-pay-manual-num')) $('sell-pay-manual-num').addEventListener('input', updateSellPayNumber);
       $('confirm-order-btn').addEventListener('click', showConfirm);
       $('submit-vpn-order-btn').addEventListener('click', submitVpnOrder);
       if($('submit-proxy-order-btn')) $('submit-proxy-order-btn').addEventListener('click', submitProxyOrder);
@@ -3530,6 +3549,7 @@
       $('ref-withdraw-btn').addEventListener('click', openWithdrawModal);
       $('close-withdraw-btn').addEventListener('click', closeWithdrawModal);
       $('wd-submit-btn').addEventListener('click', submitWithdrawRequest);
+      if($('wd-pay-manual-num')) $('wd-pay-manual-num').addEventListener('input', updateWithdrawPayNumber);
 
       // Force Join
       if($('force-join-verify-btn')) $('force-join-verify-btn').addEventListener('click', handleForceJoinVerify);

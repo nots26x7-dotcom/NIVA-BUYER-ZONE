@@ -1442,6 +1442,11 @@
 
   <script>
     const APP_DEFAULT_NAME = "NIVA BUYER ZONE";
+
+    /* ===== SESSION CACHE — 0-latency repeat opens ===== */
+    const _SCP = 'nex_';
+    const _scGetT = (k, ttl) => { try { const r = sessionStorage.getItem(_SCP+k); if(!r) return null; const o = JSON.parse(r); if(Date.now()-o.t > ttl) return null; return o.v; } catch(e) { return null; } };
+    const _scSet  = (k, v)    => { try { sessionStorage.setItem(_SCP+k, JSON.stringify({v, t:Date.now()})); } catch(e) {} };
     const LEGACY_BRAND_REGEX = /META\s*BUYER\s*ZONE/gi;
     function normalizeBrandName(value){
       const raw = String(value || '').trim();
@@ -1468,11 +1473,7 @@
       }catch(e){ console.warn('Brand sanitizer skipped:', e); }
     }
     function startLegacyBrandObserver(){
-      sanitizeLegacyBrandInDom();
-      try{
-        const obs = new MutationObserver(() => sanitizeLegacyBrandInDom());
-        obs.observe(document.body, { childList:true, subtree:true, characterData:true });
-      }catch(e){}
+      sanitizeLegacyBrandInDom(); // runs once; MutationObserver removed for performance
     }
     
     const DEFAULT_LOADER_LOGO = "https://i.ibb.co/KxX8Jgn4/6183649044270354133.jpg";
@@ -1487,8 +1488,8 @@
     const TELEGRAM_NOTIFY_ENABLED = true;
     const NOTIFICATION_BACKEND_MODE = false;
     const MAX_PROOF_DATA_URL_LENGTH = 950000; 
-
-    const firebaseConfig = {
+    
+const firebaseConfig = {
       apiKey: "AIzaSyDwPchjHJ8SrtKxXb18diT8c9fHiiMqLII",
       authDomain: "niva-buyer-zone-9f0d2.firebaseapp.com",
       databaseURL: "https://niva-buyer-zone-9f0d2-default-rtdb.firebaseio.com",
@@ -1497,7 +1498,7 @@
       messagingSenderId: "92493493182",
       appId: "1:92493493182:web:edaf82fb0401b4154d3fef",
       measurementId: "G-P2DHHSESBH"
-    };
+};
 
     const $ = (id) => document.getElementById(id);
     const tg = window.Telegram?.WebApp || { initDataUnsafe:{}, ready(){}, expand(){}, openLink(url){window.open(url,'_blank','noopener,noreferrer')}, openTelegramLink(url){window.open(url,'_blank','noopener,noreferrer')}, HapticFeedback:{impactOccurred(){},notificationOccurred(){}} };
@@ -1524,7 +1525,7 @@
     // Referral / Withdraw / Force-Join Caches
     let referralSettingsCache = {}, forceJoinChannelsCache = {}, myWithdrawalsCache = {}, withdrawalsCache = {};
     let selectedWithdrawMethod = '', selectedWithdrawNumber = '';
-    const REFERRAL_BOT_APP_LINK = "https://t.me/NivaBuyerZone_bot/app";
+    const REFERRAL_BOT_APP_LINK = "making....";
     let currentAdminTab = 'pending', adminStarted = false, adminConfirmCallback = null;
     let paymentTargetOrderId = '', proofModalSrc = '', paymentProofTargetOrderId = '', paymentProofProcessing = false;
     let broadcastNoticeImageDataUrl = '', broadcastNoticeImageFileName = '', broadcastNoticeImageProcessing = false, leaderboardUserListOpen = false, userTrackingSearchTerm = '';
@@ -1858,6 +1859,16 @@
     function startUserListeners(){
       if(!firebaseReady) return;
       registerCurrentUser();
+      // === FAST PATH — resolve both gates from session cache for instant re-opens ===
+      const _cachedMkt = _scGetT('mkt', 120000); // market cache: 2 min TTL
+      if(_cachedMkt && Object.keys(_cachedMkt).length > 0){
+        marketCache = _cachedMkt; renderMarket(marketCache); marketDataLoaded = true;
+      }
+      if(_scGetT('fj_'+currentUserId, 300000)){ // force-join cache: 5 min TTL
+        forceJoinGateResolved = true;
+        const _fjo = $('force-join-scr'); if(_fjo) _fjo.style.display='none';
+      }
+      maybeFinishLoading(); // fires immediately if both caches hit → 0-latency open
       // Force-join gate is registered FIRST and checked as early as possible so the
       // "join our channel" screen (if needed) appears the instant loading finishes —
       // never after the home screen has already flashed on screen.
@@ -1870,7 +1881,7 @@
       db.ref('settings/links').on('value', snap => { const l = snap.val() || {}; channelLinkValue = normalizeLink(l.channel); helpLinkValue = normalizeLink(l.help); });
       db.ref('settings/disclaimer').on('value', snap => { disclaimerNoticeValue = normalizeDisclaimerNotice(typeof snap.val() === 'string' ? snap.val() : snap.val()?.noticeText); renderDisclaimerNotice(); });
       db.ref('settings/requireProofTrxId').on('value', snap => { requireProofTrxId = snap.val() !== false; applyProofRequirementUI(); });
-      db.ref('marketConfig').on('value', snap => { marketCache = snap.val() || {}; renderMarket(marketCache); marketDataLoaded = true; maybeFinishLoading(); });
+      db.ref('marketConfig').on('value', snap => { marketCache = snap.val() || {}; _scSet('mkt', marketCache); renderMarket(marketCache); marketDataLoaded = true; maybeFinishLoading(); });
       db.ref('vpnConfig').on('value', snap => { vpnConfigCache = snap.val() || {}; renderVpns(vpnConfigCache); });
       db.ref('proxyConfig').on('value', snap => { proxyConfigCache = snap.val() || {}; renderProxies(proxyConfigCache); });
       db.ref('mailConfig').on('value', snap => { mailConfigCache = snap.val() || {}; renderMails(mailConfigCache); });
@@ -1885,7 +1896,7 @@
       startLeaderboardListener();
       // Hard safety net: never leave the user stuck on the loading screen if a
       // listener stalls (e.g. slow network on the Telegram membership check).
-      setTimeout(finishLoading, 5000);
+      setTimeout(finishLoading, 2000); // reduced: cache fast-path makes 5 s wait unnecessary
     }
 
     // ================= LEADERBOARD SYSTEM =================
@@ -1893,7 +1904,7 @@
     function startLeaderboardListener(){
       if(!firebaseReady || !db) return;
       // Indexed, filtered query — only pulls approved orders, not the whole orders table, so this stays light even as order volume grows
-      db.ref('orders').orderByChild('order_status').equalTo('approved').on('value', snap => {
+      db.ref('orders').orderByChild('order_status').equalTo('approved').limitToLast(500).on('value', snap => {
         leaderboardCache = buildLeaderboardRanking(snap.val() || {});
         // Only touch the DOM if the leaderboard tab is actually open right now — background updates never cause lag on other tabs
         const scr = $('leaderboard-scr');
@@ -2134,12 +2145,15 @@
       const overlay = $('force-join-scr');
       const resolveGate = (result) => { forceJoinGateResolved = true; maybeFinishLoading(); return result; };
       if(isAdmin){ if(overlay) overlay.style.display = 'none'; return resolveGate(true); } // admins are never gated out
+      // Session cache hit → skip all Telegram API calls for 5 minutes after verification
+      if(_scGetT('fj_'+currentUserId, 300000)){ if(overlay) overlay.style.display='none'; return resolveGate(true); }
       const channels = Object.entries(forceJoinChannelsCache || {}).filter(([,v]) => v && v.status !== false && v.chatId);
       if(!channels.length || !currentUserId){ if(overlay) overlay.style.display = 'none'; return resolveGate(true); }
       const results = await Promise.all(channels.map(async ([key,v]) => ({ key, v, joined: await checkChannelMembership(v.chatId, currentUserId) })));
       const notJoined = results.filter(r => !r.joined);
       renderForceJoinScreen(notJoined.map(r => ({ key:r.key, ...r.v })));
       if(overlay) overlay.style.display = notJoined.length ? 'flex' : 'none';
+      if(!notJoined.length) _scSet('fj_'+currentUserId, true); // cache successful verification
       return resolveGate(!notJoined.length);
     }
     async function handleForceJoinVerify(){
@@ -2214,7 +2228,7 @@
       if(!entries.length){ $('vpn-brand-list').innerHTML = '<div class="empty-state">No VPNs available</div>'; return; }
       $('vpn-brand-list').innerHTML = entries.map(([key,v],idx) => {
         const on = v.status !== false;
-        const logo = v.logo ? `<img src="${escapeHtml(v.logo)}">` : '<span style="font-size:24px;">🌐</span>';
+        const logo = v.logo ? `<img src="${escapeHtml(v.logo)}" loading="lazy">` : '<span style="font-size:24px;">🌐</span>';
         return `<div class="coin-card ${on?'online':''}" onclick="${on ? `openVpnModal('${escapeHtml(key)}')` : ''}" style="animation-delay:${idx*.06}s;"><div class="coin-card-top"><div class="coin-logo-wrap">${logo}</div><div><div class="coin-name-txt">${escapeHtml(v.name || key)}</div><div class="coin-label-txt">BUY VPN</div></div><div class="status-pill ${on?'on':'off'}"><div class="s-dot ${on?'on':'off'}"></div>${on?'ONLINE':'OFFLINE'}</div></div></div>`;
       }).join('');
     }
@@ -2224,7 +2238,7 @@
       if(!entries.length){ $('proxy-brand-list').innerHTML = '<div class="empty-state">No proxies available</div>'; return; }
       $('proxy-brand-list').innerHTML = entries.map(([key,v],idx) => {
         const on = v.status !== false;
-        const logo = v.logo ? `<img src="${escapeHtml(v.logo)}">` : '<span style="font-size:24px;">🛰️</span>';
+        const logo = v.logo ? `<img src="${escapeHtml(v.logo)}" loading="lazy">` : '<span style="font-size:24px;">🛰️</span>';
         return `<div class="coin-card ${on?'online':''}" onclick="${on ? `openProxyModal('${escapeHtml(key)}')` : ''}" style="animation-delay:${idx*.06}s;"><div class="coin-card-top"><div class="coin-logo-wrap">${logo}</div><div><div class="coin-name-txt">${escapeHtml(v.name || key)}</div><div class="coin-label-txt">BUY PROXY</div></div><div class="status-pill ${on?'on':'off'}"><div class="s-dot ${on?'on':'off'}"></div>${on?'ONLINE':'OFFLINE'}</div></div></div>`;
       }).join('');
     }
@@ -2234,7 +2248,7 @@
       if(!entries.length){ $('mail-brand-list').innerHTML = '<div class="empty-state">No mail brands available</div>'; return; }
       $('mail-brand-list').innerHTML = entries.map(([key,v],idx) => {
         const on = v.status !== false;
-        const logo = v.logo ? `<img src="${escapeHtml(v.logo)}">` : '<span style="font-size:24px;">📧</span>';
+        const logo = v.logo ? `<img src="${escapeHtml(v.logo)}" loading="lazy">` : '<span style="font-size:24px;">📧</span>';
         const stockCount = Object.keys(v.stock||{}).length;
         return `<div class="coin-card ${on?'online':''}" onclick="${on ? `openMailModal('${escapeHtml(key)}')` : ''}" style="animation-delay:${idx*.06}s;"><div class="coin-card-top"><div class="coin-logo-wrap">${logo}</div><div><div class="coin-name-txt">${escapeHtml(v.name || key)}</div><div class="coin-label-txt">${money(v.pricePerUnit||0)} / PIECE · ${stockCount} IN STOCK</div></div><div class="status-pill ${on?'on':'off'}"><div class="s-dot ${on?'on':'off'}"></div>${on?'ONLINE':'OFFLINE'}</div></div></div>`;
       }).join('');
@@ -2384,7 +2398,12 @@
     }
     
     function renderTutorialVideos(data){
-      const arr = Object.values(data || {}).filter(v => v && v.status !== false).sort((a,b) => (b.created_at || 0) - (a.created_at || 0));
+      tutorialCache = data || {}; // update cache — actual DOM render is lazy (fires on tab open)
+      const scr = $('tutorial-scr');
+      if(scr && scr.style.display !== 'none') _doRenderTutorials();
+    }
+    function _doRenderTutorials(){
+      const arr = Object.values(tutorialCache || {}).filter(v => v && v.status !== false).sort((a,b) => (b.created_at || 0) - (a.created_at || 0));
       if(!arr.length){ $('tutorial-list').innerHTML = '<div class="empty-state">No tutorial videos.</div>'; return; }
       $('tutorial-list').innerHTML = arr.map((v,i) => {
         return `<div class="tutorial-card" style="animation-delay:${i*.04}s;"><div class="tutorial-frame"><iframe src="https://www.youtube.com/embed/${escapeHtml(v.video_id)}" loading="lazy" allowfullscreen></iframe></div><div class="tutorial-meta"><div class="tutorial-title">${escapeHtml(v.video_title)}</div></div></div>`;
@@ -2752,6 +2771,7 @@
       // Refresh sell form cards when returning home (in case settings changed)
       if(screenId === 'home-scr') renderSellFormPaymentCards();
       // Refresh referral card + proxy brand list on tab open
+      if(screenId === 'tutorial-scr') _doRenderTutorials();
       if(screenId === 'referral-scr') renderReferralCard();
       if(screenId === 'proxy-scr') renderProxies(proxyConfigCache);
       if(screenId === 'mail-scr') renderMails(mailConfigCache);
@@ -3557,6 +3577,12 @@
 
       // Admin: Referral & Withdraw tab
       if($('save-referral-settings-btn')) $('save-referral-settings-btn').addEventListener('click', saveReferralSettings);
+      if($('refresh-user-tracking-btn')) $('refresh-user-tracking-btn').addEventListener('click', () => { renderUserTrackingSystem(); showToast('Refreshed','success'); });
+      if($('clear-order-history-btn')) $('clear-order-history-btn').addEventListener('click', () => {
+        adminConfirm('Clear All Order History?', 'This permanently deletes ALL order records for every user.', '🗑️', () => {
+          db.ref('orders').remove().then(() => showToast('All orders cleared','warning')).catch(() => showToast('Failed','error'));
+        });
+      });
       if($('withdraw-search')) $('withdraw-search').addEventListener('input', renderAdminWithdrawals);
       if($('withdraw-filter')) $('withdraw-filter').addEventListener('change', renderAdminWithdrawals);
     }
